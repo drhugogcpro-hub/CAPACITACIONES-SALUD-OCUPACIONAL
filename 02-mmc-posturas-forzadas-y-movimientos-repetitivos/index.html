@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANEJO MANUAL DE CARGAS, POSTURAS FORZADAS Y MOVIMIENTOS REPETITIVOS</title>
+    <!-- Tailwind CSS para el diseño responsivo de alta gama -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para simbología interactiva moderna -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+            color: #0f172a; 
+        }
+        
+        /* Animaciones fluidas para transiciones entre módulos */
+        .modulo { 
+            display: none; 
+            opacity: 0; 
+            transform: translateY(12px); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .modulo.activo { 
+            display: block; 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        
+        /* Efectos visuales de tarjetas */
+        .card-interactive { 
+            transition: all 0.25s ease; 
+        }
+        .card-interactive:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08); 
+        }
+        
+        /* Acordeones interactivos de control de flujo */
+        .accordion-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out; 
+        }
+        .accordion-content.abierto { 
+            max-height: 1000px; 
+            padding: 1rem 0;
+        }
+
+        /* Ocultar barra de scroll pero mantener funcionalidad */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen bg-slate-50 text-slate-800 overflow-x-hidden">
+
+    <!-- BARRA LATERAL (SIDEBAR) RESPONSIVA -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 lg:static lg:h-screen shrink-0 transition-transform duration-300 ease-in-out">
+        <div class="p-5 flex flex-col h-full overflow-y-auto no-scrollbar">
+            <!-- LOGO Y TÍTULO DE LA CAPACITACIÓN -->
+            <div class="flex flex-col gap-3 mb-6">
+                <div class="flex items-center gap-3">
+                    <!-- Contenedor del Logo con Fallback visual si no se carga la imagen en GitHub -->
+                    <div class="h-12 w-12 rounded-xl bg-orange-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-orange-600/30">
+                        <i data-lucide="activity" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-sm leading-tight text-white tracking-tight uppercase">SALUD OCUPACIONAL</h1>
+                        <p class="text-xs text-orange-500 font-bold tracking-widest uppercase">CEMENTOS PROGRESO</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800/80 rounded-lg p-3 border border-slate-700/50 mt-2">
+                    <p class="text-[10px] uppercase font-bold tracking-wider text-slate-400">Progreso General</p>
+                    <div class="w-full bg-slate-700 rounded-full h-2 mt-1.5 overflow-hidden">
+                        <div id="progreso-barra" class="bg-orange-500 h-2 rounded-full transition-all duration-500" style="width: 9%"></div>
+                    </div>
+                    <p id="progreso-texto" class="text-xs text-orange-400 font-semibold mt-1">Módulo 1 de 11 (9%)</p>
+                </div>
+            </div>
+            
+            <div class="h-px bg-slate-800 mb-4"></div>
+            
+            <!-- MENÚ DE NAVEGACIÓN MODULAR DE 11 MÓDULOS -->
+            <nav class="space-y-1 flex-1">
+                <button onclick="cambiarModulo('m1', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-white bg-orange-600 shadow-lg shadow-orange-600/20">
+                    <span class="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-[10px]">1</span>
+                    <span class="text-left flex-1 truncate">M1. Introducción a la Ergonomía</span>
+                </button>
+                <button onclick="cambiarModulo('m2', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">2</span>
+                    <span class="text-left flex-1 truncate">M2. Factores de Riesgo Ergonómico</span>
+                </button>
+                <button onclick="cambiarModulo('m3', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">3</span>
+                    <span class="text-left flex-1 truncate">M3. Manipulación de Cargas</span>
+                </button>
+                <button onclick="cambiarModulo('m4', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">4</span>
+                    <span class="text-left flex-1 truncate">M4. Posturas Forzadas</span>
+                </button>
+                <button onclick="cambiarModulo('m5', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">5</span>
+                    <span class="text-left flex-1 truncate">M5. Movimientos Repetitivos</span>
+                </button>
+                <button onclick="cambiarModulo('m6', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">6</span>
+                    <span class="text-left flex-1 truncate">M6. Empuje y Arrastre</span>
+                </button>
+                <button onclick="cambiarModulo('m7', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">7</span>
+                    <span class="text-left flex-1 truncate">M7. Ayudas Mecánicas</span>
+                </button>
+                <button onclick="cambiarModulo('m8', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">8</span>
+                    <span class="text-left flex-1 truncate">M8. Organización del Trabajo</span>
+                </button>
+                <button onclick="cambiarModulo('m9', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent hover:border-amber-500/30">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px] text-amber-500">9</span>
+                    <span class="text-left flex-1 truncate font-bold text-amber-400">M9. MITO o REALIDAD</span>
+                </button>
+                <button onclick="cambiarModulo('m10', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]">10</span>
+                    <span class="text-left flex-1 truncate">M10. Identificación de Peligros</span>
+                </button>
+                <button onclick="cambiarModulo('m11', this)" class="menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent hover:border-emerald-500/30">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px] text-emerald-400">11</span>
+                    <span class="text-left flex-1 truncate font-bold text-emerald-400">M11. Evaluación Final</span>
+                </button>
+            </nav>
+        </div>
+        
+        <div class="p-4 bg-slate-950 border-t border-slate-800 text-center">
+            <span class="text-[10px] text-slate-500 font-semibold tracking-wider block">CAPACITACIONES SALUD OCUPACIONAL</span>
+            <span class="text-[9px] text-slate-600 block mt-0.5">Salud y Seguridad Ocupacional © 2026</span>
+        </div>
+    </aside>
+
+    <!-- FONDO GRIS OSCURO PARA MÓVILES CUANDO EL MENÚ ESTÁ ABIERTO -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden"></div>
+
+    <!-- CONTENIDO DE CAPACITACIÓN -->
+    <div class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+        <!-- CABECERA SUPERIOR PARA MÓVILES Y ACCIONES RÁPIDAS -->
+        <header class="bg-white border-b border-slate-200 py-4 px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Tema de Capacitación Obligatorio</h2>
+                    <h1 class="text-sm md:text-base font-extrabold text-slate-900 truncate">Manejo Manual de Cargas, Posturas Forzadas y Movimientos Repetitivos</h1>
+                </div>
+            </div>
+            
+            <div class="hidden sm:flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Activo
+                </span>
+            </div>
+        </header>
+
+        <!-- ESPACIO DE TRABAJO DE MÓDULOS -->
+        <main class="flex-1 p-4 md:p-8 lg:p-10 max-w-5xl w-full mx-auto space-y-8">
+            
+            <!-- M1. INTRODUCCIÓN A LA ERGONOMÍA -->
+            <section id="m1" class="modulo activo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="info" class="w-4 h-4"></i> Módulo 1
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Introducción a la Ergonomía</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Comprender qué es la ergonomía y por qué es vital en la producción y manejo del cemento.</p>
+                </div>
+
+                <!-- OBJETIVO DEL MÓDULO -->
+                <div class="bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-5 text-white shadow-md">
+                    <div class="flex gap-4 items-start">
+                        <div class="p-3 bg-white/20 rounded-xl">
+                            <i data-lucide="target" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-sm uppercase tracking-wider">Objetivo de Aprendizaje</h4>
+                            <p class="text-sm mt-1 text-orange-50 font-medium">
+                                Comprender qué es la ergonomía, cómo se aplica a la manipulación diaria de cargas u objetos, herramientas pesadas y posturas críticas, y su importancia en la prevención de lesiones permanentes en el cuerpo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONCEPTOS CLAVE -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Qué es Ergonomía -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 card-interactive">
+                        <div class="flex items-center gap-3 mb-3 text-orange-600">
+                            <i data-lucide="settings" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-base text-slate-900">Concepto de Ergonomía</h3>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Es la ciencia que busca adaptar el trabajo, las herramientas, las maquinarias y los entornos a las capacidades y limitaciones físicas y mentales de las personas, y no al revés. En nuestra industria, significa adaptar el manejo de objetos, tolvas y herramientas a tu cuerpo para proteger tu salud.
+                        </p>
+                    </div>
+
+                    <!-- Trastornos Musculoesqueléticos -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 card-interactive">
+                        <div class="flex items-center gap-3 mb-3 text-rose-600">
+                            <i data-lucide="activity-square" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-base text-slate-900">¿Qué son los TME?</h3>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Los <strong>Trastornos Musculoesqueléticos (TME)</strong> son lesiones o dolores que afectan las articulaciones, músculos, tendones, nervios y la columna vertebral. Se originan o agravan principalmente por el esfuerzo físico continuo, malas posturas o manejo inadecuado de cargas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ESTADÍSTICAS E IMPACTO -->
+                <div class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800">
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><i data-lucide="bar-chart-2" class="text-orange-500 w-5 h-5"></i> Estadísticas e Impacto Real</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="text-center p-4 bg-slate-800/50 rounded-xl border border-slate-800">
+                            <span class="block text-4xl font-black text-orange-500">60%</span>
+                            <span class="text-xs text-slate-300 font-medium mt-1.5 block">De las enfermedades laborales en cementeras son de tipo musculoesquelético.</span>
+                        </div>
+                        <div class="text-center p-4 bg-slate-800/50 rounded-xl border border-slate-800">
+                            <span class="block text-4xl font-black text-orange-500">1º</span>
+                            <span class="text-xs text-slate-300 font-medium mt-1.5 block">Lugar en causas de ausentismo laboral prolongado y reubicación de puestos.</span>
+                        </div>
+                        <div class="text-center p-4 bg-slate-800/50 rounded-xl border border-slate-800">
+                            <span class="block text-4xl font-black text-orange-500">80%</span>
+                            <span class="text-xs text-slate-300 font-medium mt-1.5 block">De los trabajadores sufrirá de dolor lumbar en algún punto de su carrera operativa.</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4 text-center italic">El cuidado preventivo aumenta la salud personal, mejora la productividad del equipo y reduce los días perdidos por incapacidad laboral.</p>
+                </div>
+
+                <!-- RESPONSABILIDADES -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 class="font-bold text-base text-slate-900 mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="text-emerald-500"></i> Responsabilidades del Trabajador y Empleador</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                            <h4 class="font-bold text-emerald-800 text-sm uppercase tracking-wide mb-2">Del Trabajador (Tus Obligaciones)</h4>
+                            <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                <li>Utilizar correctamente los equipos de ayuda mecánica disponibles en planta.</li>
+                                <li>Aplicar el método cinético seguro en cada levantamiento de saco.</li>
+                                <li>Participar activamente en las pausas de acondicionamiento físico.</li>
+                                <li>Reportar de manera inmediata molestias musculoesqueléticas.</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-sky-50/50 rounded-xl border border-sky-100">
+                            <h4 class="font-bold text-sky-800 text-sm uppercase tracking-wide mb-2">Del Empleador (Nuestra Responsabilidad)</h4>
+                            <ul class="text-xs text-slate-700 space-y-2 list-disc pl-4">
+                                <li>Proporcionar herramientas ergonómicas y ayudas mecánicas funcionales (carretillas, polipastos).</li>
+                                <li>Diseñar puestos de trabajo que reduzcan la necesidad de posturas forzadas extremos.</li>
+                                <li>Capacitar de forma continua al personal en técnicas ergonómicas.</li>
+                                <li>Implementar programas de rotación de tareas y vigilancia de la salud.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTÓN SIGUIENTE -->
+                <div class="flex justify-end pt-4">
+                    <button onclick="irSiguienteModulo('m2')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Factores de Riesgo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M2. FACTORES DE RIESGO ERGONÓMICO -->
+            <section id="m2" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="shield-alert" class="w-4 h-4"></i> Módulo 2
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Factores de Riesgo Ergonómico</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Identifica los principales peligros biomecánicos y organizacionales en la planta de cemento.</p>
+                </div>
+
+                <!-- GRID DE FACTORES BIOMECÁNICOS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl card-interactive flex flex-col justify-between">
+                        <div>
+                            <div class="p-2.5 bg-orange-100 text-orange-700 rounded-xl w-fit mb-3"><i data-lucide="weight" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Manejo Manual de Cargas</h3>
+                            <p class="text-xs text-slate-500">Levantar, sostener, colocar o transportar sacos de cemento, aditivos u otras cargas pesadas sin ayuda de maquinaria.</p>
+                        </div>
+                        <span class="text-[10px] text-orange-600 font-bold tracking-widest uppercase mt-3 block">Crítico en Cementeras</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl card-interactive flex flex-col justify-between">
+                        <div>
+                            <div class="p-2.5 bg-amber-100 text-amber-700 rounded-xl w-fit mb-3"><i data-lucide="person-standing" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Posturas Forzadas</h3>
+                            <p class="text-xs text-slate-500">Posiciones que se apartan de la postura neutra (p. ej., trabajar con las manos arriba del nivel de los hombros, flexionar la espalda permanentemente).</p>
+                        </div>
+                        <span class="text-[10px] text-amber-600 font-bold tracking-widest uppercase mt-3 block">Riesgo Alto</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl card-interactive flex flex-col justify-between">
+                        <div>
+                            <div class="p-2.5 bg-blue-100 text-blue-700 rounded-xl w-fit mb-3"><i data-lucide="refresh-cw" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Movimientos Repetitivos</h3>
+                            <p class="text-xs text-slate-500">Ciclos de trabajo similares de forma continua (p. ej., el ensacado rápido, la limpieza y rascado continuo con herramientas de mano).</p>
+                        </div>
+                        <span class="text-[10px] text-blue-600 font-bold tracking-widest uppercase mt-3 block">Frecuencia Alta</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl card-interactive flex flex-col justify-between">
+                        <div>
+                            <div class="p-2.5 bg-purple-100 text-purple-700 rounded-xl w-fit mb-3"><i data-lucide="zap" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Aplicación de Fuerza</h3>
+                            <p class="text-xs text-slate-500">Requerimiento físico exigido para mover objetos, empujar válvulas de silos atascadas o ajustar moldes de vaciado con mazo pesado.</p>
+                        </div>
+                        <span class="text-[10px] text-purple-600 font-bold tracking-widest uppercase mt-3 block">Sobrecarga Muscular</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl card-interactive flex flex-col justify-between">
+                        <div>
+                            <div class="p-2.5 bg-red-100 text-red-700 rounded-xl w-fit mb-3"><i data-lucide="help-circle" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Vibraciones</h3>
+                            <p class="text-xs text-slate-500">El uso de martillos demoledores neumáticos, taladros vibratorios, o la operación de vehículos pesados (retroexcavadoras, montacargas).</p>
+                        </div>
+                        <span class="text-[10px] text-red-600 font-bold tracking-widest uppercase mt-3 block">Sistemas Nervioso/Óseo</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl card-interactive flex flex-col justify-between">
+                        <div>
+                            <div class="p-2.5 bg-emerald-100 text-emerald-700 rounded-xl w-fit mb-3"><i data-lucide="arrow-right-left" class="w-5 h-5"></i></div>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Empuje y Arrastre</h3>
+                            <p class="text-xs text-slate-500">Esfuerzos aplicados al mover carretillas de carga o transpaletas manuales con paletas de cemento fraguado.</p>
+                        </div>
+                        <span class="text-[10px] text-emerald-600 font-bold tracking-widest uppercase mt-3 block">Columna Lumbar</span>
+                    </div>
+                </div>
+
+                <!-- OTROS RIESGOS BIOMECÁNICOS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex items-start gap-4">
+                        <div class="p-2.5 bg-slate-100 text-slate-700 rounded-xl"><i data-lucide="move" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Permanencia Prolongada de Pie</h4>
+                            <p class="text-xs text-slate-600 mt-1">Trabajadores en plataformas de despacho o dosificación estática que se mantienen parados por más de 4 horas continuas, lo que dificulta el retorno venoso y fatiga las piernas.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex items-start gap-4">
+                        <div class="p-2.5 bg-slate-100 text-slate-700 rounded-xl"><i data-lucide="monitor" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Trabajo Sedentario (Administrativo/Control)</h4>
+                            <p class="text-xs text-slate-600 mt-1">Operadores de salas de control y personal de facturación en oficinas sentados por más de 6 horas, con escasa variabilidad, propensos a malas posturas de cuello y espalda baja.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FACTORES ORGANIZACIONALES -->
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                    <h3 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2"><i data-lucide="users" class="text-amber-600 w-5 h-5"></i> Factores de Riesgo Organizacionales</h3>
+                    <p class="text-xs text-slate-700 mb-4 leading-relaxed">No todo el riesgo es físico; la forma de planificar el trabajo también repercute directamente en tu fatiga y riesgo de lesión:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-amber-200/60 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-900 mb-1 uppercase tracking-wider">Ritmo de Trabajo Elevado</h4>
+                            <p class="text-[11px] text-slate-600">Presión por cumplir cargas rápidas de camiones o cuotas de ensacado apresuran los movimientos y descuidan la postura de seguridad.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-amber-200/60 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-900 mb-1 uppercase tracking-wider">Recuperación Insuficiente</h4>
+                            <p class="text-[11px] text-slate-600">Falta de pausas pautadas para que el tejido muscular y los tendones liberen tensiones e inicien la regeneración de energía celular.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-amber-200/60 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-900 mb-1 uppercase tracking-wider">Jornadas Prolongadas</h4>
+                            <p class="text-[11px] text-slate-600">Turnos extraordinarios de producción sin una adecuada hidratación e incremento de descansos que elevan de forma crítica la fatiga musculoesquelética.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m1')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <button onclick="irSiguienteModulo('m3')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Manipulación de Cargas <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M3. MANIPULACIÓN MANUAL DE CARGAS (MMC) -->
+            <section id="m3" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="scale" class="w-4 h-4"></i> Módulo 3
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Manipulación Manual de Cargas (MMC)</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Leyes, límites recomendados y el Método Cinético Seguro paso a paso.</p>
+                </div>
+
+                <!-- MARCO NORMATIVO LEGAL (Guatemala) -->
+                <div class="bg-emerald-50 border-2 border-emerald-500/80 rounded-2xl p-6 shadow-sm">
+                    <div class="flex gap-4 items-start">
+                        <div class="p-3 bg-emerald-500 text-white rounded-xl">
+                            <i data-lucide="gavel" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-emerald-950 text-base">Acuerdo Gubernativo 229-2014 y sus Reformas (Guatemala)</h3>
+                            <p class="text-xs text-emerald-900 font-medium mt-1 uppercase tracking-wider">Artículos 90 y 91 - Salud y Seguridad Ocupacional</p>
+                            <p class="text-xs text-slate-700 mt-2 leading-relaxed">
+                                Establece las normativas obligatorias para la prevención de riesgos en el manejo manual de cargas en territorio nacional. Dicta parámetros claros sobre límites de peso y la obligación del empleador de proveer mecanismos mecánicos para evitar lesiones en la espalda.
+                            </p>
+                            <div class="mt-4 bg-white/80 p-3 rounded-xl border border-emerald-100 flex items-center gap-3">
+                                <i data-lucide="shield-check" class="text-emerald-600 w-5 h-5 shrink-0"></i>
+                                <span class="text-[11px] text-slate-600 font-medium"><strong>ISO 11228-1:</strong> Norma internacional aplicable que evalúa los límites de levantamiento y transporte manual considerando peso, frecuencia y alcance de la carga de forma segura.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CUÁNDO NO LEVANTAR -->
+                <div class="bg-red-50 border-l-4 border-red-500 rounded-r-2xl p-5">
+                    <h4 class="font-extrabold text-red-800 uppercase text-xs tracking-wider flex items-center gap-1.5 mb-2">
+                        <i data-lucide="alert-octagon" class="w-4 h-4"></i> Regla de Oro: ¿Cuándo NO se debe levantar manualmente?
+                    </h4>
+                    <p class="text-xs text-slate-700 leading-relaxed mb-3">La manipulación manual de cargas está terminantemente prohibida o restringida en las siguientes condiciones de planta:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-600 pl-2">
+                        <div class="flex items-center gap-1.5"><i data-lucide="x" class="text-red-500 w-3.5 h-3.5"></i> Si el peso supera los 25 kg para levantamiento individual regular.</div>
+                        <div class="flex items-center gap-1.5"><i data-lucide="x" class="text-red-500 w-3.5 h-3.5"></i> Si el piso es resbaloso, irregular o inestable.</div>
+                        <div class="flex items-center gap-1.5"><i data-lucide="x" class="text-red-500 w-3.5 h-3.5"></i> Si la carga no posee agarres o asideras seguras.</div>
+                        <div class="flex items-center gap-1.5"><i data-lucide="x" class="text-red-500 w-3.5 h-3.5"></i> En espacios reducidos que impidan flexionar las rodillas.</div>
+                    </div>
+                </div>
+
+                <!-- EVALUACIÓN RÁPIDA DEL RIESGO -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider mb-3">Evaluación Rápida del Riesgo (6 Factores Clave)</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="text-xs text-slate-400 font-bold block uppercase">1. Peso</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">¿Supera el estándar máximo seguro?</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="text-xs text-slate-400 font-bold block uppercase">2. Distancia</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">¿Se transporta lejos del cuerpo?</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="text-xs text-slate-400 font-bold block uppercase">3. Frecuencia</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">¿Cuántas veces por minuto se repite?</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="text-xs text-slate-400 font-bold block uppercase">4. Altura</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">¿El origen está a nivel de suelo u hombros?</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="text-xs text-slate-400 font-bold block uppercase">5. Giro de Tronco</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">¿Involucra torsión al levantar?</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                            <span class="text-xs text-slate-400 font-bold block uppercase">6. Agarre</span>
+                            <p class="text-xs text-slate-700 font-semibold mt-1">¿Es fácil sostener y estabilizar la carga?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIMULADOR INTERACTIVO DEL MÉTODO CINÉTICO -->
+                <div class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800">
+                    <h3 class="font-bold text-base mb-2 flex items-center gap-2"><i data-lucide="refresh-cw" class="text-orange-500 w-5 h-5"></i> Simulador: El Método Cinético Seguro Paso a Paso</h3>
+                    <p class="text-xs text-slate-300 mb-6">Haz clic en los números para aprender la técnica correcta de levantamiento de cargas u objetos.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Botonera de pasos -->
+                        <div class="space-y-2 col-span-1" id="pasos-cineticos">
+                            <button onclick="activarPasoCinetico(1)" class="paso-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold bg-orange-600 text-white flex items-center gap-3 transition-all">
+                                <span class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center font-bold text-[10px]">01</span>
+                                <span>Evaluar la carga</span>
+                            </button>
+                            <button onclick="activarPasoCinetico(2)" class="paso-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-300 flex items-center gap-3 transition-all">
+                                <span class="w-6 h-6 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-[10px]">02</span>
+                                <span>Acercarse al objeto</span>
+                            </button>
+                            <button onclick="activarPasoCinetico(3)" class="paso-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-300 flex items-center gap-3 transition-all">
+                                <span class="w-6 h-6 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-[10px]">03</span>
+                                <span>Base amplia de apoyo</span>
+                            </button>
+                            <button onclick="activarPasoCinetico(4)" class="paso-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-300 flex items-center gap-3 transition-all">
+                                <span class="w-6 h-6 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-[10px]">04</span>
+                                <span>Flexión de caderas/rodillas</span>
+                            </button>
+                            <button onclick="activarPasoCinetico(5)" class="paso-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-300 flex items-center gap-3 transition-all">
+                                <span class="w-6 h-6 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-[10px]">05</span>
+                                <span>Columna Neutra y Agarre</span>
+                            </button>
+                        </div>
+
+                        <!-- Panel de visualización dinámico -->
+                        <div class="col-span-2 bg-slate-950 rounded-xl p-5 border border-slate-800 flex flex-col justify-between" id="panel-pasos-descripcion">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-[10px] font-bold uppercase text-orange-500 tracking-wider">Detalle Técnico del Paso</span>
+                                    <span id="paso-numero-label" class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">Paso 1 de 5</span>
+                                </div>
+                                <h4 id="paso-titulo" class="font-bold text-white text-base">Evaluar la Carga</h4>
+                                <p id="paso-texto-des" class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                    Antes de tocar la carga, evalúa visualmente su tamaño, peso aparente y puntos de agarre. Busca indicios de roturas en el saco de cemento o humedad que pueda desestabilizar la masa del material. Si supera tu capacidad segura de levantamiento, solicita ayuda o un equipo mecánico de asistencia.
+                                </p>
+                            </div>
+                            
+                            <div class="mt-6 p-3 bg-slate-900 rounded-lg border border-slate-800/80 text-[11px] text-orange-400/90 flex gap-2">
+                                <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+                                <span id="paso-tip">Consejo: Recuerda que los ante objetos que pesan mas de 25Kg, puedes pedir ayuda a un compañero.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ERRORES FRECUENTES -->
+                <div class="bg-red-50/50 border border-red-200 rounded-2xl p-5">
+                    <h3 class="font-extrabold text-red-800 text-sm mb-3">¡Cuidado! Los 5 errores más frecuentes</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                        <div class="bg-white p-3 rounded-xl border border-red-100 text-center shadow-sm">
+                            <span class="text-red-500 font-bold block text-lg">1</span>
+                            <h4 class="font-bold text-[11px] text-slate-800 mt-1">Doblar la espalda</h4>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Levantar con las piernas rectas concentrando la tensión en la zona lumbar.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-red-100 text-center shadow-sm">
+                            <span class="text-red-500 font-bold block text-lg">2</span>
+                            <h4 class="font-bold text-[11px] text-slate-800 mt-1">Girar el tronco</h4>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Rotar la columna mientras se sostiene el peso genera hernias de disco.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-red-100 text-center shadow-sm">
+                            <span class="text-red-500 font-bold block text-lg">3</span>
+                            <h4 class="font-bold text-[11px] text-slate-800 mt-1">Levantar con una mano</h4>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Distribución desigual de la fuerza doblando la columna hacia un lado.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-red-100 text-center shadow-sm">
+                            <span class="text-red-500 font-bold block text-lg">4</span>
+                            <h4 class="font-bold text-[11px] text-slate-800 mt-1">Tirones rápidos</h4>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Hacer movimientos bruscos multiplica el impacto del peso por la inercia.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-red-100 text-center shadow-sm">
+                            <span class="text-red-500 font-bold block text-lg">5</span>
+                            <h4 class="font-bold text-[11px] text-slate-800 mt-1">Carga alejada</h4>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Separar el saco del pecho ejerce un efecto de palanca sobre la zona lumbar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m2')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <button onclick="irSiguienteModulo('m4')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Posturas Forzadas <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M4. POSTURAS FORZADAS -->
+            <section id="m4" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="person-standing" class="w-4 h-4"></i> Módulo 4
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Posturas Forzadas</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Cómo evitar posiciones que destruyen las articulaciones lentamente.</p>
+                </div>
+
+                <!-- DEFINICIÓN DE POSTURA FORZADA -->
+                <div class="bg-white border border-slate-200 p-6 rounded-2xl flex flex-col md:flex-row gap-6 items-center">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-base text-slate-900 mb-2">Definición de Posturas Forzadas</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Son aquellas posiciones de trabajo que adoptamos en las cuales una o varias articulaciones salen del rango de confort neutro. Esto genera sobrecarga muscular localizada, fatiga acelerada de tejidos y microdesgarros debido al bloqueo de una circulación fluida.
+                        </p>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-slate-900 text-white p-4 rounded-xl text-center border border-slate-800">
+                        <span class="text-[10px] text-amber-500 font-black uppercase tracking-wider block">Zona de Riesgo Crítico</span>
+                        <p class="text-xs text-slate-300 mt-1">El riesgo aumenta exponencialmente si la postura forzada se mantiene por más de 4 segundos continuos de manera reiterada.</p>
+                    </div>
+                </div>
+
+                <!-- POSTURAS CRÍTICAS EN LA INDUSTRIA -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-red-50/40 p-4 rounded-xl border border-red-150 flex gap-3 items-start">
+                        <span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 animate-ping"></span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Cuello Flexionado</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Mirar fijamente hacia abajo (ej. panel o pantallas de ensacado bajo) por más de 15 grados aumenta el peso real de la cabeza sobre la cervical.</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-50/40 p-4 rounded-xl border border-red-150 flex gap-3 items-start">
+                        <span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 animate-ping"></span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Brazos Elevados</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Trabajar por encima de la altura de los hombros (ej. mantenimiento de tolvas o ductos de transporte) restringe el riego sanguíneo.</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-50/40 p-4 rounded-xl border border-red-150 flex gap-3 items-start">
+                        <span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 animate-ping"></span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Flexión Lumbar</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Inclinarse hacia adelante sin doblar las rodillas para levantar aditivos o raspar pisos fuerza al extremo los discos lumbares.</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-50/40 p-4 rounded-xl border border-red-150 flex gap-3 items-start">
+                        <span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Cuclillas Prolongadas</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Mantenimiento de tuberías de dosificación de concreto a nivel del suelo con las rodillas dobladas al máximo limita la circulación de retorno.</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-50/40 p-4 rounded-xl border border-red-150 flex gap-3 items-start">
+                        <span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0"></span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Trabajo Arrodillado</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Apoyo directo de rótulas en concreto tosco sin rodilleras ni protección, lo que inflama las bursas sinoviales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-50/40 p-4 rounded-xl border border-red-150 flex gap-3 items-start">
+                        <span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0 animate-ping"></span>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Alcances Excesivos</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Estirar demasiado los brazos lejos del tronco para alcanzar llaves de paso o herramientas sobre la mesa de trabajo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONSECUENCIAS MÉDICAS -->
+                <div class="bg-slate-900 text-white rounded-2xl p-5 border border-slate-800">
+                    <h3 class="font-bold text-sm mb-3 flex items-center gap-1.5"><i data-lucide="shield-alert" class="text-rose-500 w-4 h-4"></i> Daños Silenciosos en la Salud</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+                        <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-800">
+                            <span class="font-bold text-xs text-orange-400 block uppercase mb-1">Dolor Lumbar</span>
+                            <p class="text-[10px] text-slate-300">Degeneración discal prematura.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-800">
+                            <span class="font-bold text-xs text-orange-400 block uppercase mb-1">Tendinitis</span>
+                            <p class="text-[10px] text-slate-300">Inflamación aguda de tendones de hombro.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-800">
+                            <span class="font-bold text-xs text-orange-400 block uppercase mb-1">Lesión de Hombro</span>
+                            <p class="text-[10px] text-slate-300">Síndrome del manguito rotador.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-800">
+                            <span class="font-bold text-xs text-orange-400 block uppercase mb-1">Hernias</span>
+                            <p class="text-[10px] text-slate-300">Compresión directa del canal de nervios cervical/lumbar.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-800">
+                            <span class="font-bold text-xs text-orange-400 block uppercase mb-1">Fatiga Crónica</span>
+                            <p class="text-[10px] text-slate-300">Dolor y rigidez difusa al final del turno.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MEDIDAS PREVENTIVAS -->
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6">
+                    <h3 class="font-bold text-slate-900 text-sm mb-3 uppercase tracking-wider flex items-center gap-1.5"><i data-lucide="shield-check" class="text-emerald-600"></i> Medidas Preventivas Esenciales</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="font-bold text-emerald-600 text-xs uppercase block">1. Ajuste del Puesto</span>
+                            <p class="text-[11px] text-slate-600 mt-1">Alinear superficies de carga, mesas de trabajo y paletas de descarga para mantener un plano óptimo de trabajo neutro.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="font-bold text-emerald-600 text-xs uppercase block">2. Uso de Plataformas</span>
+                            <p class="text-[11px] text-slate-600 mt-1">Emplear bancos o escaleras móviles homologadas para evitar estiramientos y elevaciones de brazos forzadas.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="font-bold text-emerald-600 text-xs uppercase block">3. Cambios de Postura</span>
+                            <p class="text-[11px] text-slate-600 mt-1">Evitar fijar el cuerpo en la misma posición por más de 30 minutos; haz estiramientos rápidos preventivos.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm">
+                            <span class="font-bold text-emerald-600 text-xs uppercase block">4. Rotación y Pausas</span>
+                            <p class="text-[11px] text-slate-600 mt-1">Alternar actividades de fuerza con de control operativo y ejecutar las pausas activas obligatorias.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m3')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <button onclick="irSiguienteModulo('m5')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Movimientos Repetitivos <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M5. MOVIMIENTOS REPETITIVOS -->
+            <section id="m5" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Módulo 5
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Movimientos Repetitivos</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Control del desgaste de articulaciones debido a labores cíclicas continuas.</p>
+                </div>
+
+                <!-- DEFINICIÓN DE MOVIMIENTOS REPETITIVOS -->
+                <div class="bg-white border border-slate-200 p-6 rounded-2xl">
+                    <h3 class="font-bold text-base text-slate-900 mb-2">Definición de Movimiento Repetitivo</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Se define como la realización repetitiva de un mismo ciclo de gestos o esfuerzos musculares simples por períodos de tiempo significativos, involucrando grupos musculares pequeños (manos, muñecas, dedos, codos).
+                    </p>
+                </div>
+
+                <!-- FACTORES QUE AUMENTAN EL RIESGO -->
+                <div class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800">
+                    <h3 class="font-bold text-sm mb-4 uppercase tracking-wider flex items-center gap-2"><i data-lucide="alert-triangle" class="text-amber-500 w-5 h-5"></i> Factores de Riesgo Multiplicadores</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-center">
+                        <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-850">
+                            <span class="font-extrabold text-orange-500 text-lg block">Alta Frecuencia</span>
+                            <p class="text-[10px] text-slate-300 mt-1">Más de 30 movimientos idénticos por minuto sin pausas de descompresión.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-850">
+                            <span class="font-extrabold text-orange-500 text-lg block">Fuerza Coexistente</span>
+                            <p class="text-[10px] text-slate-300 mt-1">Hacer el ciclo aplicando mucha fuerza para apretar mangueras o válvulas.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-850">
+                            <span class="font-extrabold text-orange-500 text-lg block">Mala Postura</span>
+                            <p class="text-[10px] text-slate-300 mt-1">Hacer la labor con la muñeca desviada de su eje neutro natural.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-850">
+                            <span class="font-extrabold text-orange-500 text-lg block">Vibración</span>
+                            <p class="text-[10px] text-slate-300 mt-1">Agregar la vibración de una máquina rotatoria de mano al esfuerzo.</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-850">
+                            <span class="font-extrabold text-orange-500 text-lg block">Exposición</span>
+                            <p class="text-[10px] text-slate-300 mt-1">Mantener la labor repetitiva por más de 2 horas sin alternar tareas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LESIONES FRECUENTES -->
+                <div class="bg-red-50/50 border border-red-200 rounded-2xl p-5">
+                    <h3 class="font-extrabold text-red-800 text-sm mb-3">Lesiones Clínicas Más Comunes</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Tendinitis</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">La fricción continua desgasta e inflama las vainas de los tendones de la mano o brazo produciendo rigidez dolorosa extrema.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Epicondilitis (Codo de Tenista)</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Dolor punzante en la parte externa del codo debido a esfuerzos reiterados de rotación y agarre.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Túnel Carpiano</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Compresión del nervio mediano a la altura de la muñeca. Provoca hormigueo, debilidad de agarre y entumecimiento permanente de la mano.</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm">
+                            <h4 class="font-bold text-xs text-slate-900 uppercase">Tenosinovitis</h4>
+                            <p class="text-[11px] text-slate-600 mt-1">Inflamación aguda de la membrana que cubre y lubrica el tendón, impidiendo el correcto deslizamiento muscular.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PREVENCIÓN -->
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6">
+                    <h3 class="font-bold text-slate-900 text-sm mb-3 uppercase tracking-wider flex items-center gap-1.5"><i data-lucide="shield-check" class="text-emerald-600"></i> Estrategias de Prevención</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-center">
+                        <div class="bg-white p-3 rounded-xl border border-emerald-150 shadow-sm">
+                            <span class="font-bold text-emerald-700 text-xs block">Automatización</span>
+                            <p class="text-[10px] text-slate-600 mt-1">Reemplazo de tareas manuales con ensacadoras automáticas.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-150 shadow-sm">
+                            <span class="font-bold text-emerald-700 text-xs block">Herramientas</span>
+                            <p class="text-[10px] text-slate-600 mt-1">Uso de pinzas y mazos ergonómicos con absorción de impacto.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-150 shadow-sm">
+                            <span class="font-bold text-emerald-700 text-xs block">Rotación</span>
+                            <p class="text-[10px] text-slate-600 mt-1">Alternancia regular entre paletización y otras tareas operativas.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-150 shadow-sm">
+                            <span class="font-bold text-emerald-700 text-xs block">Pausas Estructuradas</span>
+                            <p class="text-[10px] text-slate-600 mt-1">Ejecución de micropausas de reposo de articulaciones cada 50 minutos.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-150 shadow-sm">
+                            <span class="font-bold text-emerald-700 text-xs block">Variabilidad</span>
+                            <p class="text-[10px] text-slate-600 mt-1">Diseñar tareas combinadas que eviten fijar un único movimiento.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m4')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <button onclick="irSiguienteModulo('m6')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Empuje y Arrastre <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M6. EMPUJE Y ARRASTRE DE CARGAS -->
+            <section id="m6" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="arrow-right-left" class="w-4 h-4"></i> Módulo 6
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Empuje y Arrastre de Cargas</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Mecánica correcta del uso de equipos auxiliares de arrastre en la planta.</p>
+                </div>
+
+                <!-- LEVANTAR VS EMPUJAR -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6">
+                    <h3 class="font-bold text-slate-900 text-base mb-3">La Diferencia Física: ¿Por qué es mejor Empujar que Levantar?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-4 bg-orange-50/50 rounded-xl border border-orange-100">
+                            <h4 class="font-bold text-orange-800 text-xs uppercase mb-1">Al Levantar Manualmente</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Tu cuerpo debe contrarrestar directamente la fuerza de gravedad del peso completo, comprimiendo las vértebras lumbares con una fuerza de palanca desproporcionada.
+                            </p>
+                        </div>
+                        <div class="p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                            <h4 class="font-bold text-emerald-800 text-xs uppercase mb-1">Al Empujar con Carretilla / Troquet</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Utilizas tu masa corporal para contrarrestar la fricción y la inercia del movimiento horizontal. La columna trabaja de forma alineada y neutra sin soportar el peso de forma vertical directa.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHECKLIST DE INSPECCIÓN DE EQUIPOS -->
+                <div class="bg-slate-900 text-white rounded-2xl p-6 border border-slate-800">
+                    <h3 class="font-bold text-sm mb-4 uppercase tracking-wider flex items-center gap-2"><i data-lucide="check-square" class="text-orange-500 w-5 h-5"></i> Guía de Uso del Troquet y Carretillas</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="p-1.5 bg-orange-500 rounded-lg text-white mt-0.5"><i data-lucide="hand" class="w-4 h-4"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-xs">Posición Correcta de las Manos</h4>
+                                    <p class="text-[11px] text-slate-300 mt-0.5">Sujetar los mangos a una altura comprendida entre tus caderas y tus hombros. Nunca empujes inclinando la cabeza demasiado hacia abajo.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="p-1.5 bg-orange-500 rounded-lg text-white mt-0.5"><i data-lucide="trending-up" class="w-4 h-4"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-xs">Dirección de la Fuerza</h4>
+                                    <p class="text-[11px] text-slate-300 mt-0.5">La fuerza debe aplicarse utilizando el peso corporal inclinado hacia adelante. Evita dar tirones bruscos con los brazos estirados.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="p-1.5 bg-orange-500 rounded-lg text-white mt-0.5"><i data-lucide="refresh-cw" class="w-4 h-4"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-xs">Inspección Obligatoria de Ruedas</h4>
+                                    <p class="text-[11px] text-slate-300 mt-0.5">Revisar el inflado de los neumáticos de la carretilla y la fluidez de giro del eje de rotación. Una rueda atascada exige un 300% más de fuerza.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="p-1.5 bg-orange-500 rounded-lg text-white mt-0.5"><i data-lucide="shield" class="w-4 h-4"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-xs">Monitoreo del Estado del Piso</h4>
+                                    <p class="text-[11px] text-slate-300 mt-0.5">Antes de rodar, limpia derrames de cemento en polvo o gravilla suelta que aumente la resistencia al rodamiento y el riesgo de tropiezo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m5')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <button onclick="irSiguienteModulo('m7')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Ayudas Mecánicas <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M7. AYUDAS MECÁNICAS -->
+            <section id="m7" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="truck" class="w-4 h-4"></i> Módulo 7
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Ayudas Mecánicas</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Equipamiento tecnológico e industrial para eliminar por completo la carga manual.</p>
+                </div>
+
+                <!-- CUÁNDO UTILIZARLAS -->
+                <div class="bg-white border border-slate-200 p-6 rounded-2xl">
+                    <h3 class="font-bold text-slate-900 text-base mb-4 flex items-center gap-2"><i data-lucide="shield" class="text-orange-600"></i> ¿Cuándo es obligatorio dejar de levantar manualmente?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                            <h4 class="font-bold text-xs text-amber-800 uppercase mb-1">Criterio de Peso Crítico</h4>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                Cualquier carga que supere los <strong>25 kg</strong> de peso (como la mayoría de sacos industriales de cemento estándar, que suelen pesar de 42.5 kg o más) <strong>debe</strong> ser levantada utilizando ayudas mecánicas o requiriendo ayuda de otra persona bajo un estricto protocolo de trabajo coordinado.
+                            </p>
+                        </div>
+                        <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+                            <h4 class="font-bold text-xs text-emerald-800 uppercase mb-1">Criterio de Frecuencia de Carga</h4>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                Incluso si la carga es liviana (por ejemplo, bolsas pequeñas de aditivos de 10 kg), si se requiere realizar el movimiento de levantamiento más de 5 veces por minuto por un lapso acumulado de 1 hora, se debe exigir asistencia mecanizada o de arrastre continuo.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OPCIONES DE AYUDA MECÁNICA -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex gap-4 items-start card-interactive">
+                        <div class="p-2.5 bg-orange-100 text-orange-600 rounded-xl"><i data-lucide="construction" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Troquet o Diablitos</h4>
+                            <p class="text-xs text-slate-500 mt-1">Especial para mover cargas u objetos de forma ágil en distancias intermedias y pasillos estrechos.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex gap-4 items-start card-interactive">
+                        <div class="p-2.5 bg-orange-100 text-orange-600 rounded-xl"><i data-lucide="package" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Carretillas Estándar</h4>
+                            <p class="text-xs text-slate-500 mt-1">Óptimas para el transporte de gravilla, arena fina o escombros de concreto sueltos en zonas de bacheo.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex gap-4 items-start card-interactive">
+                        <div class="p-2.5 bg-orange-100 text-orange-600 rounded-xl"><i data-lucide="copy" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Transpaletas (Pallets)</h4>
+                            <p class="text-xs text-slate-500 mt-1">Manuales o eléctricas, ideales para trasladar estibas completas de sacos de cemento, cargas de gran volumeno u objetos de dimensiones grantes en bodegas amplias.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex gap-4 items-start card-interactive">
+                        <div class="p-2.5 bg-orange-100 text-orange-600 rounded-xl"><i data-lucide="arrow-up" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Grúas y Polipastos</h4>
+                            <p class="text-xs text-slate-500 mt-1">Mecanismos suspendidos de elevación para mover aditivos pesados o componentes mecánicos de la molienda.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-5 rounded-2xl flex gap-4 items-start card-interactive">
+                        <div class="p-2.5 bg-orange-100 text-orange-600 rounded-xl"><i data-lucide="repeat" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Bandas Transportadoras</h4>
+                            <p class="text-xs text-slate-500 mt-1">Sistemas de transporte continuo para alimentar la tolva sin esfuerzo muscular directo por parte del operador.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m6')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <button onclick="irSiguienteModulo('m8')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Organización del Trabajo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M8. ORGANIZACIÓN DEL TRABAJO -->
+            <section id="m8" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="calendar" class="w-4 h-4"></i> Módulo 8
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Organización del Trabajo</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Pausas activas, rotación y buenos hábitos para el cuidado corporal a largo plazo.</p>
+                </div>
+
+                <!-- CONCEPTOS DE PLANIFICACIÓN -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                        <h3 class="font-bold text-base text-slate-900 mb-3 flex items-center gap-2"><i data-lucide="refresh-cw" class="text-orange-500"></i> Rotación de Puestos</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                            La rotación programada es clave para evitar la fatiga acumulada en los mismos grupos musculares. Por ejemplo, alternar al personal operativo entre el área de ensacado manual, el puesto de control de silos automatizado y el despacho vehicular.
+                        </p>
+                        <span class="text-[11px] text-slate-400 block font-mono">Rotación recomendada: Cada 2 horas de actividad física intensa.</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+                        <h3 class="font-bold text-base text-slate-900 mb-3 flex items-center gap-2"><i data-lucide="clock" class="text-orange-500"></i> Pausas Activas y Micropausas</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                            Las pausas activas son pequeños espacios de 5 a 10 minutos para realizar estiramientos suaves que estimulan la circulación y relajan la tensión acumulada. Las micropausas son paradas de 10 a 20 segundos para relajar las manos y soltar los hombros tras tareas repetitivas.
+                        </p>
+                        <span class="text-[11px] text-slate-400 block font-mono">Frecuencia recomendada: Pausas activas al inicio del turno y tras el almuerzo.</span>
+                    </div>
+                </div>
+
+                <!-- REPORTE TEMPRANO Y FISICO -->
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                    <h3 class="font-bold text-slate-900 text-sm mb-3">El Valor de un Reporte Temprano de Molestias</h3>
+                    <p class="text-xs text-slate-700 leading-relaxed mb-4">
+                        Muchos colaboradores deciden ignorar un dolor sordo y leve en la espalda baja o en la muñeca pensando que "pasará solo". Esto suele evolucionar a hernias o tendinitis graves imposibles de revertir sin intervención quirúrgica. <strong>El reporte temprano previene la cronicidad y permite la adecuación oportuna del puesto.</strong>
+                    </p>
+                    <div class="p-4 bg-white rounded-xl border border-amber-200/60 flex gap-4 items-start shadow-sm">
+                        <div class="p-2 bg-amber-100 text-amber-700 rounded-lg"><i data-lucide="dumbbell" class="w-5 h-5"></i></div>
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-900">Importancia del Acondicionamiento Físico</h4>
+                            <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">
+                                Mantener músculos centrales (core abdominal y lumbar) fuertes mediante acondicionamiento y buena nutrición actúa como una faja anatómica natural. La mejor forma de proteger tu espalda es fortaleciendo tus músculos abdominales y piernas de forma consistente.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m7')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <!-- ENLACE AL JUEGO DE RETROALIMENTACIÓN -->
+                    <button onclick="irSiguienteModulo('m9')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all shadow-md shadow-amber-600/15">
+                        ¡Iniciar Reto: Mito o Realidad! <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M9. MITO / REALIDAD - MÓDULO INTERACTIVO DE RETROALIMENTACIÓN -->
+            <section id="m9" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-amber-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="gamepad-2" class="w-4 h-4"></i> Módulo 9
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Evaluación Dinámica: ¿Mito o Realidad?</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Pon a prueba tus conocimientos ergonómicos y recibe retroalimentación inmediata sobre mitos comunes de la salud laboral.</p>
+                </div>
+
+                <!-- INSTRUCCIONES DEL JUEGO -->
+                <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-6 border border-slate-700 flex flex-col md:flex-row gap-6 items-center">
+                    <div class="flex-1">
+                        <h3 class="font-extrabold text-base text-amber-400">Instrucciones del Reto Técnico</h3>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Lee cada una de las afirmaciones que se presentan a continuación. Decide si se trata de una <strong>Realidad (Verdadero)</strong> o de un <strong>Mito (Falso)</strong> haciendo clic en el botón correspondiente. El sistema te otorgará la respuesta correcta y la explicación médica y legal al instante.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-slate-800 rounded-xl border border-slate-700 text-center w-full md:w-fit shrink-0">
+                        <span class="text-[10px] text-slate-400 font-bold block uppercase">Estrellas Conseguidas</span>
+                        <div class="flex justify-center gap-1 mt-1 text-amber-400" id="mitos-score-container">
+                            <i data-lucide="star" class="w-5 h-5 opacity-40"></i>
+                            <i data-lucide="star" class="w-5 h-5 opacity-40"></i>
+                            <i data-lucide="star" class="w-5 h-5 opacity-40"></i>
+                            <i data-lucide="star" class="w-5 h-5 opacity-40"></i>
+                            <i data-lucide="star" class="w-5 h-5 opacity-40"></i>
+                            <i data-lucide="star" class="w-5 h-5 opacity-40"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTENEDOR DE TARJETAS DE MITOS/REALIDADES -->
+                <div class="space-y-4" id="contenedor-juego-mitos">
+                    
+                    <!-- AFIRMACIÓN 1: Fajas lumbares (Super Crítico) -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 transition-all" id="tarjeta-mito-1">
+                        <div class="flex justify-between items-start gap-3">
+                            <div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">Pregunta 1 de 6 • EPP y Accesorios</span>
+                                <h4 class="font-extrabold text-slate-900 text-sm md:text-base mt-1.5">"El uso de fajas lumbares o cinturones de soporte previene de forma efectiva las lesiones en la columna y me permite levantar sacos más pesados."</h4>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4" id="botones-mito-1">
+                            <button onclick="responderMito(1, false)" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Es un MITO (Falso)</button>
+                            <button onclick="responderMito(1, true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Es una REALIDAD (Verdadero)</button>
+                        </div>
+                        <div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 hidden" id="feedback-mito-1">
+                            <div class="flex gap-2 text-emerald-800 items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 shrink-0 text-emerald-600 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-bold text-xs">¡Excelente Respuesta! Es un MITO rotundo.</h5>
+                                    <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                        Las <strong>fajas lumbares NO previenen lesiones en trabajadores sanos</strong> según la OMS, el NIOSH y estudios médicos globales. Al contrario, crean una <strong>falsa sensación de seguridad</strong> que lleva a cargar pesos excesivos, debilitan crónicamente los músculos abdominales y de la espalda por falta de uso ("atrofia por desuso") e incrementan la presión arterial intraabdominal. Solo deben utilizarse bajo estricta indicación de un médico rehabilitador clínico tras una cirugía o lesión previa.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AFIRMACIÓN 2: Levantamiento correcto -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 transition-all" id="tarjeta-mito-2">
+                        <div class="flex justify-between items-start gap-3">
+                            <div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">Pregunta 2 de 6 • Levantamiento Correcto</span>
+                                <h4 class="font-extrabold text-slate-900 text-sm md:text-base mt-1.5">"Para levantar un saco de cemento desde el suelo, la fuerza se debe originar siempre en la flexión y empuje de las piernas, nunca doblando la espalda."</h4>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4" id="botones-mito-2">
+                            <button onclick="responderMito(2, false)" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Es un MITO (Falso)</button>
+                            <button onclick="responderMito(2, true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Es una REALIDAD (Verdadero)</button>
+                        </div>
+                        <div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 hidden" id="feedback-mito-2">
+                            <div class="flex gap-2 text-emerald-800 items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 shrink-0 text-emerald-600 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-bold text-xs">¡Correcto! Es una gran REALIDAD.</h5>
+                                    <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                        Los cuádriceps y glúteos de tus piernas son los músculos más fuertes y de mayor tamaño de tu cuerpo, diseñados para empujar grandes fuerzas contra la gravedad. Al flexionar tus piernas mantienes tu columna alineada en su forma natural de "S", evitando compresión crítica de discos.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AFIRMACIÓN 3: Transporte -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 transition-all" id="tarjeta-mito-3">
+                        <div class="flex justify-between items-start gap-3">
+                            <div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">Pregunta 3 de 6 • Transporte de Carga</span>
+                                <h4 class="font-extrabold text-slate-900 text-sm md:text-base mt-1.5">"El saco de cemento o la caja de aditivos debe transportarse preferentemente apoyándose sobre el hombro para liberar el pecho y respirar mejor."</h4>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4" id="botones-mito-3">
+                            <button onclick="responderMito(3, false)" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Es un MITO (Falso)</button>
+                            <button onclick="responderMito(3, true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Es una REALIDAD (Verdadero)</button>
+                        </div>
+                        <div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 hidden" id="feedback-mito-3">
+                            <div class="flex gap-2 text-emerald-800 items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 shrink-0 text-emerald-600 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-bold text-xs">¡Así es! Es un MITO muy extendido.</h5>
+                                    <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                        Transportar cargas asimétricas apoyadas sobre un solo hombro desvía de forma forzada el eje de tu columna, creando cargas excéntricas brutales en los discos lumbares y sobrecargando los músculos cervicales. <strong>El saco debe transportarse pegado firmemente al pecho, abrazado con ambos brazos.</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AFIRMACIÓN 4: Descenso de la carga -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 transition-all" id="tarjeta-mito-4">
+                        <div class="flex justify-between items-start gap-3">
+                            <div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">Pregunta 4 de 6 • Descenso Seguro</span>
+                                <h4 class="font-extrabold text-slate-900 text-sm md:text-base mt-1.5">"Al depositar el saco en el suelo, se puede dejar caer libremente desde la cintura o doblar bruscamente la espalda si el saco ya está abajo."</h4>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4" id="botones-mito-4">
+                            <button onclick="responderMito(4, false)" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Es un MITO (Falso)</button>
+                            <button onclick="responderMito(4, true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Es una REALIDAD (Verdadero)</button>
+                        </div>
+                        <div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 hidden" id="feedback-mito-4">
+                            <div class="flex gap-2 text-emerald-800 items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 shrink-0 text-emerald-600 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-bold text-xs">¡Correcto! Es un MITO de alto peligro.</h5>
+                                    <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                        El descenso es biomecánicamente igual de peligroso que el ascenso. Debes bajar el objeto de manera controlada utilizando de nuevo la fuerza de tus rodillas y manteniendo la columna neutra. Dejar caer el saco bruscamente o doblar la espalda baja al final puede detonar un lumbago instantáneo.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AFIRMACIÓN 5: Trabajo en equipo -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 transition-all" id="tarjeta-mito-5">
+                        <div class="flex justify-between items-start gap-3">
+                            <div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">Pregunta 5 de 6 • Trabajo en Equipo</span>
+                                <h4 class="font-extrabold text-slate-900 text-sm md:text-base mt-1.5">"Cuando levantamos una estiba o un motor entre dos colaboradores, el levantamiento debe ser coordinado y sincronizado, comunicándonos en voz alta."</h4>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4" id="botones-mito-5">
+                            <button onclick="responderMito(5, false)" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Es un MITO (Falso)</button>
+                            <button onclick="responderMito(5, true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Es una REALIDAD (Verdadero)</button>
+                        </div>
+                        <div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 hidden" id="feedback-mito-5">
+                            <div class="flex gap-2 text-emerald-800 items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 shrink-0 text-emerald-600 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-bold text-xs">¡Excelente! Es una REALIDAD incuestionable.</h5>
+                                    <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                        El levantamiento en equipo requiere sincronía total. Si uno de los dos levanta antes o a una velocidad distinta, se produce un desbalance crítico donde uno de los trabajadores llegará a soportar el 90% de la carga real de forma súbita.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AFIRMACIÓN 6: Método cinético -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 transition-all" id="tarjeta-mito-6">
+                        <div class="flex justify-between items-start gap-3">
+                            <div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase tracking-wider font-mono">Pregunta 6 de 6 • Método Cinético</span>
+                                <h4 class="font-extrabold text-slate-900 text-sm md:text-base mt-1.5">"El Método Cinético de levantamiento de cargas de forma segura es exclusivo para levantar cargas de mucho peso y no es necesario para cargas ligeras."</h4>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-4" id="botones-mito-6">
+                            <button onclick="responderMito(6, false)" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="x-circle" class="w-4 h-4"></i> Es un MITO (Falso)</button>
+                            <button onclick="responderMito(6, true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Es una REALIDAD (Verdadero)</button>
+                        </div>
+                        <div class="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100 hidden" id="feedback-mito-6">
+                            <div class="flex gap-2 text-emerald-800 items-start">
+                                <i data-lucide="check-circle" class="w-5 h-5 shrink-0 text-emerald-600 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-bold text-xs">¡Felicitaciones! Es un absoluto MITO.</h5>
+                                    <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                        Las microlesiones en los discos se acumulan. Levantar cargas ligeras de forma incorrecta repetidamente durante meses o años (efecto acumulativo) debilita tu columna cervical y lumbar al igual que un único gran esfuerzo, lo que genera lesiones graves crónicas a largo plazo.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m8')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <button onclick="irSiguienteModulo('m10')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                        Siguiente: Identificación de Peligros <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M10. IDENTIFICACIÓN DE PELIGROS EN CAMPO -->
+            <section id="m10" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="eye" class="w-4 h-4"></i> Módulo 10
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Identificación de Peligros Ergonómicos</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Aprende a reconocer y reportar de manera oportuna desviaciones y peligros físicos en la zona de trabajo.</p>
+                </div>
+
+                <!-- DIAGRAMA INTERACTIVO DE PELIGROS (MOCK Escenario Cementera) -->
+                <div class="bg-slate-950 rounded-2xl p-6 border border-slate-800 text-white">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                        <div>
+                            <span class="text-[10px] text-orange-500 font-bold tracking-widest uppercase block">Simulador de Planta Cementera</span>
+                            <h3 class="font-bold text-base mt-1">Inspección de Seguridad: Zona de Despacho y Ensacado</h3>
+                        </div>
+                        <span class="text-xs bg-slate-900 text-slate-400 border border-slate-800 px-3 py-1 rounded-lg">Selecciona cada tarjeta para analizar la solución del peligro</span>
+                    </div>
+
+                    <!-- RECONOCIMIENTO DE PELIGROS -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Peligro 1 -->
+                        <button onclick="mostrarPeligroEscena('peso')" class="text-left bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-orange-500 hover:bg-slate-900 transition-all">
+                            <span class="text-[10px] text-red-500 font-bold block">PELIGRO CRÍTICO A</span>
+                            <h4 class="font-bold text-xs text-white mt-1">Peso Excesivo sin Apoyo</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Sacos de cemento de 42.5 kg manipulados individualmente.</p>
+                        </button>
+                        <!-- Peligro 2 -->
+                        <button onclick="mostrarPeligroEscena('espacio')" class="text-left bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-orange-500 hover:bg-slate-900 transition-all">
+                            <span class="text-[10px] text-red-500 font-bold block">PELIGRO CRÍTICO B</span>
+                            <h4 class="font-bold text-xs text-white mt-1">Espacios Reducidos de Carga</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Plataforma de molienda con tuberías que obstaculizan la flexión.</p>
+                        </button>
+                        <!-- Peligro 3 -->
+                        <button onclick="mostrarPeligroEscena('agarres')" class="text-left bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-orange-500 hover:bg-slate-900 transition-all">
+                            <span class="text-[10px] text-amber-500 font-bold block">PELIGRO BIOMECÁNICO</span>
+                            <h4 class="font-bold text-xs text-white mt-1">Falta de Agarres / Desgarros</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Envases de aditivos rotos o resbaladizos sin asideras.</p>
+                        </button>
+                        <!-- Peligro 4 -->
+                        <button onclick="mostrarPeligroEscena('pisos')" class="text-left bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-orange-500 hover:bg-slate-900 transition-all">
+                            <span class="text-[10px] text-amber-500 font-bold block">PELIGRO BIOMECÁNICO</span>
+                            <h4 class="font-bold text-xs text-white mt-1">Pisos Irregulares / Polvo</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Acumulación de clinker o concreto endurecido en la ruta.</p>
+                        </button>
+                        <!-- Peligro 5 -->
+                        <button onclick="mostrarPeligroEscena('luz')" class="text-left bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-orange-500 hover:bg-slate-900 transition-all">
+                            <span class="text-[10px] text-slate-400 font-bold block">PELIGRO AMBIENTAL</span>
+                            <h4 class="font-bold text-xs text-white mt-1">Iluminación Deficiente</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Área de dosificación de silos con reflectores fundidos.</p>
+                        </button>
+                        <!-- Peligro 6 -->
+                        <button onclick="mostrarPeligroEscena('obstaculos')" class="text-left bg-slate-900/60 p-4 rounded-xl border border-slate-800 hover:border-orange-500 hover:bg-slate-900 transition-all">
+                            <span class="text-[10px] text-slate-400 font-bold block">PELIGRO AMBIENTAL</span>
+                            <h4 class="font-bold text-xs text-white mt-1">Obstáculos y Riesgo de Caída</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Tarimas de madera apiladas de forma desordenada en zona de paso.</p>
+                        </button>
+                    </div>
+
+                    <!-- Panel Dinámico de Análisis de Peligros en Planta -->
+                    <div class="mt-6 p-5 bg-slate-900 rounded-xl border border-slate-800" id="panel-analisis-peligro">
+                        <div class="flex items-start gap-4">
+                            <div class="p-3 bg-slate-800 text-orange-500 rounded-xl" id="icono-peligro-analisis">
+                                <i data-lucide="eye" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-white" id="titulo-peligro-analisis">Selecciona un peligro del panel superior</h4>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed" id="descripcion-peligro-analisis">
+                                    En la planta de cemento abundan las condiciones variables de riesgo. Aprender a detectarlas a tiempo evita incidentes severos en tu cuerpo o en tus compañeros de turno.
+                                </p>
+                                <div class="mt-3 p-3 bg-slate-950 rounded-lg hidden" id="solucion-peligro-container">
+                                    <span class="text-[10px] text-emerald-500 font-bold tracking-widest uppercase block">Medida de Control SSO Recomendada:</span>
+                                    <p class="text-xs text-slate-300 mt-1" id="solucion-peligro-texto"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-between pt-4">
+                    <button onclick="irSiguienteModulo('m9')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                    </button>
+                    <!-- ENLACE A EVALUACIÓN FINAL -->
+                    <button onclick="irSiguienteModulo('m11')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all shadow-md shadow-emerald-600/15">
+                        ¡Ir a la Evaluación Final! <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- M11. EVALUACIÓN FINAL -->
+            <section id="m11" class="modulo space-y-6">
+                <div class="border-b border-slate-200 pb-5">
+                    <div class="flex items-center gap-2 text-xs text-emerald-600 font-bold uppercase tracking-widest mb-1.5">
+                        <i data-lucide="graduation-cap" class="w-4 h-4"></i> Módulo 11
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Evaluación Final de Competencias</h2>
+                    <p class="text-slate-600 mt-1 text-sm md:text-base">Completa el cuestionario oficial obligatorio de acreditación de SSO.</p>
+                </div>
+
+                <!-- IFRAME DE MICROSOFT FORMS RESPONSIVO -->
+                <div class="w-full bg-white border border-slate-200 rounded-2xl p-4 md:p-6 shadow-md flex flex-col items-center">
+                    <div class="w-full max-w-4xl bg-slate-50 rounded-xl overflow-hidden border border-slate-200 relative min-h-[550px] shadow-inner">
+                        <!-- INTEGRACIÓN DE MICROSOFT FORMS CON PARÁMETRO EMBED -->
+                        <iframe width="100%" height="600px" src="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=R74bQeX7JUCmrieWPa2zRnkQANe8zvtBtjOVN904RcNUNU85NUhXVzRaSkhIWE9ORlExT1dINUc2TS4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" style="border: none; width: 100%; min-height: 600px;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                    </div>
+                    
+                    <div class="mt-4 flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+                        <span>Conexión de evaluación encriptada • Registro de SSO Cementera 2026</span>
+                    </div>
+                </div>
+
+                <!-- NOTA DE CIERRE -->
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 text-center">
+                    <h4 class="font-extrabold text-emerald-900 uppercase text-xs tracking-wider">¿Completaste la Evaluación?</h4>
+                    <p class="text-xs text-slate-700 mt-1 leading-relaxed">Una vez enviado el cuestionario de Microsoft Forms, tus resultados se registrarán automáticamente en el sistema del departamento de SSO para la entrega de tu certificado de aptitud preventiva.</p>
+                </div>
+
+                <!-- BOTONES DE NAVEGACIÓN -->
+                <div class="flex justify-start pt-4">
+                    <button onclick="irSiguienteModulo('m10')" class="border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver a Identificación de Peligros
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT: Lógica de Interacciones y Flujo de Módulos -->
+    <script>
+        // Lista completa de ID de módulos ordenados para calcular progresos
+        const modulosOrdenados = ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11'];
+
+        // Carga inicial y construcción de iconos con Lucide
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            actualizarProgresoGeneral('m1');
+        });
+
+        // Toggle del sidebar en vista móvil
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Cambiar de módulo al hacer clic en el menú lateral
+        function cambiarModulo(idModulo, boton) {
+            // Ocultar todos los módulos
+            document.querySelectorAll('.modulo').forEach(m => {
+                m.classList.remove('activo');
+            });
+            
+            // Mostrar módulo seleccionado con animación suave
+            const modSeleccionado = document.getElementById(idModulo);
+            if (modSeleccionado) {
+                modSeleccionado.classList.add('activo');
+                // Auto-scroll hacia la cabecera del contenido
+                document.querySelector('.flex-1.flex-col').scrollTop = 0;
+            }
+            
+            // Restablecer estilos de todos los botones del menú lateral a inactivo
+            document.querySelectorAll('.menu-btn').forEach((btn, index) => {
+                const stepNum = index + 1;
+                // Si es el módulo de M9 (Mitos) o M11 (Evaluación) los tratamos con un pequeño distintivo visual
+                if (stepNum === 9) {
+                    btn.className = "menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent hover:border-amber-500/30";
+                } else if (stepNum === 11) {
+                    btn.className = "menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent hover:border-emerald-500/30";
+                } else {
+                    btn.className = "menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/60";
+                }
+                
+                // Restablecer el número de paso a estilo oscuro
+                const badge = btn.querySelector('span:first-child');
+                if (badge) {
+                    badge.className = "w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center text-[10px]";
+                    if (stepNum === 9) badge.classList.add('text-amber-500');
+                    if (stepNum === 11) badge.classList.add('text-emerald-500');
+                }
+            });
+            
+            // Si el botón no viene explícitamente (llamada por función interna), lo buscamos
+            if (!boton) {
+                const botones = document.querySelectorAll('.menu-btn');
+                const idx = modulosOrdenados.indexOf(idModulo);
+                if (idx !== -1) {
+                    boton = botones[idx];
+                }
+            }
+
+            // Aplicar estilo activo al botón seleccionado
+            if (boton) {
+                const stepIndex = modulosOrdenados.indexOf(idModulo) + 1;
+                if (stepIndex === 9) {
+                    boton.className = "menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-white bg-amber-600 shadow-lg shadow-amber-600/20";
+                } else if (stepIndex === 11) {
+                    boton.className = "menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-white bg-emerald-600 shadow-lg shadow-emerald-600/20";
+                } else {
+                    boton.className = "menu-btn w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-white bg-orange-600 shadow-lg shadow-orange-600/20";
+                }
+                const badge = boton.querySelector('span:first-child');
+                if (badge) {
+                    badge.className = "w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-[10px] text-white";
+                }
+            }
+            
+            // Cerrar sidebar de móviles al seleccionar módulo
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+
+            // Actualizar la barra de progreso general
+            actualizarProgresoGeneral(idModulo);
+            
+            // Volver a renderizar iconos de Lucide por si se crearon elementos
+            lucide.createIcons();
+        }
+
+        // Cambiar módulo desde los botones de pie de página
+        function irSiguienteModulo(idSiguiente) {
+            cambiarModulo(idSiguiente);
+        }
+
+        // Actualizar la barra de progreso dinámico del Sidebar
+        function actualizarProgresoGeneral(idModulo) {
+            const index = modulosOrdenados.indexOf(idModulo);
+            if (index !== -1) {
+                const porcen = Math.round(((index + 1) / modulosOrdenados.length) * 100);
+                document.getElementById('progreso-barra').style.width = porcen + '%';
+                document.getElementById('progreso-texto').innerText = `Módulo ${index + 1} de 11 (${porcen}%)`;
+            }
+        }
+
+        // LÓGICA MÓDULO 3: Simulador del Método Cinético Paso a Paso
+        const datosPasosCinetico = {
+            1: {
+                titulo: "Paso 1: Evaluar la Carga",
+                texto: "Antes de tocar la carga, evalúa visualmente su tamaño, peso aparente y puntos de agarre. Busca indicios de roturas en el saco de cemento o humedad que pueda desestabilizar la masa del material. Si supera tu capacidad segura de levantamiento, solicita ayuda o un equipo mecánico de asistencia.",
+                tip: "Consejo: Recuerda que debe usar guantes para mejorar el agarre de los objetos."
+            },
+            2: {
+                titulo: "Paso 2: Acercarse al Saco u Objeto",
+                texto: "Colócate lo más cerca posible de la carga u objeto. Si dejas la carga alejada de tu cuerpo, tu columna se verá forzada a hacer un efecto de palanca (multiplicando el peso real del saco en tu espalda baja hasta por 10 veces). Tus pies deben rodear ligeramente el objeto si se encuentra en el suelo.",
+                tip: "Consejo: Mantener la carga cerca reduce drásticamente el momento de fuerza sobre tus vértebras lumbares."
+            },
+            3: {
+                titulo: "Paso 3: Base Amplia de Apoyo",
+                texto: "Separa tus pies a una distancia aproximada del ancho de tus hombros para garantizar una base estable y firme de sustentación. Coloca un pie ligeramente más adelante que el otro en dirección de la marcha que vas a emprender para guiar el movimiento sin tambalearte.",
+                tip: "Consejo: Un apoyo asimétrico balanceado estabiliza tu centro de gravedad de forma segura y natural."
+            },
+            4: {
+                titulo: "Paso 4: Flexión de Caderas y Rodillas",
+                texto: "Dobla tus caderas y tus rodillas manteniendo la espalda lo más recta y erguida posible. ¡Nunca dobles la columna! Desciende tu cuerpo como si hicieras una sentadilla controlada. Esta posición carga el esfuerzo en tus piernas y protege tu columna.",
+                tip: "Consejo: Tus piernas son los amortiguadores y motores naturales de tu cuerpo. ¡Úsalos siempre!"
+            },
+            5: {
+                titulo: "Paso 5: Columna Neutra, Sujeción Firme y Levantamiento",
+                texto: "Sujeta el saco firmemente con la palma de las manos completa (no solo con la punta de los dedos). Mantén la columna vertebral neutra, toma aire para contraer el abdomen y levántate estirando tus piernas de manera fluida y suave sin dar tirones bruscos. Sostén el saco pegado a tu pecho.",
+                tip: "Consejo: Contraer el abdomen antes del levantamiento estabiliza la pelvis y el soporte muscular de tu espalda."
+            }
+        };
+
+        function activarPasoCinetico(paso) {
+            // Restablecer estilos de botones de paso
+            const contenedorPasos = document.getElementById('pasos-cineticos');
+            const botones = contenedorPasos.querySelectorAll('button');
+            botones.forEach((btn, index) => {
+                const btnPaso = index + 1;
+                if (btnPaso === paso) {
+                    btn.className = "paso-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold bg-orange-600 text-white flex items-center gap-3 transition-all shadow";
+                    const span = btn.querySelector('span');
+                    if (span) span.className = "w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center font-bold text-[10px]";
+                } else {
+                    btn.className = "paso-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-750 text-slate-300 flex items-center gap-3 transition-all";
+                    const span = btn.querySelector('span');
+                    if (span) span.className = "w-6 h-6 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-[10px]";
+                }
+            });
+
+            // Actualizar contenido descriptivo del paso con efecto de desvanecimiento
+            const panel = document.getElementById('panel-pasos-descripcion');
+            panel.style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('paso-numero-label').innerText = `Paso ${paso} de 5`;
+                document.getElementById('paso-titulo').innerText = datosPasosCinetico[paso].titulo;
+                document.getElementById('paso-texto-des').innerText = datosPasosCinetico[paso].texto;
+                document.getElementById('paso-tip').innerText = datosPasosCinetico[paso].tip;
+                panel.style.opacity = 1;
+                lucide.createIcons();
+            }, 150);
+        }
+
+        // LÓGICA MÓDULO 9: Juego Interactivo de Mitos y Realidades
+        const mitosRespuestasCorrectas = {
+            1: false, // Uso de fajas es MITO
+            2: true,  // Flexión de piernas es REALIDAD
+            3: false, // Carga en hombro es MITO
+            4: false, // Caída libre es MITO
+            5: true,  // Trabajo sincronizado es REALIDAD
+            6: false  // Cargas ligeras también requieren método cinético es MITO
+        };
+        
+        let respuestasJuegoMitos = {};
+
+        function responderMito(pregunta, seleccion) {
+            // Registrar respuesta
+            respuestasJuegoMitos[pregunta] = seleccion;
+            const esCorrecto = (seleccion === mitosRespuestasCorrectas[pregunta]);
+
+            // Deshabilitar botones de esa pregunta para que no se repitan
+            const divBotones = document.getElementById(`botones-mito-${pregunta}`);
+            const btnMito = divBotones.querySelector('button:first-child');
+            const btnRealidad = divBotones.querySelector('button:last-child');
+            
+            // Mostrar la retroalimentación
+            const divFeedback = document.getElementById(`feedback-mito-${pregunta}`);
+            divFeedback.classList.remove('hidden');
+
+            if (esCorrecto) {
+                divFeedback.className = "mt-4 p-4 bg-emerald-50 rounded-xl border-2 border-emerald-500 text-emerald-950";
+                divFeedback.querySelector('h5').innerHTML = `¡Respuesta Correcta!`;
+                // Estilizar botones de forma inactiva pero señalando el acierto
+                if (seleccion === true) {
+                    btnRealidad.className = "bg-emerald-500 text-white border border-emerald-500 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed";
+                    btnMito.className = "bg-slate-50 text-slate-400 border border-slate-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed opacity-50";
+                } else {
+                    btnMito.className = "bg-emerald-500 text-white border border-emerald-500 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed";
+                    btnRealidad.className = "bg-slate-50 text-slate-400 border border-slate-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed opacity-50";
+                }
+            } else {
+                divFeedback.className = "mt-4 p-4 bg-red-50 rounded-xl border-2 border-red-400 text-red-950";
+                divFeedback.querySelector('h5').innerHTML = `¡Respuesta Incorrecta! Revisa la explicación técnica:`;
+                // Estilizar botones señalando el error
+                if (seleccion === true) {
+                    btnRealidad.className = "bg-red-500 text-white border border-red-500 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed";
+                    btnMito.className = "bg-slate-50 text-slate-400 border border-slate-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed opacity-50";
+                } else {
+                    btnMito.className = "bg-red-500 text-white border border-red-500 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed";
+                    btnRealidad.className = "bg-slate-50 text-slate-400 border border-slate-200 px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-not-allowed opacity-50";
+                }
+            }
+
+            // Actualizar la puntuación en estrellas visuales
+            actualizarPuntuacionMitos();
+            lucide.createIcons();
+        }
+
+        function actualizarPuntuacionMitos() {
+            let aciertos = 0;
+            for (let p in respuestasJuegoMitos) {
+                if (respuestasJuegoMitos[p] === mitosRespuestasCorrectas[p]) {
+                    aciertos++;
+                }
+            }
+            
+            const scoreContainer = document.getElementById('mitos-score-container');
+            let htmlEstrellas = '';
+            for (let i = 1; i <= 6; i++) {
+                if (i <= aciertos) {
+                    htmlEstrellas += `<i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400"></i>`;
+                } else {
+                    htmlEstrellas += `<i data-lucide="star" class="w-5 h-5 text-slate-600 opacity-40"></i>`;
+                }
+            }
+            scoreContainer.innerHTML = htmlEstrellas;
+            lucide.createIcons();
+        }
+
+        // LÓGICA MÓDULO 10: Analizador de Peligros en Planta de Cemento
+        const datosPeligrosCampo = {
+            'peso': {
+                titulo: "Peligro: Peso Excesivo de Cargas u Objetos sin Ayuda Mecánica",
+                icono: "weight",
+                color: "text-red-500 bg-red-100",
+                descripcion: "Los sacos de cemento comerciales comúnmente pesan de 42.5 kg o más. Intentar levantarlos o moverlos de forma manual individual de forma repetitiva supera con creces el límite biomecánico seguro establecido por normativas internacionales (25 kg máximo recomendado para hombres sanos en condiciones ideales).",
+                solucion: "Uso obligatorio de ayudas mecánicas auxiliares (diablitos, transpaletas o robots automáticos de ensacado y paletizado). En caso de extrema urgencia en campo, realizar el levantamiento de forma coordinada entre dos colaboradores capacitados bajo sincronía."
+            },
+            'espacio': {
+                titulo: "Peligro: Espacios Reducidos de Carga",
+                icono: "move",
+                color: "text-red-500 bg-red-100",
+                descripcion: "El área de ensilado o molienda posee a menudo ductos, mangueras de presión y tuberías de alimentación bajas que restringen el rango libre de movimiento del colaborador, obligándolo a flexionar la espalda baja de forma lateral y forzada sin poder doblar las rodillas de forma correcta.",
+                solucion: "Adecuación ergonómica de tuberías e instalación de pasarelas de altura. De no ser posible la reubicación física de los ductos, se deben usar manipuladores neumáticos suspendidos de brazo articulado para posicionar la carga de forma libre."
+            },
+            'agarres': {
+                titulo: "Peligro: Falta de Agarres / Desgarros del Envase",
+                icono: "help-circle",
+                color: "text-amber-500 bg-amber-100",
+                descripcion: "Los sacos de cemento de papel kraft no poseen asideras naturales. Si el saco se humedece, la fricción del papel disminuye críticamente, obligando al colaborador a realizar pinzas de fuerza extrema con las falanges de los dedos, sobrecargando los tendones flexores de la muñeca.",
+                solucion: "Utilizar guantes de protección industrial de alta fricción con recubrimiento de nitrilo o poliuretano rugoso. Descartar de inmediato sacos dañados o húmedos utilizando ganchos y pinzas mecánicas de transporte de bolsas."
+            },
+            'pisos': {
+                titulo: "Peligro: Pisos Irregulares, Polvo o Resbalones",
+                icono: "alert-triangle",
+                color: "text-amber-500 bg-amber-100",
+                descripcion: "El polvo fino de cemento esparcido sobre pisos lisos actúa de forma similar a microesferas de rodamientos disminuyendo drásticamente el coeficiente de fricción del calzado. Esto incrementa de forma súbita el esfuerzo lumbar necesario para estabilizar el equilibrio corporal durante la carga.",
+                solucion: "Limpieza periódica obligatoria de derrames utilizando aspiradoras de vacío industrial en seco (evitando el barrido en seco que suspende partículas de sílice libre). Uso de calzado de seguridad con suela antideslizante con dibujo de alta profundidad de agarre."
+            },
+            'luz': {
+                titulo: "Peligro: Iluminación Deficiente en Plataformas",
+                icono: "eye-off",
+                color: "text-slate-500 bg-slate-100",
+                descripcion: "La dosificación de silos o plataformas externas a menudo operan en turnos nocturnos o interiores con reflectores quemados. Trabajar a oscuras impide detectar a tiempo pequeños escalones, desniveles de tarimas, cables sueltos o derrames de material, detonando tropezones con cargas en mano.",
+                solucion: "Plan de mantenimiento preventivo y reemplazo inmediato de luminarias exteriores. Los trabajadores en plataformas de despacho deben contar de forma complementaria con linternas frontales de casco de alta luminosidad (mínimo 150 lúmenes)."
+            },
+            'obstaculos': {
+                titulo: "Peligro: Obstáculos y Riesgo de Caídas",
+                icono: "ban",
+                color: "text-slate-500 bg-slate-100",
+                descripcion: "El desorden en la zona de despacho con tarimas de madera rotas apiladas en pasillos, zunchos de plástico de estibas en el suelo o herramientas tiradas obliga al trabajador a realizar maniobras forzadas de giro o pasos de gran altura mientras carga un saco pesado.",
+                solucion: "Aplicación estricta de la metodología de las 5S (Clasificación, Orden, Limpieza, Estandarización y Disciplina). Toda zona operativa de despacho y pasillo de tránsito de carretillas debe mantenerse 100% libre de obstáculos físicos."
+            }
+        };
+
+        function mostrarPeligroEscena(key) {
+            const data = datosPeligrosCampo[key];
+            if (data) {
+                document.getElementById('panel-analisis-peligro').style.opacity = 0;
+                setTimeout(() => {
+                    // Actualizar icono
+                    const iconBox = document.getElementById('icono-peligro-analisis');
+                    iconBox.className = `p-3 rounded-xl shrink-0 ${data.color}`;
+                    iconBox.innerHTML = `<i data-lucide="${data.icono}" class="w-6 h-6"></i>`;
+                    
+                    // Actualizar textos
+                    document.getElementById('titulo-peligro-analisis').innerText = data.titulo;
+                    document.getElementById('descripcion-peligro-analisis').innerText = data.descripcion;
+                    
+                    // Mostrar solución
+                    const solContainer = document.getElementById('solucion-peligro-container');
+                    solContainer.classList.remove('hidden');
+                    document.getElementById('solucion-peligro-texto').innerText = data.solucion;
+                    
+                    // Renderizar nuevos iconos
+                    lucide.createIcons();
+                    
+                    // Suave aparición
+                    document.getElementById('panel-analisis-peligro').style.opacity = 1;
+                }, 150);
+            }
+        }
+    </script>
+</body>
+</html>

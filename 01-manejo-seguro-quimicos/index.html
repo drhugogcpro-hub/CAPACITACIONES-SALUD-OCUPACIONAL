@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitación Digital OH&S: Manejo Seguro de Productos Químicos V6.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+            color: #1e293b; 
+        }
+        
+        /* Animaciones para la transición de módulos */
+        .modulo { 
+            display: none; 
+            opacity: 0; 
+            transform: translateY(12px); 
+            transition: all 0.3s ease-in-out; 
+        }
+        .modulo.activo { 
+            display: block; 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        
+        /* Efectos de tarjetas */
+        .card-hover { 
+            transition: all 0.25s ease; 
+            border-color: #e2e8f0; 
+        }
+        .card-hover:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); 
+            border-color: #f97316; 
+        }
+        
+        /* Acordeones personalizados */
+        .accordion-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out; 
+        }
+        .accordion-content.abierto { 
+            max-height: 1200px; 
+            padding-bottom: 1rem; 
+        }
+        
+        /* Scrollbar styling para un look profesional */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- BARRA LATERAL DE NAVEGACIÓN (SIDEBAR) -->
+    <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between sticky top-0 h-screen shrink-0 text-white shadow-xl z-20">
+        <div class="p-6 overflow-y-auto flex-grow">
+            <!-- LOGO DE LA ORGANIZACIÓN Y TÍTULO -->
+            <div class="flex flex-col gap-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="h-12 w-12 rounded-xl bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-600/30 shrink-0">
+                        <i data-lucide="beaker" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-sm leading-tight text-white">Seguridad Química</h1>
+                        <p class="text-[10px] text-orange-500 font-semibold tracking-wider uppercase">Industria Cementera v6.0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-4"></div>
+            
+            <!-- MENÚ DINÁMICO DE 14 MÓDULOS -->
+            <nav class="space-y-1" id="sidebar-menu">
+                <button onclick="cambiarModulo('modulo-objetivos', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700 shadow-inner">
+                    <i data-lucide="target" class="w-3.5 h-3.5"></i>
+                    <span>Objetivo General</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-introduccion', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                    <span>M1: Introducción</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-legislacion', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="gavel" class="w-3.5 h-3.5"></i>
+                    <span>M2: Legislación y Roles</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-peligros', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="flame" class="w-3.5 h-3.5"></i>
+                    <span>M3: Peligros Químicos</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-sistemas', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="tag" class="w-3.5 h-3.5"></i>
+                    <span>M4: SGA & NFPA 704</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-sds', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                    <span>M5: Hojas de Seguridad (SDS)</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-vias', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+                    <span>M6: Vías de Exposición</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-controles', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                    <span>M7: Controles de Exposición</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-epp', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                    <span>M8: Equipo de Protección (EPP)</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-manipulacion', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="package-open" class="w-3.5 h-3.5"></i>
+                    <span>M9: Manipulación Segura</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-almacenamiento', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+                    <span>M10: Almacén y Afinidad</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-emergencias', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="life-buoy" class="w-3.5 h-3.5"></i>
+                    <span>M11: Planes de Emergencia</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-residuos', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    <span>M12: Gestión de Residuos</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-mito', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                    <span>M13: Mito, Realidad & Casos</span>
+                </button>
+                <button onclick="cambiarModulo('modulo-evaluacion', this)" class="menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+                    <span>M14: Evaluación Final</span>
+                </button>
+            </nav>
+        </div>
+        
+        <div class="p-4 bg-slate-950 border-t border-slate-800 text-center flex flex-col gap-1">
+            <span class="text-[9px] text-slate-500 font-semibold tracking-wider uppercase">Salud y Seguridad Ocupacional</span>
+            <span class="text-[11px] text-slate-400">© 2026 Planta de Cemento</span>
+        </div>
+    </aside>
+
+    <!-- CUERPO PRINCIPAL DE CONTENIDOS -->
+    <main class="flex-1 overflow-y-auto p-8 max-w-5xl mx-auto">
+        
+        <!-- MODULO: OBJETIVOS GENERALES -->
+        <section id="modulo-objetivos" class="modulo activo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="target" class="w-4 h-4"></i> Bienvenido
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Capacitación de Seguridad Química</h2>
+                <p class="text-slate-600 text-base">Manejo Seguro de Productos Químicos en la Industria del Cemento v6.0.</p>
+            </div>
+
+            <!-- OBJETIVO GENERAL CARD -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-orange-500">
+                    <i data-lucide="target" class="w-48 h-48"></i>
+                </div>
+                <h3 class="text-xl font-bold text-orange-400 mb-3">Objetivo General del Programa</h3>
+                <p class="text-slate-200 text-base leading-relaxed mb-4">
+                    Desarrollar las competencias técnicas y prácticas necesarias para <strong class="text-white">identificar, manipular, almacenar y responder de manera segura</strong> ante los riesgos asociados a los productos químicos utilizados en los procesos de fabricación de cemento, aplicando el <strong class="text-white">Sistema Globalmente Armonizado (SGA)</strong> y la <strong class="text-white">jerarquía de controles de SSO</strong>.
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <div class="bg-white/10 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5 text-orange-400"></i> Clasificación SGA
+                    </div>
+                    <div class="bg-white/10 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5 text-orange-400"></i> Jerarquía de Controles
+                    </div>
+                    <div class="bg-white/10 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5 text-orange-400"></i> Plan de Emergencias
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5">
+                    <h4 class="font-bold text-emerald-800 text-base mb-1.5 flex items-center gap-2">
+                        <i data-lucide="shield" class="w-4 h-4 text-emerald-600"></i> ¿Por qué en la cementera?
+                    </h4>
+                    <p class="text-slate-700 text-xs leading-relaxed">
+                        En la fabricación de clínker y cemento interactuamos con combustibles alternos, aceites industriales, aditivos de molienda, reactivos de laboratorio y polvos alcalinos con alto pH. Su manejo seguro garantiza que regreses a casa sano y salvo todos los días.
+                    </p>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                    <h4 class="font-bold text-amber-800 text-base mb-1.5 flex items-center gap-2">
+                        <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i> Compromiso Preventivo
+                    </h4>
+                    <p class="text-slate-700 text-xs leading-relaxed">
+                        El cumplimiento estricto de las directrices contenidas en esta capacitación no es opcional: es una responsabilidad de seguridad individual e institucional inquebrantable para salvaguardar la vida.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- M1. INTRODUCCIÓN -->
+        <section id="modulo-introduccion" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="info" class="w-4 h-4"></i> Módulo 1
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Conceptos Básicos de Química e Importancia de la Prevención</h2>
+                <p class="text-slate-600 text-sm">Sentemos las bases técnicas esenciales para entender los riesgos industriales en planta.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm card-hover">
+                    <div class="flex items-center gap-3 mb-3 text-orange-600">
+                        <i data-lucide="flask-conical" class="w-5 h-5"></i>
+                        <h3 class="font-bold text-base text-slate-900">¿Qué es un Producto Químico?</h3>
+                    </div>
+                    <p class="text-slate-600 text-xs leading-relaxed">
+                        Es todo elemento o compuesto químico, solo o mezclado, tal como se presenta en estado natural u obtenido por cualquier proceso industrial. En la industria del cemento, esto abarca desde los aditivos líquidos de molienda y los lubricantes de alta resistencia de los hornos, hasta sustancias corrosivas como la cal viva.
+                    </p>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm card-hover">
+                    <div class="flex items-center gap-3 mb-3 text-red-600">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                        <h3 class="font-bold text-base text-slate-900">¿Qué es un Peligro Químico?</h3>
+                    </div>
+                    <p class="text-slate-600 text-xs leading-relaxed">
+                        Es la capacidad intrínseca de una sustancia de causar daños a las personas, la propiedad o al medio ambiente. Un químico puede presentar un peligro físico (ej. provocar incendios), peligro para la salud (ej. causar quemaduras alcalinas en la piel) o peligro para el medio ambiente.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-100 rounded-2xl p-6 border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                    <i data-lucide="arrow-right-left" class="w-4 h-4 text-orange-500"></i> Diferencia Crítica: Peligro vs. Riesgo
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 relative">
+                        <span class="absolute top-3 right-3 text-red-500 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 bg-red-50 rounded">Propiedad Intrínseca</span>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Peligro</h4>
+                        <p class="text-slate-600 text-[11px]">
+                            Es la capacidad inherente de una sustancia para hacer daño. No cambia.
+                        </p>
+                        <p class="text-slate-700 text-[11px] mt-2.5 font-semibold bg-slate-50 p-2 rounded border-l-4 border-slate-400">
+                            Ejemplo: Un tambor sellado de ácido sulfúrico altamente concentrado. El peligro es corrosivo de por vida.
+                        </p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 relative">
+                        <span class="absolute top-3 right-3 text-orange-500 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 bg-orange-50 rounded">Cálculo Probabilístico</span>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Riesgo</h4>
+                        <p class="text-slate-600 text-[11px]">
+                            Es la probabilidad de que el daño ocurra debido a la exposición a dicho peligro.
+                        </p>
+                        <p class="text-slate-700 text-[11px] mt-2.5 font-semibold bg-slate-50 p-2 rounded border-l-4 border-orange-400">
+                            Ejemplo: El riesgo es BAJO si el ácido está en su estante seguro con contención, pero es ALTO si se manipula sin gafas ni guantes químicos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-orange-50 border-l-4 border-orange-500 p-5 rounded-r-2xl">
+                <h4 class="font-bold text-orange-950 text-sm mb-1 flex items-center gap-2">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i> Importancia Vital de la Prevención
+                </h4>
+                <p class="text-slate-700 text-xs leading-relaxed">
+                    Un descuido milimétrico en el manejo químico puede desencadenar eventos catastróficos inmediatos (quemaduras graves por inhalación o contacto, explosiones) o crónicos (silicosis, dermatitis destructivas). La prevención es la única barrera de seguridad activa que garantiza que cada operario termine su turno en condiciones óptimas.
+                </p>
+            </div>
+        </section>
+
+        <!-- M2. LEGISLACIÓN Y NORMATIVA -->
+        <section id="modulo-legislacion" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="gavel" class="w-4 h-4"></i> Módulo 2
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Legislación, Marco Normativo de SSO y Roles Organizacionales</h2>
+                <p class="text-slate-600 text-sm">Conozca las obligaciones legales nacionales, normas internacionales e implicaciones de su puesto de trabajo.</p>
+            </div>
+
+            <!-- MARCO LEGAL GUATEMALA -->
+            <div class="bg-emerald-50 border-l-4 border-emerald-500 rounded-r-2xl p-5 shadow-sm">
+                <div class="flex items-center gap-3 mb-2 text-emerald-600">
+                    <i data-lucide="gavel" class="w-5 h-5"></i>
+                    <h3 class="font-bold text-base text-slate-900">Reglamento de SSO de Guatemala (AG 229-2014 y Reformas)</h3>
+                </div>
+                <p class="text-slate-700 text-xs leading-relaxed">
+                    De acuerdo con el <strong>Reglamento de Salud y Seguridad Ocupacional de Guatemala (Acuerdo Gubernativo 229-2014)</strong>, todas las áreas industriales con presencia de agentes químicos nocivos para la salud deben estar estrictamente reguladas, identificadas, con sus respectivas Fichas de Datos de Seguridad (FDS) e instructivos de manipulación accesibles en idioma español.
+                </p>
+            </div>
+
+            <!-- OBLIGACIONES MUTUAS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+                    <h4 class="font-bold text-slate-900 text-sm mb-2.5 flex items-center gap-2 border-b pb-1.5">
+                        <i data-lucide="briefcase" class="w-4 h-4 text-slate-600"></i> Obligaciones del Empleador
+                    </h4>
+                    <ul class="space-y-2 text-slate-600 text-[11px]">
+                        <li class="flex items-start gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span>Identificar adecuadamente áreas de almacenamiento de químicos y desechos peligrosos para minimizar riesgos.</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span>Capacitar rigurosamente a los trabajadores con las mejores técnicas disponibles en manejo de químicos.</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span>Proporcionar el EPP certificado, adecuado e idóneo para cada tarea de forma gratuita.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
+                    <h4 class="font-bold text-slate-900 text-sm mb-2.5 flex items-center gap-2 border-b pb-1.5">
+                        <i data-lucide="user-check" class="w-4 h-4 text-slate-600"></i> Obligaciones del Trabajador
+                    </h4>
+                    <ul class="space-y-2 text-slate-600 text-[11px]">
+                        <li class="flex items-start gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-orange-500 shrink-0 mt-0.5"></i>
+                            <span>Cumplir obligatoriamente con las normas, instructivos de seguridad y capacitaciones de la empresa.</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-orange-500 shrink-0 mt-0.5"></i>
+                            <span>Utilizar obligatoriamente el EPP provisto de manera correcta y cuidar su perfecto estado.</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-orange-500 shrink-0 mt-0.5"></i>
+                            <span>Informar de inmediato al supervisor o monitor de SSO sobre cualquier desviación en campo.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RESPONSABILIDADES POR PUESTO EN PLANTA (INTEGRADO DEL INDEX) -->
+            <div class="bg-slate-100 border border-slate-200 rounded-2xl p-5">
+                <div class="mb-3">
+                    <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+                        <i data-lucide="users" class="text-orange-500 w-4 h-4"></i> Responsabilidades por Puesto (Procedimiento Interno)
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Seleccione un puesto de la organización para conocer sus obligaciones críticas específicas según el reglamento corporativo:</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="space-y-1.5 lg:col-span-1">
+                        <button onclick="mostrarResponsabilidad('jefe-almacen', this)" class="resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600">
+                            Jefe de Almacén
+                        </button>
+                        <button onclick="mostrarResponsabilidad('gerente-seguridad', this)" class="resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600">
+                            Gerente de Seguridad Industrial
+                        </button>
+                        <button onclick="mostrarResponsabilidad('gerente-higiene', this)" class="resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600">
+                            Higiene / Médico Ocupacional
+                        </button>
+                        <button onclick="mostrarResponsabilidad('coordinador-sso', this)" class="resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600">
+                            Coordinador SSO
+                        </button>
+                        <button onclick="mostrarResponsabilidad('lideres-area', this)" class="resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600">
+                            Líderes de Área / Colaboradores
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white border border-slate-200 rounded-lg p-5 flex flex-col justify-center min-h-[180px]">
+                        <div id="resp-placeholder" class="text-center text-slate-400 space-y-1">
+                            <i data-lucide="mouse-pointer-click" class="w-6 h-6 mx-auto opacity-50"></i>
+                            <p class="text-xs">Haz clic en cualquier rol de la izquierda para desplegar sus obligaciones específicas.</p>
+                        </div>
+                        
+                        <div id="resp-contenido" class="hidden space-y-3">
+                            <h4 id="resp-titulo" class="font-bold text-sm text-orange-600 flex items-center gap-1.5"></h4>
+                            <ul id="resp-lista" class="space-y-1.5 text-xs text-slate-600 list-disc list-inside"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REFERENCIAS INTERNACIONALES -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5">
+                <h4 class="font-bold text-slate-900 text-sm mb-3">Normas Internacionales Aplicadas</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-start gap-3">
+                        <div class="h-10 w-10 bg-slate-900 rounded-lg flex items-center justify-center text-white shrink-0 font-bold text-xs">
+                            SGA
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-xs text-slate-900">SGA / GHS (ONU Rev. 11)</h5>
+                            <p class="text-[11px] text-slate-600 mt-0.5">
+                                Sistema Globalmente Armonizado de Clasificación y Etiquetado de Productos Químicos. El estándar global para homologar etiquetas y fichas SDS.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-start gap-3">
+                        <div class="h-10 w-10 bg-emerald-600 rounded-lg flex items-center justify-center text-white shrink-0 font-bold text-xs">
+                            ISO
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-xs text-slate-900">ISO 45001:2018</h5>
+                            <p class="text-[11px] text-slate-600 mt-0.5">
+                                Norma internacional para Sistemas de Gestión de la Seguridad y Salud en el Trabajo. Marco base para una gestión preventiva proactiva corporativa.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M3. IDENTIFICACIÓN DE PELIGROS QUÍMICOS -->
+        <section id="modulo-peligros" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="flame" class="w-4 h-4"></i> Módulo 3
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Tipos y Clasificación de Peligros Químicos</h2>
+                <p class="text-slate-600 text-sm">Comprender las tres principales dimensiones de daño que pueden ejercer los químicos y los agentes higiénicos críticos de la cementera.</p>
+            </div>
+
+            <!-- ACORDEÓN DE TIPOS DE PELIGROS -->
+            <div class="space-y-3">
+                <!-- PELIGROS FÍSICOS -->
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc-fisicos')" class="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3 text-red-600">
+                            <i data-lucide="flame-kindling" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-base text-slate-900 text-left">1. Peligros Físicos (Propiedades Fisicoquímicas)</h3>
+                        </div>
+                        <i data-lucide="chevron-down" id="icon-acc-fisicos" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc-fisicos" class="accordion-content px-5 border-t border-slate-100 bg-slate-50/50">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4 text-[11px]">
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Inflamables</span>
+                                <p class="text-slate-600">Arden con facilidad (ej. disolventes, combustibles de quemadores).</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Explosivos</span>
+                                <p class="text-slate-600">Pueden estallar violentamente por calor o fricción (ej. agentes de voladura en canteras).</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Oxidantes / Comburentes</span>
+                                <p class="text-slate-600">Alimentan y avivan el fuego liberando oxígeno (ej. nitrato de amonio).</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Gases a Presión</span>
+                                <p class="text-slate-600">Cilindros de gas comprimido que pueden proyectarse violentamente o estallar.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Corrosivos para Metales</span>
+                                <p class="text-slate-600">Atacan destructivamente los metales de estructuras y equipos.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Reactivos</span>
+                                <p class="text-slate-600">Sustancias inestables capaces de reaccionar violentamente sin combustión directa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PELIGROS PARA LA SALUD -->
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc-salud')" class="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3 text-orange-600">
+                            <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-base text-slate-900 text-left">2. Peligros para la Salud</h3>
+                        </div>
+                        <i data-lucide="chevron-down" id="icon-acc-salud" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc-salud" class="accordion-content px-5 border-t border-slate-100 bg-slate-50/50">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4 text-[11px]">
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Toxicidad Aguda</span>
+                                <p class="text-slate-600">Efectos letales o severos en dosis únicas.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Corrosión / Irritación</span>
+                                <p class="text-slate-600">Quemaduras de piel u ojos por pHs extremos (ej: cemento húmedo, cal).</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Sensibilización</span>
+                                <p class="text-slate-600">Gatilla dermatitis alérgica extrema (ej: por cromo VI en cemento).</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Mutagenicidad / Carcinogenicidad</span>
+                                <p class="text-slate-600">Riesgos a largo plazo (ej: polvo de sílice libre cristalina).</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Toxicidad Reproductiva</span>
+                                <p class="text-slate-600">Sustancias que pueden afectar la fertilidad o dañar el feto.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Aspiración & Órganos Blancos</span>
+                                <p class="text-slate-600">Daños específicos del sistema pulmonar, hepático o neurológico.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PELIGROS AMBIENTALES -->
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc-ambiental')" class="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-all">
+                        <div class="flex items-center gap-3 text-emerald-600">
+                            <i data-lucide="trees" class="w-5 h-5"></i>
+                            <h3 class="font-bold text-base text-slate-900 text-left">3. Peligros para el Medio Ambiente</h3>
+                        </div>
+                        <i data-lucide="chevron-down" id="icon-acc-ambiental" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc-ambiental" class="accordion-content px-5 border-t border-slate-100 bg-slate-50/50">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4 text-[11px]">
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Toxicidad Acuática (Aguda y Crónica)</span>
+                                <p class="text-slate-600">Capacidad de exterminar flora y fauna acuática en ríos o suelos tras fugas de aditivos o aceites lubricantes.</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-150">
+                                <span class="font-bold text-slate-900 block mb-0.5">Persistencia y Bioacumulación</span>
+                                <p class="text-slate-600">Sustancias persistentes que se acumulan en las cadenas tróficas del ecosistema.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AGENTES HIGIÉNICOS CRÍTICOS DE LA CEMENTERA -->
+            <div class="bg-slate-900 text-white border border-slate-800 rounded-2xl p-5">
+                <div class="mb-3">
+                    <h3 class="font-bold text-base text-orange-400 flex items-center gap-2">
+                        <i data-lucide="activity" class="w-4 h-4"></i> Agentes Higiénicos Críticos en el Proceso de Cemento
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Sustancias prioritarias monitoreadas permanentemente bajo directrices de SSO:</p>
+                </div>
+
+                <div class="space-y-2.5 text-xs">
+                    <div class="p-3.5 bg-slate-850 border border-slate-800 rounded-xl space-y-1">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+                            <span class="font-bold text-white flex items-center gap-1.5">
+                                <i data-lucide="layers" class="text-amber-400 w-3.5 h-3.5"></i> Polvo de Cemento / Clínker
+                            </span>
+                            <span class="font-mono text-[10px] text-slate-500 font-semibold">Ref ACGIH: Inhalable 10 mg/m³</span>
+                        </div>
+                        <p class="text-slate-300"><strong>Fuentes e Impacto:</strong> Trituración, hornos y envasado. Causa irritación severa, dermatitis alcalina y quemaduras químicas en contacto húmedo ($pH$ 12-14).</p>
+                    </div>
+
+                    <div class="p-3.5 bg-slate-850 border border-slate-800 rounded-xl space-y-1">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+                            <span class="font-bold text-white flex items-center gap-1.5">
+                                <i data-lucide="alert-octagon" class="text-red-400 w-3.5 h-3.5"></i> Sílice Cristalina Respirable (SCR)
+                            </span>
+                            <span class="font-mono text-[10px] text-red-400 font-bold">Límite Crítico: 0.025 mg/m³</span>
+                        </div>
+                        <p class="text-slate-300"><strong>Fuentes e Impacto:</strong> Polvo de cantera, arenas y molienda de crudo. Provoca silicosis crónica incurable, EPOC y es un carcinógeno pulmonar catalogado (IARC Grupo 1).</p>
+                    </div>
+
+                    <div class="p-3.5 bg-slate-850 border border-slate-800 rounded-xl space-y-1">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+                            <span class="font-bold text-white flex items-center gap-1.5">
+                                <i data-lucide="biohazard" class="text-purple-400 w-3.5 h-3.5"></i> Trazas de Cromo Hexavalente / Metales
+                            </span>
+                            <span class="font-mono text-[10px] text-purple-400 font-bold">Límite Crítico: 0.0002 mg/m³</span>
+                        </div>
+                        <p class="text-slate-300"><strong>Fuentes e Impacto:</strong> Mantenimiento de ladrillos refractarios de hornos y combustibles alternativos. Altamente alergénico y cancerígeno por inhalación prolongada.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M4. SISTEMAS DE IDENTIFICACIÓN -->
+        <section id="modulo-sistemas" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="tag" class="w-4 h-4"></i> Módulo 4
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Sistemas de Identificación de Peligros Químicos</h2>
+                <p class="text-slate-600 text-sm">Aprenda a descifrar los elementos de una etiqueta SGA y las diferencias con el Rombo NFPA 704.</p>
+            </div>
+
+            <!-- SGA / GHS SUBSECTION WITH INTERACTIVE SELECTOR -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-1">4.1 Sistema Globalmente Armonizado (SGA / GHS)</h3>
+                <p class="text-slate-600 text-xs leading-relaxed mb-4">
+                    Es el sistema estándar internacional diseñado para la manipulación y uso cotidiano del producto químico. Facilita la comprensión de los peligros mediante elementos clave en su etiqueta:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div class="p-3 bg-white rounded-lg border border-slate-200">
+                        <strong>1. Identificador de producto:</strong> Nombre químico de la sustancia o mezcla de la cementera.
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200">
+                        <strong>2. Palabra de Advertencia:</strong> Indica gravedad del peligro. Solo hay dos opciones: <span class="text-red-600 font-bold">"PELIGRO"</span> (riesgo grave) o <span class="text-orange-500 font-bold">"ATENCIÓN"</span>.
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200">
+                        <strong>3. Indicaciones de Peligro (Frases H):</strong> Frases normalizadas asignadas al peligro para detallar los daños.
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200">
+                        <strong>4. Consejos de Prudencia (Frases P):</strong> Medidas que describen cómo prevenir o minimizar los efectos adversos.
+                    </div>
+                </div>
+
+                <!-- Los 9 Pictogramas Interactivos -->
+                <div class="mt-5">
+                    <h4 class="font-bold text-slate-900 text-sm mb-3">Estudio de los 9 Pictogramas Oficiales del SGA (Haz clic para explorar)</h4>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2">
+                        <button onclick="desplegarDetalleSga('explosivo', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-explosivo.png" alt="Explosivo" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=EXPLOSIVO'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Explosivo</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('inflamable', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-inflamable.png" alt="Inflamable" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=INFLAMABLE'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Inflamable</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('comburente', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-comburente.png" alt="Comburente" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=COMBURENTE'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Comburente</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('gas', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-gas-presion.png" alt="Gas Presión" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=GAS+PRESION'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Gas Presión</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('corrosivo', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-corrosivo.png" alt="Corrosivo" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=CORROSIVO'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Corrosivo</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('toxicidad', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-toxicidad-aguda.png" alt="Toxicidad" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=TOXICIDAD'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Tox. Aguda</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('irritante', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-irritante.png" alt="Irritante" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=IRRITANTE'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Irritante</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('grave', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-grave-salud.png" alt="Peligro Grave" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=PELIGRO+SALUD'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Peligro Salud</span>
+                        </button>
+                        <button onclick="desplegarDetalleSga('ambiental', this)" class="picto-btn border border-slate-200 bg-slate-50 p-2 rounded-xl flex flex-col items-center justify-between text-center transition-all hover:border-orange-500 group min-h-[95px]">
+                            <img src="img/sga-ambiental.png" alt="Ambiental" class="w-10 h-10 object-contain bg-white p-0.5 rounded" onerror="this.src='https://placehold.co/100x100/fee2e2/991b1b?text=AMBIENTAL'"/>
+                            <span class="text-[9px] font-bold text-slate-700 mt-1 block">Ambiental</span>
+                        </button>
+                    </div>
+
+                    <!-- Panel de detalles de pictogramas (SGA) -->
+                    <div id="panel-sga-detalle" class="hidden mt-4 bg-slate-900 text-white rounded-xl p-4 flex flex-col md:flex-row gap-4 items-center transition-all">
+                        <div class="bg-white p-1.5 rounded-lg shrink-0">
+                            <img id="panel-sga-img" src="" alt="Simbología" class="w-14 h-14 object-contain">
+                        </div>
+                        <div class="space-y-1 w-full text-left">
+                            <h4 id="panel-sga-titulo" class="font-bold text-sm text-orange-400 uppercase"></h4>
+                            <p id="panel-sga-desc" class="text-xs text-slate-300 leading-relaxed"></p>
+                            <p id="panel-sga-ejemplo" class="text-xs font-semibold text-slate-400 italic"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NFPA 704 SUBSECTION -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-1">4.2 Norma NFPA 704 (El Rombo de Seguridad)</h3>
+                <p class="text-slate-600 text-xs leading-relaxed mb-4">
+                    La norma <strong>NFPA 704</strong> está enfocada exclusivamente en el <strong>personal de respuesta a emergencias</strong> (bomberos, brigadas de planta) para identificar peligros clave durante siniestros de forma táctica.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <!-- CSS Rotated NFPA Diamond -->
+                    <div class="space-y-2">
+                        <div class="text-center font-bold text-slate-700 text-xs">ROMBO NFPA 704 (Pasa el cursor por cuadrantes)</div>
+                        <div class="relative w-40 h-40 mx-auto flex items-center justify-center">
+                            <div class="grid grid-cols-2 gap-0.5 rotate-45 w-28 h-28 border-2 border-slate-800 p-0.5 bg-slate-800 shadow-xl">
+                                <!-- Red (Top) -->
+                                <div class="bg-red-500 flex items-center justify-center -rotate-45 relative group cursor-pointer hover:scale-105 transition-transform">
+                                    <span class="text-white font-extrabold text-xl">3</span>
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-slate-950 text-white text-[10px] rounded p-2 w-48 z-10 text-center shadow-lg pointer-events-none">
+                                        <strong class="text-red-400">Inflamabilidad (Rojo):</strong><br>Grado de inflamabilidad (0-4). 3 = Inflama a temp. ambiente.
+                                    </div>
+                                </div>
+                                <!-- Yellow (Right) -->
+                                <div class="bg-yellow-400 flex items-center justify-center -rotate-45 relative group cursor-pointer hover:scale-105 transition-transform">
+                                    <span class="text-slate-950 font-extrabold text-xl">2</span>
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-slate-950 text-white text-[10px] rounded p-2 w-48 z-10 text-center shadow-lg pointer-events-none">
+                                        <strong class="text-yellow-500">Reactividad (Amarillo):</strong><br>Liberación de energía (0-4). 2 = Cambio químico violento.
+                                    </div>
+                                </div>
+                                <!-- Blue (Left) -->
+                                <div class="bg-blue-600 flex items-center justify-center -rotate-45 relative group cursor-pointer hover:scale-105 transition-transform">
+                                    <span class="text-white font-extrabold text-xl">4</span>
+                                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-slate-950 text-white text-[10px] rounded p-2 w-48 z-10 text-center shadow-lg pointer-events-none">
+                                        <strong class="text-blue-400">Salud (Azul):</strong><br>Peligro de salud (0-4). 4 = Mortal / Daño extremo.
+                                    </div>
+                                </div>
+                                <!-- White (Bottom) -->
+                                <div class="bg-white flex items-center justify-center -rotate-45 relative group cursor-pointer hover:scale-105 transition-transform">
+                                    <span class="text-slate-950 font-extrabold text-lg">W̶</span>
+                                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 hidden group-hover:block bg-slate-950 text-white text-[10px] rounded p-2 w-48 z-10 text-center shadow-lg pointer-events-none">
+                                        <strong class="text-slate-900">Especial (Blanco):</strong><br>W̶ = Reacciona violentamente con agua (prohibido aplicar agua).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cuadrantes Explicación -->
+                    <div class="space-y-2 text-[11px]">
+                        <div class="border-l-4 border-blue-600 pl-2">
+                            <h5 class="font-bold text-slate-900">Azul — Riesgo para la Salud (Escala 0-4)</h5>
+                            <p class="text-slate-600">3 = Riesgo Grave, 4 = Riesgo Extremo (Mortal).</p>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-2">
+                            <h5 class="font-bold text-slate-900">Rojo — Inflamabilidad (Escala 0-4)</h5>
+                            <p class="text-slate-600">3 = Líquidos que se encienden bajo casi todo nivel normal.</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-400 pl-2">
+                            <h5 class="font-bold text-slate-900">Amarillo — Reactividad (Escala 0-4)</h5>
+                            <p class="text-slate-600">Indica propensión a estallar o reaccionar destructivamente.</p>
+                        </div>
+                        <div class="border-l-4 border-slate-400 pl-2">
+                            <h5 class="font-bold text-slate-900">Blanco — Símbolos Especiales</h5>
+                            <p class="text-slate-600">
+                                <strong>OX</strong> = Oxidante | 
+                                <strong>W̶</strong> = No usar agua | 
+                                <strong>SA</strong> = Gas asfixiante simple.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPARATIVA TABLA (INTEGRADO DEL INDEX) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-3">4.3 Diferencias Comparativas: SGA vs. NFPA 704</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-900 text-white">
+                                <th class="p-2.5 rounded-tl-lg">Característica</th>
+                                <th class="p-2.5">SGA (GHS)</th>
+                                <th class="p-2.5 rounded-tr-lg">NFPA 704</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="bg-slate-50">
+                                <td class="p-2.5 font-bold">¿Para qué sirve?</td>
+                                <td class="p-2.5">Manipulación diaria en frentes de trabajo y almacenamiento.</td>
+                                <td class="p-2.5">Respuesta táctica ante emergencias e incendios.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-bold">¿Quién lo utiliza?</td>
+                                <td class="p-2.5 text-emerald-700 font-semibold">Todos los colaboradores de la planta.</td>
+                                <td class="p-2.5 text-red-700 font-semibold">Brigadas de emergencia y bomberos.</td>
+                            </tr>
+                            <tr class="bg-slate-50">
+                                <td class="p-2.5 font-bold">¿Dónde se encuentra?</td>
+                                <td class="p-2.5">Etiquetas en envases y hojas de seguridad (SDS).</td>
+                                <td class="p-2.5">Tanques fijos, tuberías, entradas de almacenes.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-bold">¿Cómo clasifica?</td>
+                                <td class="p-2.5">Categorías de peligro (1 a 5, donde 1 es el peligro mayor).</td>
+                                <td class="p-2.5">Escala numérica simple de 0 a 4 (donde 4 es el peligro mayor).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- M5. HOJAS DE DATOS DE SEGURIDAD -->
+        <section id="modulo-sds" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> Módulo 5
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Hojas de Datos de Seguridad (SDS / FDS)</h2>
+                <p class="text-slate-600 text-sm">Su mejor herramienta técnica de autoprotección antes de manipular cualquier químico en la cementera.</p>
+            </div>
+
+            <!-- CRITICAL CALLOUT FOR SDS -->
+            <div class="bg-red-50 border-2 border-red-500 rounded-2xl p-5 shadow-md relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 opacity-10 text-red-600">
+                    <i data-lucide="alert-octagon" class="w-20 h-20"></i>
+                </div>
+                <h3 class="font-bold text-red-900 text-base flex items-center gap-2 mb-1.5">
+                    <i data-lucide="shield-alert" class="w-5 h-5"></i> ¡ALERTA OPERATIVA CRÍTICA!
+                </h3>
+                <p class="text-slate-800 text-xs leading-relaxed font-medium">
+                    Hemos detectado desviaciones serias en planta por colaboradores que omiten la lectura previa de las FDS. <strong class="text-red-700 underline">No revisar la SDS antes de usar una sustancia es una falta de seguridad grave</strong> que lo expone directamente a <strong class="text-red-700">lesiones irreversibles, quemaduras alcalinas severas, envenenamiento o muerte</strong>.
+                </p>
+                <div class="mt-3 bg-red-100 p-2.5 rounded-lg border border-red-200 text-[11px] text-slate-800 font-bold">
+                    REGLA INQUEBRANTABLE: "Si no ha leído y comprendido la SDS de la sustancia, TIENE ESTRICTAMENTE PROHIBIDO iniciar su manipulación."
+                </div>
+            </div>
+
+            <!-- ESTÁNDAR DE VIGENCIA CORPORATIVA -->
+            <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-xs text-slate-700 space-y-1">
+                <p class="font-bold text-slate-900 flex items-center gap-1.5">
+                    <i data-lucide="calendar" class="w-4 h-4 text-orange-500"></i> Estándar Corporativo de Vigencia:
+                </p>
+                <p class="text-slate-600">Toda SDS activa en los frentes de trabajo debe estar <strong>en idioma español, estructurada bajo SGA y tener una antigüedad máxima de 3 años</strong> de emisión por el fabricante. Documentos en inglés o vencidos están prohibidos.</p>
+            </div>
+
+            <!-- LAS 16 SECCIONES INTERACTIVAS (CON ACORDEONES) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-sm mb-2">Las 16 Secciones Normalizadas del SGA</h3>
+                <p class="text-slate-500 text-xs mb-4">Haz clic sobre cada una de las 16 secciones internacionales para revisar su alcance preventivo de campo:</p>
+                
+                <div class="space-y-1" id="lista-secciones-fds">
+                    <!-- Se generarán por JavaScript o se renderizan de forma compacta -->
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">01</span>
+                                <span class="text-xs font-semibold text-slate-800">Identificación del producto y del proveedor</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Incluye el nombre de la sustancia, código interno SAP, usos industriales recomendados, teléfonos de emergencia de planta y del fabricante.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-orange-50/20">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-orange-200 text-orange-800 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">02</span>
+                                <span class="text-xs font-semibold text-orange-950">Identificación de peligros (SGA)</span>
+                                <span class="bg-red-100 text-red-700 text-[8px] font-black uppercase px-1 rounded">Crítica ★</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Presenta la clasificación de peligro, palabras de advertencia (Peligro/Atención), los símbolos del SGA en rombos con borde rojo, y todas las frases H (de peligro) e Y (de prudencia).</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">03</span>
+                                <span class="text-xs font-semibold text-slate-800">Composición / información sobre los componentes</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Identidad química, porcentaje de concentración de los ingredientes peligrosos de la mezcla y su número CAS.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-orange-50/20">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-orange-200 text-orange-800 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">04</span>
+                                <span class="text-xs font-semibold text-orange-950">Primeros auxilios</span>
+                                <span class="bg-red-100 text-red-700 text-[8px] font-black uppercase px-1 rounded">Crítica ★</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Instrucciones precisas para responder en caso de inhalación, ingestión, contacto ocular o cutáneo directo, detallando si se permite o prohíbe inducir el vómito.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">05</span>
+                                <span class="text-xs font-semibold text-slate-800">Medidas de lucha contra incendios</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Medios de extinción adecuados (CO2, polvo químico seco) y agentes de extinción prohibidos (ej. no usar agua sobre carburo de calcio).</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">06</span>
+                                <span class="text-xs font-semibold text-slate-800">Medidas en caso de vertido accidental</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Estrategias de evacuación del área, uso del kit absorbedor y métodos de neutralización idóneos aprobados por Gestión Ambiental.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">07</span>
+                                <span class="text-xs font-semibold text-slate-800">Manipulación y almacenamiento seguros</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Lineamientos de estantería, control de temperatura, ventilación obligatoria requerida y familias químicas incompatibles.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-orange-50/20">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-orange-200 text-orange-800 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">08</span>
+                                <span class="text-xs font-semibold text-orange-950">Controles de exposición / protección individual</span>
+                                <span class="bg-red-100 text-red-700 text-[8px] font-black uppercase px-1 rounded">Crítica ★</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Parámetros de ventilación locales y especificación del polímero obligatorio de los guantes (nitrilo/neopreno) y filtros del respirador para la tarea.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">09</span>
+                                <span class="text-xs font-semibold text-slate-800">Propiedades físicas y químicas</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Aspecto, olor, pH exacto, densidad, límites de inflamabilidad o explosividad y punto de ebullición.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">10</span>
+                                <span class="text-xs font-semibold text-slate-800">Estabilidad y reactividad</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Estabilidad química del compuesto, materiales incompatibles específicos a evitar y productos de descomposición peligrosos tras fuego.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">11</span>
+                                <span class="text-xs font-semibold text-slate-800">Información toxicológica</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Efectos médicos inmediatos y crónicos por sobreexposición, valores de dosis letal (DL50) y potencial de carcinogenicidad.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">12</span>
+                                <span class="text-xs font-semibold text-slate-800">Información ecológica / ecotoxicológica</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Toxicidad ambiental en agua, persistencia y capacidad de bioacumulación en el entorno.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">13</span>
+                                <span class="text-xs font-semibold text-slate-800">Consideraciones relativas a la eliminación</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Métodos de reciclaje, tratamiento o descarte final de remanentes y embalajes vacíos autorizados.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">14</span>
+                                <span class="text-xs font-semibold text-slate-800">Información relativa al transporte</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Código de transporte internacional, clasificación vial e instrucciones especiales de embalaje.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">15</span>
+                                <span class="text-xs font-semibold text-slate-800">Información reglamentaria</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Disposiciones locales de salud, seguridad industrial y legislación de protección ambiental aplicables.</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                        <button onclick="alternarFdsAcordeon(this)" class="w-full flex items-center justify-between p-3 bg-white hover:bg-slate-50 text-left transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-slate-200 text-slate-700 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded">16</span>
+                                <span class="text-xs font-semibold text-slate-800">Otras informaciones</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                        </button>
+                        <div class="accordion-content bg-slate-50/50 px-4">
+                            <p class="text-[11px] text-slate-600 pt-3 leading-relaxed">Glosarios, referencias bibliográficas, historial de revisiones del documento y lineamientos de entrenamiento sugeridos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NORMOTECNIA BÁSICA DE LECTURA RÁPIDA -->
+                <div class="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                    <h4 class="font-bold text-emerald-900 text-sm mb-2 flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4 text-emerald-600"></i> Normotecnia Básica de Emergencia y Prevención (El Trinomio 2-4-8)
+                    </h4>
+                    <p class="text-slate-700 text-xs leading-relaxed mb-3">
+                        Antes de usar cualquier producto de la planta (ej: aditivos de clínker), grábese este trinomio de secciones como regla de oro operativa básica:
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mt-3">
+                        <div class="bg-white p-3 rounded border border-emerald-150">
+                            <strong class="text-slate-900 block mb-1">Sección 2: Identificación de Peligros</strong>
+                            <p class="text-slate-600">Le indica con claridad <span class="text-red-600 font-bold">a qué peligro específico</span> se está exponiendo de inmediato en la operación.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded border border-emerald-150">
+                            <strong class="text-slate-900 block mb-1">Sección 4: Primeros Auxilios</strong>
+                            <p class="text-slate-600">Le muestra exactamente <span class="text-emerald-700 font-bold">qué hacer en caso de contacto ocular o inhalación</span> para evitar un daño permanente.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded border border-emerald-150">
+                            <strong class="text-slate-900 block mb-1">Sección 8: Control de Exposición / EPP</strong>
+                            <p class="text-slate-600">Le especifica obligatoriamente <span class="text-orange-600 font-bold">qué tipo de guante, máscara o gafas debe portar</span> antes de tocar el químico.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M6. VÍAS DE INGRESO AL ORGANISMO -->
+        <section id="modulo-vias" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="activity" class="w-4 h-4"></i> Módulo 6
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Vías de Ingreso de los Químicos al Organismo</h2>
+                <p class="text-slate-600 text-sm">¿Cómo logran las sustancias penetrar sus defensas biológicas en campo?</p>
+            </div>
+
+            <!-- VÍAS DE ENTRADA -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center shadow-sm">
+                    <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-850 mb-2 font-bold text-xs">1</div>
+                    <h4 class="font-bold text-slate-900 text-xs mb-1">Inhalación</h4>
+                    <p class="text-[10px] text-slate-500 leading-normal">A través del aire (gases, vapores de disolventes, polvos alcalinos). <span class="text-orange-600 font-semibold">La más crítica en la cementera.</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center shadow-sm">
+                    <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-850 mb-2 font-bold text-xs">2</div>
+                    <h4 class="font-bold text-slate-900 text-xs mb-1">Contacto Cutáneo</h4>
+                    <p class="text-[10px] text-slate-500 leading-normal">Absorción dérmica directa por falta de guantes de protección o ropa idónea.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center shadow-sm">
+                    <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-850 mb-2 font-bold text-xs">3</div>
+                    <h4 class="font-bold text-slate-900 text-xs mb-1">Contacto Ocular</h4>
+                    <p class="text-[10px] text-slate-500 leading-normal">Salpicaduras que provocan desde irritación hasta ceguera química.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center shadow-sm">
+                    <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-850 mb-2 font-bold text-xs">4</div>
+                    <h4 class="font-bold text-slate-900 text-xs mb-1">Ingestión</h4>
+                    <p class="text-[10px] text-slate-500 leading-normal">Vía digestiva accidental (comer o fumar con manos con lubricante, trasvases prohibidos).</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center flex flex-col items-center shadow-sm">
+                    <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-850 mb-2 font-bold text-xs">5</div>
+                    <h4 class="font-bold text-slate-900 text-xs mb-1">Inyección</h4>
+                    <p class="text-[10px] text-slate-500 leading-normal">Ingreso del contaminante a través de heridas abiertas o cortes con herramientas sucias.</p>
+                </div>
+            </div>
+
+            <!-- FACTORES QUE AUMENTAN LA ABSORCIÓN -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-orange-500"></i> Factores que Aumentan la Absorción en Campo
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div class="p-3 bg-slate-50 rounded-lg border flex gap-3">
+                        <i data-lucide="thermometer" class="w-5 h-5 text-red-500 shrink-0"></i>
+                        <div>
+                            <strong>Temperatura y Sudoración:</strong> El calor dilatado de los poros ante los hornos facilita una entrada mucho más rápida de compuestos.
+                        </div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border flex gap-3">
+                        <i data-lucide="heart" class="w-5 h-5 text-red-500 shrink-0"></i>
+                        <div>
+                            <strong>Esfuerzo Físico Extremo:</strong> Duplica el volumen respiratorio de aire, acelerando la entrada de polvo fino a los pulmones.
+                        </div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border flex gap-3">
+                        <i data-lucide="scissors" class="w-5 h-5 text-red-500 shrink-0"></i>
+                        <div>
+                            <strong>Estado de la Piel:</strong> Raspones o grietas absorben el peligro químico hasta 10 veces más rápido que una piel sana.
+                        </div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border flex gap-3">
+                        <i data-lucide="clock" class="w-5 h-5 text-red-500 shrink-0"></i>
+                        <div>
+                            <strong>Tiempo de Exposición:</strong> A mayor duración, mayor acumulación y daño irreversible en órganos diana.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M7. CONTROLES PARA REDUCIR LA EXPOSICIÓN -->
+        <section id="modulo-controles" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="filter" class="w-4 h-4"></i> Módulo 7
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Jerarquía de Controles de SSO</h2>
+                <p class="text-slate-600 text-sm">El orden de prioridad normado internacionalmente para eliminar o minimizar riesgos.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+                    <i data-lucide="network" class="w-4 h-4 text-orange-500"></i> Metodología de Prioridad SSO
+                </h3>
+                <p class="text-slate-600 text-xs mb-4">La seguridad no empieza por el EPP. Siga siempre este orden descendente de controles:</p>
+                
+                <!-- Hierarchy Pyramid Visual representation using styled flex boxes -->
+                <div class="space-y-1.5 text-xs text-white">
+                    <div class="bg-slate-900 p-3.5 rounded-xl flex justify-between items-center border border-slate-700">
+                        <span class="font-bold text-slate-300">1. Eliminación (Nivel Máximo)</span>
+                        <span class="text-slate-400">Suprimir físicamente el químico de planta si es factible.</span>
+                    </div>
+                    <div class="bg-slate-800 p-3.5 rounded-xl flex justify-between items-center border border-slate-700">
+                        <span class="font-bold text-slate-300">2. Sustitución</span>
+                        <span class="text-slate-400">Reemplazar por un compuesto químico de menor toxicidad.</span>
+                    </div>
+                    <div class="bg-slate-700 p-3.5 rounded-xl flex justify-between items-center border border-slate-600">
+                        <span class="font-bold text-slate-300">3. Controles de Ingeniería</span>
+                        <span class="text-slate-400">Instalar colectores de polvo, campanas extractoras, diques.</span>
+                    </div>
+                    <div class="bg-slate-600 p-3.5 rounded-xl flex justify-between items-center border border-slate-500">
+                        <span class="font-bold text-slate-300">4. Controles Administrativos</span>
+                        <span class="text-slate-400">Señalización, procedimientos, rotación de personal, capacitaciones.</span>
+                    </div>
+                    <div class="bg-orange-600 p-3.5 rounded-xl flex justify-between items-center border border-orange-500 shadow-lg shadow-orange-600/20">
+                        <span class="font-bold text-white">5. EPP (Última Línea de Defensa)</span>
+                        <span class="text-orange-100">Guantes, respirador, gafas. Si el EPP falla, usted queda expuesto directamente.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M8. EQUIPO DE PROTECCIÓN PERSONAL -->
+        <section id="modulo-epp" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="shield" class="w-4 h-4"></i> Módulo 8
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Selección y Limitaciones del EPP Químico</h2>
+                <p class="text-slate-600 text-sm">Cómo escoger el equipo idóneo y entender por qué no elimina el peligro original.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-base mb-3">Guía de Selección de EPP en Planta</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                    <div class="p-4 bg-slate-50 rounded-xl border">
+                        <strong class="text-slate-950 block mb-1">Protección de Manos</strong>
+                        <p class="text-slate-600 mb-2">Usar estrictamente guantes de Nitrilo o Neopreno homologados.</p>
+                        <span class="text-red-600 font-semibold text-[10px] uppercase block">⚠ Prohibidos guantes de cuero o lona para químicos.</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border">
+                        <strong class="text-slate-950 block mb-1">Protección Respiratoria</strong>
+                        <p class="text-slate-600 mb-2">Filtros mecánicos P100 para sílice y polvo alcalino. Cartuchos de carbón activo para vapores y solventes.</p>
+                        <span class="text-slate-500 text-[10px] block">Asegurar perfecto sello facial.</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border">
+                        <strong class="text-slate-950 block mb-1">Protección Visual / Facial</strong>
+                        <p class="text-slate-600 mb-2">Monogafas de sello hermético indirecto y pantalla facial en trasvases críticos.</p>
+                        <span class="text-slate-500 text-[10px] block">Evitar uso de lentes convencionales.</span>
+                    </div>
+                </div>
+
+                <!-- LIMITACIONES DEL EPP -->
+                <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-xs">
+                    <h4 class="font-bold text-red-950 mb-1 flex items-center gap-1.5">
+                        <i data-lucide="alert-octagon" class="text-red-600 w-4 h-4"></i> Limitación Crítica de los Equipos:
+                    </h4>
+                    <p class="text-slate-700 leading-relaxed">
+                        El EPP no disminuye ni elimina la agresividad o toxicidad inherente del producto químico; únicamente limita su exposición física de forma temporal. <strong class="text-red-700">Si un guante se perfora o un respirador pierde hermeticidad por vello facial, la barrera se destruye de inmediato.</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- M9. MANIPULACIÓN SEGURA -->
+        <section id="modulo-manipulacion" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="package-open" class="w-4 h-4"></i> Módulo 9
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Buenas Prácticas de Manipulación Diaria</h2>
+                <p class="text-slate-600 text-sm">Directrices obligatorias de seguridad operativa durante el trasvase y manipulación de sustancias.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600">
+                    <div class="flex gap-2 items-start">
+                        <i data-lucide="check-square" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                        <div>
+                            <strong>Leer la etiqueta siempre:</strong> Verifique las indicaciones de peligro (Frases H) antes de abrir cualquier tambor o recipiente.
+                        </div>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <i data-lucide="x-square" class="w-4 h-4 text-red-500 shrink-0 mt-0.5"></i>
+                        <div>
+                            <strong>No reutilizar envases:</strong> Queda terminantemente prohibido verter o almacenar temporalmente químicos en botellas de agua pura o bebidas de consumo humano.
+                        </div>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <i data-lucide="check-square" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                        <div>
+                            <strong>Etiquetado Secundario:</strong> Todo recipiente de trasvase debe portar la etiqueta corporativa correspondiente, indicando nombre, pictograma SGA y código QR de acceso a su FDS digital.
+                        </div>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <i data-lucide="x-square" class="w-4 h-4 text-red-500 shrink-0 mt-0.5"></i>
+                        <div>
+                            <strong>No mezclar incompatibles:</strong> Evite a toda costa reacciones violentas de desprendimiento de vapores tóxicos (ej: cloro o gases nitrosos).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M10. ALMACENAMIENTO SEGURO -->
+        <section id="modulo-almacenamiento" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="layout-grid" class="w-4 h-4"></i> Módulo 10
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Almacenamiento Seguro e Incompatibilidades</h2>
+                <p class="text-slate-600 text-sm">Reglas críticas para la disposición física en bodegas químicas, segregación y control del inventario obsoleto.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-700">
+                <div class="bg-white border border-slate-200 p-4 rounded-xl space-y-1.5 shadow-sm">
+                    <div class="h-8 w-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+                        <i data-lucide="arrow-left-right" class="w-4 h-4"></i>
+                    </div>
+                    <strong class="text-slate-900 block font-bold">Separación de 1 Metro</strong>
+                    <p class="text-slate-500">Distancia horizontal mínima requerida para sustancias bajo restricciones en una misma estantería.</p>
+                </div>
+                <div class="bg-white border border-slate-200 p-4 rounded-xl space-y-1.5 shadow-sm">
+                    <div class="h-8 w-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                        <i data-lucide="layers" class="w-4 h-4"></i>
+                    </div>
+                    <strong class="text-slate-900 block font-bold">Contención Secundaria (110%)</strong>
+                    <p class="text-slate-500">Cubetos o bandejas con capacidad de retener el 110% del volumen del recipiente líquido más grande.</p>
+                </div>
+                <div class="bg-white border border-slate-200 p-4 rounded-xl space-y-1.5 shadow-sm">
+                    <div class="h-8 w-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                        <i data-lucide="timer" class="w-4 h-4"></i>
+                    </div>
+                    <strong class="text-slate-900 block font-bold">Lavaojos a < 1 Minuto</strong>
+                    <p class="text-slate-500">Toda zona de manipulación debe tener estaciones lavaojos accesibles y libres de obstáculos.</p>
+                </div>
+            </div>
+
+            <!-- RUTA DE OBSOLETOS & KPI (DEL INDEX) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div class="flex flex-col lg:flex-row gap-6 items-center">
+                    <div class="w-full lg:w-2/3 space-y-2">
+                        <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                            <i data-lucide="trash-2" class="text-orange-500 w-4 h-4"></i> Ruta de Productos Obsoletos y Formularios SAP
+                        </h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            El almacenamiento de químicos vencidos eleva drásticamente el riesgo de inestabilidad o fugas. Se debe registrar el producto en SAP mediante los formularios <strong>FOR-000999</strong> y <strong>FOR-002031</strong> para su control en catálogo. Todo producto sin rotación mayor a 12 meses debe ser trasladado a cuarentena.
+                        </p>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600">
+                            <strong>Indicador Clave de Rendimiento (KPI):</strong> El inventario de químicos obsoletos o vencidos en bodegas principales debe mantenerse en un nivel <strong>menor o igual al 2% ($\le$ 2%)</strong> del stock registrado.
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/3 bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                        <div class="text-3xl font-black text-orange-600 tracking-tight">&le; 2%</div>
+                        <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block">Límite Máximo del KPI</span>
+                        <div class="w-full bg-slate-200 h-2 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-orange-500 h-full w-1/5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPATIBILIDAD IMAGEN Y SECCIÓN -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-sm mb-3">Matriz de Compatibilidad e Incompatibilidades Críticas</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <div class="bg-slate-100 p-3 rounded-xl border text-center">
+                        <img src="matriz-compatibilidad.png" alt="Matriz de Compatibilidad" class="w-full h-40 object-contain mx-auto bg-white border rounded" onerror="this.src='https://placehold.co/400x200/e2e8f0/475569?text=MATRIZ+COMPATIBILIDAD+GitHub'"/>
+                        <span class="text-[9px] text-slate-500 mt-1 block font-mono">Nombre de archivo en Git: matriz-compatibilidad.png</span>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <span class="font-bold text-slate-900 block">Mezclas Altamente Peligrosas (PROHIBIDAS):</span>
+                        <div class="bg-red-50 p-2.5 border-l-4 border-red-500 rounded text-slate-800 leading-normal">
+                            <strong>Ácidos + Bases:</strong> Reacciones violentas de neutralización exotérmica que pueden explotar o salpicar.
+                        </div>
+                        <div class="bg-red-50 p-2.5 border-l-4 border-red-500 rounded text-slate-800 leading-normal">
+                            <strong>Oxidantes + Combustibles:</strong> Peligro de ignición inmediata y fuego incontrolable.
+                        </div>
+                        <div class="bg-red-50 p-2.5 border-l-4 border-red-500 rounded text-slate-800 leading-normal">
+                            <strong>Hipoclorito + Ácidos:</strong> Libera instantáneamente gas cloro, un gas extremadamente irritante, asfixiante y letal.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERMISO PIQE PARA CONTRATISTAS (DEL INDEX) -->
+            <div class="bg-slate-900 text-white rounded-2xl p-5">
+                <div class="flex flex-col lg:flex-row gap-4 items-center">
+                    <div class="w-full lg:w-3/4 space-y-1.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] font-bold uppercase">
+                            Control de Terceros
+                        </span>
+                        <h4 class="font-bold text-base text-white">Permiso de Ingreso de Químicos Externos (PIQE)</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Cualquier empresa contratista o subcontratista que requiera ingresar sustancias químicas debe tramitar obligatoriamente el formato <strong>PIQE</strong> ante el Coordinador SSO de la planta con un mínimo de <strong>72 horas de anticipación</strong>, entregando copias de sus SDS correspondientes. No se permiten remanentes al finalizar la obra.
+                        </p>
+                    </div>
+                    <div class="w-full lg:w-1/4 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-xs">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-orange-500 mx-auto mb-1"></i>
+                        <strong class="block text-white uppercase text-[10px]">Cero Tolerancia</strong>
+                        <p class="text-slate-400 text-[10px] mt-0.5">La omisión del PIQE suspende los trabajos del contratista.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M11. RESPUESTA ANTE EMERGENCIAS -->
+        <section id="modulo-emergencias" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="life-buoy" class="w-4 h-4"></i> Módulo 11
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Respuesta ante Emergencias Químicas</h2>
+                <p class="text-slate-600 text-sm">Protocolos vitales de actuación inmediata y uso de estaciones de emergencia.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="p-4 bg-red-50 rounded-xl border border-red-150">
+                        <strong class="text-red-900 block mb-2">En caso de Derrames:</strong>
+                        <ol class="list-decimal pl-4 space-y-1 text-slate-700 leading-relaxed">
+                            <li>Detener o contener la fuga en su origen si es seguro hacerlo.</li>
+                            <li>Delimitar el área y reportar de inmediato a control y brigadas.</li>
+                            <li>Absorber con material del Kit (aserrín, arena o paños inertes). <strong class="text-red-700">Nunca lave con agua directa hacia los drenajes comunes.</strong></li>
+                        </ol>
+                    </div>
+
+                    <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-150">
+                        <strong class="text-emerald-900 block mb-2">En caso de Salpicadura Ocular:</strong>
+                        <ol class="list-decimal pl-4 space-y-1 text-slate-700 leading-relaxed">
+                            <li>Diríjase de inmediato a la estación lavaojos más cercana en <strong class="text-emerald-800">menos de 10 segundos</strong>.</li>
+                            <li>Abra los párpados a la fuerza y sosténgalos con sus dedos.</li>
+                            <li>Irrigue con abundante agua por un <strong class="text-emerald-800 font-bold">mínimo de 15 a 20 minutos continuos</strong>.</li>
+                            <li>Busque atención médica de forma urgente.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-4 bg-slate-50 border rounded-xl flex gap-3 items-start text-xs text-slate-700">
+                    <i data-lucide="shield-alert" class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5"></i>
+                    <div>
+                        <strong>Kits Homologados y Simulacros:</strong> Todo frente de trabajo que manipule líquidos químicos debe disponer de un kit absorbente visible y ejecutar al menos <strong>un simulacro anual de control de derrames químicos e intoxicaciones</strong> evaluado por SSO.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M12. GESTIÓN DE RESIDUOS -->
+        <section id="modulo-residuos" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> Módulo 12
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Gestión Correcta de Residuos Peligrosos</h2>
+                <p class="text-slate-600 text-sm">Normas estrictas de descarte, clasificación y etiquetado para proteger el medio ambiente.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-center text-[11px] text-slate-700">
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <span class="font-bold block mb-1 text-slate-900">1. Segregación</span>
+                        Queda prohibido mezclar aceites usados con reactivos de laboratorio o ácidos en el mismo depósito de desecho.
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <span class="font-bold block mb-1 text-slate-900">2. Almacén Temporal</span>
+                        Resguardar en áreas dedicadas con diques de contención cerrados e impermeabilizados.
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <span class="font-bold block mb-1 text-slate-900">3. Rotulado Claro</span>
+                        Los bidones de descarte deben portar obligatoriamente la leyenda "Residuo Peligroso de: (Nombre)".
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-lg border">
+                        <span class="font-bold block mb-1 text-slate-900">4. Disposición Final</span>
+                        Co-procesamiento en hornos cementeros autorizados o retiro a través de gestores ambientales certificados.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M13: MITO O REALIDAD & CASOS PRÁCTICOS -->
+        <section id="modulo-mito" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i> Módulo 13
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Desafío Interactivo & Escenarios de Planta</h2>
+                <p class="text-slate-600 text-sm">Ponga a prueba su conocimiento sobre riesgos y analice situaciones reales de campo.</p>
+            </div>
+
+            <!-- ANALISIS DE ESCENARIOS (DEL INDEX) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-sm mb-3">Análisis de Desviaciones Comunes de Campo</h3>
+                
+                <div class="space-y-3 text-xs">
+                    <!-- ESCENARIO A -->
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2">
+                        <h4 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                            <span class="w-5 h-5 rounded bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-[10px]">A</span>
+                            Derrame de Ácido en Laboratorio de Calidad
+                        </h4>
+                        <p class="text-slate-600">Un analista quiebra accidentalmente un matraz de ácido clorhídrico concentrado y, para apresurar la limpieza, toma una manguera de agua y lava el derrame dirigiéndolo al desagüe común.</p>
+                        <button onclick="revelarSolución('solucion-a', this)" class="text-[11px] font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1.5 transition-colors">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i> Revelar dictamen técnico
+                        </button>
+                        <div id="solucion-a" class="hidden text-[11px] bg-slate-900 border border-slate-800 p-3.5 rounded-lg text-slate-300 space-y-1 mt-2">
+                            <p class="text-red-400 font-bold">🚫 ACCIÓN TOTALMENTE INSEGURA Y PROHIBIDA</p>
+                            <p><strong>Consecuencias:</strong> Arrojar químicos al drenaje viola las normas de medio ambiente. Verter agua directa sobre un ácido concentrado puede gatillar una reacción exotérmica violenta con proyecciones de salpicaduras corrosivas al rostro.</p>
+                            <p><strong>Acción Correcta:</strong> Activar control de derrames. Colocarse EPP químico, aplicar bicarbonato de sodio o cal apagada para neutralizar el $pH$ y absorber con paños inertes del kit.</p>
+                        </div>
+                    </div>
+
+                    <!-- ESCENARIO B -->
+                    <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2">
+                        <h4 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                            <span class="w-5 h-5 rounded bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-[10px]">B</span>
+                            Ingreso de Sustancias sin Control de Contratistas
+                        </h4>
+                        <p class="text-slate-600">Una contratista ingresa el domingo a reparar bases de maquinaria en ensacado, trayendo resinas epóxicas sin rotulado en botellas de agua genéricas.</p>
+                        <button onclick="revelarSolución('solucion-b', this)" class="text-[11px] font-bold text-orange-600 hover:text-orange-700 flex items-center gap-1.5 transition-colors">
+                            <i data-lucide="eye" class="w-3.5 h-3.5"></i> Revelar dictamen técnico
+                        </button>
+                        <div id="solucion-b" class="hidden text-[11px] bg-slate-900 border border-slate-800 p-3.5 rounded-lg text-slate-300 space-y-1 mt-2">
+                            <p class="text-red-400 font-bold">🚫 INFRACCIÓN CONTRACTUAL CRÍTICA</p>
+                            <p><strong>Consecuencias:</strong> Ingresar químicos clandestinos expone al personal a riesgos no declarados y viola las políticas contractuales de seguridad.</p>
+                            <p><strong>Acción Correcta:</strong> El supervisor de obra debió tramitar el permiso **PIQE** 72 horas antes de iniciar los trabajos. Las sustancias deben poseer etiqueta SGA y portar su propio kit de respuesta a derrames.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHECKLIST INTERACTIVO DE 8 PUNTOS (DEL INDEX) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                    <i data-lucide="check-circle-2" class="text-emerald-500 w-4 h-4"></i> Checklist de Campo Obligatorio
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">Antes de manipular o retirar cualquier producto químico de almacén, verifique los siguientes 8 puntos críticos de seguridad en planta haciendo clic en cada fila:</p>
+
+                <div class="space-y-1.5">
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">1. ¿La FDS del producto está disponible y actualizada?</h4>
+                            <p class="text-[10px] text-slate-500">Debe estar accesible en español y tener una vigencia menor o igual a 3 años.</p>
+                        </div>
+                    </div>
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">2. ¿Reconozco los peligros de la etiqueta original y el rombo?</h4>
+                            <p class="text-[10px] text-slate-500">Identifico plenamente las Frases H de riesgo a la salud, inflamabilidad y reactividad antes de mover el contenedor.</p>
+                        </div>
+                    </div>
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">3. ¿Tengo el EPP específico de barrera química normado?</h4>
+                            <p class="text-[10px] text-slate-500">Cuento con guantes del polímero exacto (nitrilo/neopreno), gafas de sello hermético y respirador con filtro adecuado.</p>
+                        </div>
+                    </div>
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">4. En caso de trasvase, ¿el recipiente está homologado e identificado?</h4>
+                            <p class="text-[10px] text-slate-500">El frasco posee etiqueta de trasvase con código QR. Prohibido el uso de botellas de refresco.</p>
+                        </div>
+                    </div>
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">5. ¿Validé la Matriz de Compatibilidad para almacenamiento común?</h4>
+                            <p class="text-[10px] text-slate-500">Respeto el cruce de condiciones: si hay restricción, mantengo la separación mínima de 1 metro horizontal.</p>
+                        </div>
+                    </div>
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">6. ¿Existe un cubeto de retención secundaria independiente?</h4>
+                            <p class="text-[10px] text-slate-500">El dique tiene la capacidad estructural de contener al menos el 110% del volumen del envase líquido mayor.</p>
+                        </div>
+                    </div>
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">7. ¿Ubico plenamente la estación de lavaojos y el kit de derrames?</h4>
+                            <p class="text-[10px] text-slate-500">Los pasillos están despejados y la estación lavaojos está a menos de 1 minuto de distancia del área de labor.</p>
+                        </div>
+                    </div>
+                    <div onclick="marcarCheckItem(this)" class="check-box-row group border border-slate-200 bg-slate-50 hover:bg-slate-100/50 rounded-xl p-3 flex items-start gap-3 cursor-pointer transition-all">
+                        <div class="check-box-indicator text-slate-400 mt-0.5"><i data-lucide="square" class="w-4 h-4"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-700 group-hover:text-slate-900 transition-colors">8. ¿Sé a quién notificar en caso de fuga activa o empaque dañado?</h4>
+                            <p class="text-[10px] text-slate-500">Debo reportar la anomalía al Jefe de Almacén y al Supervisor SSO.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mensaje-exito-checklist" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-300 rounded-xl text-center space-y-2">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center mx-auto">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-xs text-emerald-700">¡Validación de Campo Completada!</h4>
+                    <p class="text-[10px] text-slate-600">Ha verificado satisfactoriamente los 8 controles de seguridad física. Está listo para la labor.</p>
+                </div>
+            </div>
+
+            <!-- JUEGO MITO O REALIDAD -->
+            <div class="bg-white border-2 border-slate-200 rounded-3xl p-6 shadow-md">
+                <div id="game-intro" class="text-center py-4 space-y-3">
+                    <div class="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mx-auto">
+                        <i data-lucide="gamepad-2" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900">¿Listo para el desafío de SSO?</h3>
+                    <p class="text-slate-600 max-w-md mx-auto text-xs leading-relaxed">
+                        Responda 5 afirmaciones determinando si corresponden a un Mito o una Realidad de campo. Requerirá al menos <strong class="text-orange-600">4 aciertos</strong> para considerarse aprobado en esta sección de entrenamiento.
+                    </p>
+                    <button onclick="startGame()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all inline-flex items-center gap-2 text-xs">
+                        Comenzar Desafío <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <!-- GAME SCENE -->
+                <div id="game-play" class="hidden space-y-4">
+                    <div class="flex justify-between items-center text-[10px] font-bold text-slate-500 border-b pb-2">
+                        <span>Pregunta <span id="q-index">1</span> de 5</span>
+                        <span>Aciertos: <span id="q-score" class="text-emerald-600">0</span></span>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-5 border text-center">
+                        <p id="q-text" class="text-sm font-bold text-slate-800 leading-relaxed">
+                            Cargando afirmación...
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="submitAnswer(true)" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all flex flex-col items-center gap-1">
+                            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                            <span>REALIDAD</span>
+                        </button>
+                        <button onclick="submitAnswer(false)" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all flex flex-col items-center gap-1">
+                            <i data-lucide="x-circle" class="w-4 h-4"></i>
+                            <span>MITO</span>
+                        </button>
+                    </div>
+
+                    <!-- FEEDBACK AREA -->
+                    <div id="game-feedback" class="hidden p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 text-left">
+                        <h4 id="fb-title" class="font-bold text-xs">Resultado</h4>
+                        <p id="fb-text">Detalle de retroalimentación.</p>
+                        <button onclick="nextQuestion()" class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg font-bold mt-1.5 hover:bg-slate-800 text-[10px] transition-all flex items-center gap-1">
+                            Siguiente <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GAME RESULT -->
+                <div id="game-result" class="hidden text-center py-4 space-y-3">
+                    <div id="res-icon" class="h-12 w-12 rounded-full flex items-center justify-center mx-auto text-white">
+                        <!-- Carga vía JS -->
+                    </div>
+                    <h3 id="res-title" class="text-xl font-bold">Resultado</h3>
+                    <p id="res-desc" class="text-slate-600 max-w-md mx-auto text-xs leading-relaxed">
+                        Descripción del puntaje.
+                    </p>
+                    <div class="flex gap-3 justify-center">
+                        <button onclick="startGame()" class="border border-slate-300 hover:border-slate-400 text-slate-700 font-bold py-2 px-4 rounded-xl text-xs transition-all">
+                            Reintentar Desafío
+                        </button>
+                        <button onclick="cambiarModulo('modulo-evaluacion', document.querySelector('[onclick*=\'modulo-evaluacion\']'))" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-xl text-xs shadow-md transition-all">
+                            Ir a la Evaluación Final
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- M14: EVALUACIÓN FINAL -->
+        <section id="modulo-evaluacion" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i> Módulo 14
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Evaluación Final de Competencias</h2>
+                <p class="text-slate-600 text-sm">Cuestionario obligatorio institucional para validación y registro de aprobación.</p>
+            </div>
+
+            <div class="w-full bg-white border border-slate-200 rounded-3xl p-4 shadow-lg flex flex-col items-center">
+                <div class="w-full max-w-4xl bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 relative min-h-[500px]">
+                    <!-- INTEGRACIÓN DEL FORMULARIO EXTERNO CORPORATIVO -->
+                    <iframe width="100%" height="550px" src="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=R74bQeX7JUCmrieWPa2zRnkQANe8zvtBtjOVN904RcNUQ1JYMktPSVk3V00yUzU4QUFRTEw2QThJMC4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" style="border: none; width: 100%; min-height: 550px; max-width:100%;" allowfullscreen webkitallowfullscreen mozallowfullscreen msallowfullscreen></iframe>
+                </div>
+                <div class="mt-4 flex items-center gap-2 text-[10px] text-slate-400 font-mono">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+                    <span>Conexión de Seguridad Cifrada • Microsoft Forms Corporativo</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CONTROLADORES LÓGICOS (JAVASCRIPT) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            // Inicializar responsabilidades
+            const primerBotonResp = document.querySelector('.resp-btn');
+            if (primerBotonResp) primerBotonResp.click();
+        });
+
+        function cambiarModulo(idModulo, boton) {
+            // Ocultar todos los módulos
+            document.querySelectorAll('.modulo').forEach(m => m.classList.remove('activo'));
+            
+            // Mostrar módulo seleccionado
+            const modSeleccionado = document.getElementById(idModulo);
+            if (modSeleccionado) {
+                modSeleccionado.classList.add('activo');
+            }
+            
+            // Restablecer estilos de los botones del menú lateral
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.className = "menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50";
+            });
+            
+            // Aplicar estilo activo en Sidebar (Identidad Naranja)
+            if (boton) {
+                boton.className = "menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700 shadow-inner";
+            }
+            
+            // Re-renderizar iconos de Lucide
+            lucide.createIcons();
+            
+            // Auto scroll al inicio de la página al cambiar de pestaña
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        // CONTROLADOR DE ACORDEÓN
+        function toggleAccordion(idAccordion) {
+            const accordion = document.getElementById(idAccordion);
+            const icon = document.getElementById('icon-' + idAccordion);
+            
+            if (accordion.classList.contains('abierto')) {
+                accordion.classList.remove('abierto');
+                icon.style.transform = "rotate(0deg)";
+            } else {
+                accordion.classList.add('abierto');
+                icon.style.transform = "rotate(180deg)";
+            }
+        }
+
+        // DESPLEGAR DETALLES SGA INTERACTIVOS
+        const detallesSga = {
+            'explosivo': {
+                titulo: "Sustancias Explosivas",
+                desc: "Sustancias o mezclas gaseosas, líquidas o sólidas que presentan riesgo de explosión en masa por calor, fricción o golpe mecánico.",
+                ejemplo: "Ejemplos en cantera: Nitratos y agentes químicos de voladura."
+            },
+            'inflamable': {
+                titulo: "Sustancias Inflamables",
+                desc: "Líquidos, sólidos o gases que se encienden con gran facilidad al contacto directo con chispas de soldadura o fuentes de ignición.",
+                ejemplo: "Ejemplos en planta: Tíner, solventes de limpieza dieléctricos y aceites usados."
+            },
+            'comburente': {
+                titulo: "Sustancias Comburentes / Oxidantes",
+                desc: "Sustancias que facilitan o avivan la combustión violenta de otros materiales combustibles liberando oxígeno.",
+                ejemplo: "Ejemplos en talleres: Oxígeno comprimido empleado en oxicorte."
+            },
+            'gas': {
+                titulo: "Gases a Presión",
+                desc: "Gases comprimidos que pueden proyectarse violentamente o explotar si el cilindro se calienta o sufre golpes en las válvulas.",
+                ejemplo: "Ejemplos en talleres: Cilindros de acetileno, nitrógeno o CO2."
+            },
+            'corrosivo': {
+                titulo: "Sustancias Corrosivas",
+                desc: "Sustancias que causan quemaduras irreversibles severas e inmediatas en contacto directo con piel u ojos, o atacan metales.",
+                ejemplo: "Ejemplos en planta: Soda cáustica líquida y ácido clorhídrico de laboratorio."
+            },
+            'toxicidad': {
+                titulo: "Toxicidad Aguda",
+                desc: "Sustancias extremadamente dañinas o mortales de forma inmediata tras inhalación, ingesta o contacto único.",
+                ejemplo: "Ejemplos en planta: Reactivos puros de calibración analítica."
+            },
+            'irritante': {
+                titulo: "Sustancias Irritantes / Nocivas",
+                desc: "Causan irritaciones respiratorias o cutáneas severas, somnolencia, alergias o mareos al operador expuesto.",
+                ejemplo: "Ejemplos en planta: Grasas, limpiadores y cemento Portland húmedo."
+            },
+            'grave': {
+                titulo: "Peligros Graves para la Salud",
+                desc: "Agentes con efectos severos a largo plazo. Incluye mutágenos, carcinógenos o tóxicos de órganos específicos.",
+                ejemplo: "Ejemplos en planta: Polvo de sílice cristalina respirable (SCR)."
+            },
+            'ambiental': {
+                titulo: "Peligros para el Medio Ambiente",
+                desc: "Sustancias con alta toxicidad duradera para la flora y fauna acuática.",
+                ejemplo: "Ejemplos en planta: Lubricantes stock, hidrocarburos pesados."
+            }
+        };
+
+        function desplegarDetalleSga(tipo, boton) {
+            const datos = detallesSga[tipo];
+            const panel = document.getElementById('panel-sga-detalle');
+            const imgPanel = document.getElementById('panel-sga-img');
+            const tituloPanel = document.getElementById('panel-sga-titulo');
+            const descPanel = document.getElementById('panel-sga-desc');
+            const ejPanel = document.getElementById('panel-sga-ejemplo');
+
+            document.querySelectorAll('.picto-btn').forEach(btn => {
+                btn.classList.remove('border-orange-500', 'bg-orange-50');
+                btn.classList.add('border-slate-200', 'bg-slate-50');
+            });
+            boton.classList.add('border-orange-500', 'bg-orange-50');
+            boton.classList.remove('border-slate-200', 'bg-slate-50');
+
+            panel.classList.remove('hidden');
+            imgPanel.src = boton.querySelector('img').src;
+            tituloPanel.innerText = datos.titulo;
+            descPanel.innerText = datos.desc;
+            ejPanel.innerText = datos.ejemplo ? datos.ejemplo : "";
+            
+            lucide.createIcons();
+        }
+
+        // ACORDEÓN FDS 16 SECCIONES
+        function alternarFdsAcordeon(boton) {
+            const contenido = boton.nextElementSibling;
+            const icono = boton.querySelector('[data-lucide="chevron-down"]');
+            const estaAbierto = contenido.classList.contains('abierto');
+
+            if (estaAbierto) {
+                contenido.classList.remove('abierto');
+                contenido.style.maxHeight = '0';
+                icono.style.transform = 'rotate(0deg)';
+            } else {
+                contenido.classList.add('abierto');
+                contenido.style.maxHeight = contenido.scrollHeight + 'px';
+                icono.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // REVELAR SOLUCIONES DE ESCENARIOS
+        function revelarSolución(idSolucion, boton) {
+            const panel = document.getElementById(idSolucion);
+            const estaOculto = panel.classList.contains('hidden');
+
+            if (estaOculto) {
+                panel.classList.remove('hidden');
+                boton.innerHTML = '<i data-lucide="eye-off" class="w-3.5 h-3.5"></i> Ocultar dictamen técnico';
+            } else {
+                panel.classList.add('hidden');
+                boton.innerHTML = '<i data-lucide="eye" class="w-3.5 h-3.5"></i> Revelar dictamen técnico';
+            }
+            lucide.createIcons();
+        }
+
+        // CONTROLADOR DE CHECKLIST INTERACTIVO (8 PUNTOS)
+        let itemsMarcados = 0;
+        const totalItemsChecklist = 8;
+
+        function marcarCheckItem(fila) {
+            const indicador = fila.querySelector('.check-box-indicator');
+            const yaMarcado = fila.classList.contains('bg-emerald-50');
+
+            if (yaMarcado) {
+                fila.classList.remove('bg-emerald-50', 'border-emerald-300');
+                fila.classList.add('bg-slate-50', 'border-slate-200');
+                indicador.innerHTML = '<i data-lucide="square" class="w-4 h-4"></i>';
+                indicador.classList.remove('text-emerald-600');
+                indicador.classList.add('text-slate-400');
+                itemsMarcados--;
+            } else {
+                fila.classList.remove('bg-slate-50', 'border-slate-200');
+                fila.classList.add('bg-emerald-50', 'border-emerald-300');
+                indicador.innerHTML = '<i data-lucide="check-square" class="w-4 h-4"></i>';
+                indicador.classList.remove('text-slate-400');
+                indicador.classList.add('text-emerald-600');
+                itemsMarcados++;
+            }
+            lucide.createIcons();
+
+            const mensajeExito = document.getElementById('mensaje-exito-checklist');
+            if (itemsMarcados === totalItemsChecklist) {
+                mensajeExito.classList.remove('hidden');
+            } else {
+                mensajeExito.classList.add('hidden');
+            }
+        }
+
+        // RESPONSABILIDADES POR PUESTO DATA
+        const datosResponsabilidades = {
+            'jefe-almacen': {
+                titulo: "Obligaciones del Jefe de Almacén",
+                tareas: [
+                    "Mantener actualizado el Catálogo de Productos Químicos mediante los formatos **FOR-000999** y **FOR-002031** antes de ingresar sustancias.",
+                    "Garantizar que todo producto cuente con su respectiva etiqueta SGA y código único corporativo.",
+                    "Revisar trimestralmente el inventario de productos obsoletos para cumplir el KPI de mantenerlos en **$\le$ 2%**."
+                ]
+            },
+            'gerente-seguridad': {
+                titulo: "Obligaciones del Gerente de Seguridad Industrial",
+                tareas: [
+                    "Aprobar técnicamente el ingreso físico de cualquier producto químico nuevo a las instalaciones.",
+                    "Coordinar y supervisar de forma anual las auditorías globales del sistema de control del procedimiento.",
+                    "Definir los lineamientos de los planes de contingencia frente a derrames mayores."
+                ]
+            },
+            'gerente-higiene': {
+                titulo: "Higiene / Médico Ocupacional",
+                tareas: [
+                    "Evaluar toxicológicamente los riesgos asociados a los componentes activos de las mezclas.",
+                    "Liderar los programas de Vigilancia Epidemiológica y exámenes clínicos para el personal expuesto.",
+                    "Validar el tipo de EPP de barrera química idóneo para la tarea en planta."
+                ]
+            },
+            'coordinador-sso': {
+                titulo: "Obligaciones del Coordinador SSO de Planta",
+                tareas: [
+                    "Inspeccionar de forma mensual las bodegas, etiquetas y estados de las estaciones de lavaojos.",
+                    "Gestionar las capacitaciones anuales obligatorias en riesgo químico y uso del SGA para operarios.",
+                    "Validar y autorizar el Permiso de Ingreso de Químicos Externos (**PIQE**) de contratistas."
+                ]
+            },
+            'lideres-area': {
+                titulo: "Obligaciones de Líderes y Colaboradores",
+                tareas: [
+                    "Inspeccionar que no se utilicen químicos sin rotular o sin FDS accesible.",
+                    "Asegurar el uso de envases homologados para trasvases, con su debida etiqueta QR corporativa.",
+                    "Garantizar el uso permanente y correcto del EPP químico asignado."
+                ]
+            }
+        };
+
+        function mostrarResponsabilidad(idRol, boton) {
+            const contenido = datosResponsabilidades[idRol];
+            const placeholder = document.getElementById('resp-placeholder');
+            const divContenido = document.getElementById('resp-contenido');
+            const titulo = document.getElementById('resp-titulo');
+            const lista = document.getElementById('resp-lista');
+
+            document.querySelectorAll('.resp-btn').forEach(b => {
+                b.className = "resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600";
+            });
+            boton.className = "resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-orange-50 border-orange-500 text-orange-600";
+
+            if (contenido) {
+                placeholder.classList.add('hidden');
+                divContenido.classList.remove('hidden');
+                titulo.innerText = contenido.titulo;
+                lista.innerHTML = "";
+                contenido.tareas.forEach(tarea => {
+                    const li = document.createElement('li');
+                    li.className = "leading-relaxed";
+                    li.innerHTML = tarea.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900">$1</strong>');
+                    lista.appendChild(li);
+                });
+            }
+        }
+
+        // --- SISTEMA DEL JUEGO INTERACTIVO (MITO / REALIDAD) ---
+        const gameQuestions = [
+            {
+                text: "Si un envase secundario carece de etiqueta en el laboratorio o taller, puedo olerlo con cautela para identificar rápidamente la sustancia.",
+                isRealidad: false,
+                explanation: "¡MITO! Inhalar vapores directamente es altamente peligroso. Muchos químicos industriales de la cementera causan pérdida de conciencia o dañan de inmediato las membranas respiratorias."
+            },
+            {
+                text: "Las Hojas de Datos de Seguridad (SDS) son de lectura y comprensión obligatoria antes de iniciar la manipulación de cualquier producto químico.",
+                isRealidad: true,
+                explanation: "¡REALIDAD! Todo colaborador expuesto tiene la obligación de leer el trinomio de secciones clave (2, 4 y 8) para asegurar su autoprotección efectiva."
+            },
+            {
+                text: "La vía respiratoria es la ruta más crítica de ingreso de agentes químicos en la cementera debido al polvo alcalino y aditivos volátiles.",
+                isRealidad: true,
+                explanation: "¡REALIDAD! La inhalación de material particulado y vapores de molienda los convierte en el riesgo de absorción principal e inmediato."
+            },
+            {
+                text: "El uso de Equipo de Protección Personal (EPP) es siempre la primera y más efectiva barrera según la Jerarquía de Controles de SSO.",
+                isRealidad: false,
+                explanation: "¡MITO! El EPP es la última línea de defensa. No elimina el peligro en origen: si el guante se perfora, queda expuesto al 100% de la agresión del producto."
+            },
+            {
+                text: "La cal viva (óxido de calcio) reacciona violentamente al contacto con la humedad de la piel o sudor liberando quemaduras térmicas destructivas.",
+                isRealidad: true,
+                explanation: "¡REALIDAD! La cal viva es altamente reactiva y exotérmica al hidratarse, por lo que exige trajes Tyvek herméticos, guantes secos y goggles herméticos."
+            }
+        ];
+
+        let currentQuestionIdx = 0;
+        let score = 0;
+
+        function startGame() {
+            currentQuestionIdx = 0;
+            score = 0;
+            
+            document.getElementById('game-intro').classList.add('hidden');
+            document.getElementById('game-result').classList.add('hidden');
+            document.getElementById('game-play').classList.remove('hidden');
+            document.getElementById('game-feedback').classList.add('hidden');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            document.getElementById('game-feedback').classList.add('hidden');
+            document.getElementById('q-index').textContent = currentQuestionIdx + 1;
+            document.getElementById('q-score').textContent = score;
+            document.getElementById('q-text').textContent = gameQuestions[currentQuestionIdx].text;
+            
+            // Habilitar botones de acción
+            document.querySelectorAll('#game-play button').forEach(b => b.removeAttribute('disabled'));
+            lucide.createIcons();
+        }
+
+        function submitAnswer(userChoice) {
+            const currentQ = gameQuestions[currentQuestionIdx];
+            const isCorrect = userChoice === currentQ.isRealidad;
+            
+            if (isCorrect) {
+                score++;
+                document.getElementById('q-score').textContent = score;
+                document.getElementById('fb-title').textContent = "¡Respuesta Correcta!";
+                document.getElementById('game-feedback').className = "p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 bg-emerald-50 border-emerald-300 text-emerald-900 text-left";
+            } else {
+                document.getElementById('fb-title').textContent = "Respuesta Incorrecta";
+                document.getElementById('game-feedback').className = "p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 bg-red-50 border-red-300 text-red-900 text-left";
+            }
+            
+            document.getElementById('fb-text').textContent = currentQ.explanation;
+            document.getElementById('game-feedback').classList.remove('hidden');
+            
+            // Bloquear botones para evitar dobles clics
+            document.querySelectorAll('#game-play button').forEach(b => {
+                if (!b.classList.contains('bg-slate-900')) b.setAttribute('disabled', 'true');
+            });
+        }
+
+        function nextQuestion() {
+            currentQuestionIdx++;
+            if (currentQuestionIdx < gameQuestions.length) {
+                loadQuestion();
+            } else {
+                showGameResults();
+            }
+        }
+
+        function showGameResults() {
+            document.getElementById('game-play').classList.add('hidden');
+            document.getElementById('game-result').classList.remove('hidden');
+            
+            const passScore = 4;
+            const hasPassed = score >= passScore;
+            
+            const iconContainer = document.getElementById('res-icon');
+            const titleContainer = document.getElementById('res-title');
+            const descContainer = document.getElementById('res-desc');
+            
+            if (hasPassed) {
+                iconContainer.className = "h-12 w-12 rounded-full flex items-center justify-center mx-auto text-white bg-emerald-500 shadow-lg shadow-emerald-500/25";
+                iconContainer.innerHTML = `<i data-lucide="award" class="w-6 h-6"></i>`;
+                titleContainer.textContent = "¡Felicidades, Desafío Superado!";
+                titleContainer.className = "text-xl font-bold text-emerald-600";
+                descContainer.innerHTML = `Ha obtenido un puntaje de <strong class="text-slate-950">${score}/5</strong>. Su nivel preventivo es apto y seguro. Continúe hacia el examen final.`;
+            } else {
+                iconContainer.className = "h-12 w-12 rounded-full flex items-center justify-center mx-auto text-white bg-red-500 shadow-lg shadow-red-500/25";
+                iconContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-6 h-6"></i>`;
+                titleContainer.textContent = "Desafío No Aprobado";
+                titleContainer.className = "text-xl font-bold text-red-600";
+                descContainer.innerHTML = `Ha obtenido un puntaje de <strong class="text-slate-950">${score}/5</strong>. Para garantizar su seguridad, le recomendamos releer los módulos técnicos y reintentar el juego.`;
+            }
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

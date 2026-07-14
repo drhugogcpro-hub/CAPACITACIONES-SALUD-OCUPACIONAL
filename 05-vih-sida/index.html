@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitación Digital SSO: VIH-SIDA en el Sector Cementero</title>
+    <!-- Tailwind CSS para diseño fluido y ultra-profesional -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Iconografía moderna de Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+            color: #0f172a; 
+        }
+        
+        /* Transiciones fluidas entre módulos */
+        .modulo { 
+            display: none; 
+            opacity: 0; 
+            transform: translateY(12px); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .modulo.activo { 
+            display: block; 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        
+        /* Efectos de tarjetas de contenido */
+        .card-industrial { 
+            transition: all 0.3s ease; 
+            border: 1px solid #e2e8f0; 
+            background: #ffffff;
+        }
+        .card-industrial:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 12px 20px -8px rgba(234, 88, 12, 0.15); 
+            border-color: #f97316; 
+        }
+        
+        /* Acordeones interactivos para el marco legal */
+        .accordion-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out; 
+        }
+        .accordion-content.abierto { 
+            max-height: 1000px; 
+            padding-bottom: 1.25rem; 
+        }
+
+        /* Estilos personalizados para el Quiz interactivo */
+        .btn-game {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-game:hover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body class="flex min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- PANEL LATERAL DE NAVEGACIÓN (ESTILO INDUSTRIAL / SSO) -->
+    <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between sticky top-0 h-screen shrink-0 text-white z-20">
+        <div class="p-6">
+            <!-- LOGO INSTITUCIONAL Y TÍTULO -->
+            <div class="flex flex-col gap-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-orange-600 rounded-xl text-white shadow-lg shadow-orange-600/30">
+                        <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-base leading-tight tracking-wider text-slate-100 uppercase">Salud Industrial</h1>
+                        <p class="text-xs text-orange-500 font-bold tracking-widest uppercase">SSO Planta de Cemento</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-6"></div>
+            
+            <!-- PROGRESO DINÁMICO DE CAPACITACIÓN -->
+            <div class="mb-6 bg-slate-800/60 p-4 rounded-xl border border-slate-800">
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="text-xs font-semibold text-slate-400">Progreso del Módulo</span>
+                    <span id="txt-progreso" class="text-xs font-bold text-orange-500">20%</span>
+                </div>
+                <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div id="barra-progreso" class="bg-gradient-to-r from-orange-600 to-orange-400 h-full rounded-full transition-all duration-500" style="width: 20%;"></div>
+                </div>
+            </div>
+
+            <!-- MENÚ DE NAVEGACIÓN -->
+            <nav class="space-y-2" id="sidebar-menu">
+                <button onclick="cambiarModulo('modulo-intro', this, 20)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700/50 shadow-sm shadow-orange-500/10">
+                    <i data-lucide="play-circle" class="w-4.5 h-4.5"></i>
+                    <span>Inicio y Objetivos</span>
+                </button>
+
+                <button onclick="cambiarModulo('modulo-legal', this, 40)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                    <i data-lucide="gavel" class="w-4.5 h-4.5"></i>
+                    <span>M1: Obligatoriedad Legal</span>
+                </button>
+
+                <button onclick="cambiarModulo('modulo-conceptos', this, 60)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                    <i data-lucide="microscope" class="w-4.5 h-4.5"></i>
+                    <span>M2: VIH vs SIDA</span>
+                </button>
+
+                <button onclick="cambiarModulo('modulo-mitos', this, 80)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                    <i data-lucide="help-circle" class="w-4.5 h-4.5"></i>
+                    <span>M3: Mitos y Realidades</span>
+                </button>
+
+                <button onclick="cambiarModulo('modulo-planta', this, 90)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                    <i data-lucide="hard-hat" class="w-4.5 h-4.5"></i>
+                    <span>M4: Protocolo en Planta</span>
+                </button>
+
+                <button onclick="cambiarModulo('modulo-derechos', this, 100)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                    <i data-lucide="heart-handshake" class="w-4.5 h-4.5"></i>
+                    <span>M5: Derechos Laborales</span>
+                </button>
+            </nav>
+        </div>
+        
+        <!-- PIE DE PÁGINA DE PANEL -->
+        <div class="p-5 bg-slate-950/80 border-t border-slate-800/80 text-center flex flex-col gap-1">
+            <span class="text-xs text-slate-400 font-semibold tracking-wider">SALUD Y SEGURIDAD INDUSTRIAL</span>
+            <span class="text-[10px] text-slate-500 font-mono">Normativa de Guatemala • Año 2026</span>
+        </div>
+    </aside>
+
+    <!-- CUERPO PRINCIPAL DE CONTENIDOS -->
+    <main class="flex-1 overflow-y-auto p-12 max-w-6xl mx-auto z-10">
+
+        <!-- MÓDULO INTRODUCCIÓN Y OBJETIVOS -->
+        <section id="modulo-intro" class="modulo activo space-y-8">
+            <div class="border-b border-slate-200 pb-6 flex justify-between items-center">
+                <div>
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-2">
+                        <i data-lucide="info" class="w-4 h-4"></i> Bienvenida e Introducción
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">VIH y SIDA: Prevención en el Ámbito Laboral</h2>
+                    <p class="text-slate-600 mt-2 text-lg">Capacitación interactiva obligatoria diseñada específicamente para colaboradores de la industria de cemento en Guatemala.</p>
+                </div>
+            </div>
+
+            <!-- TARJETA BIENVENIDA -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+                <div class="absolute right-0 bottom-0 opacity-10 translate-x-12 translate-y-12">
+                    <i data-lucide="shield-alert" class="w-80 h-80 text-orange-500"></i>
+                </div>
+                <div class="max-w-xl">
+                    <span class="px-3.5 py-1.5 bg-orange-600/30 border border-orange-500/30 rounded-full text-xs font-bold uppercase tracking-widest text-orange-400">Objetivo del Programa</span>
+                    <h3 class="text-2xl font-bold mt-4 mb-3 text-slate-100">¿Por qué es vital esta capacitación para nosotros?</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        En una industria pesada como la del cemento, el trabajo en equipo, la seguridad física y el respeto mutuo son la base de la productividad. El desconocimiento sobre el VIH/SIDA fomenta el estigma, la discriminación y el miedo infundado en nuestros frentes de trabajo.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
+                                <i data-lucide="check" class="w-4 h-4"></i>
+                            </div>
+                            <span class="text-xs font-medium text-slate-200">Prevenir riesgos ocupacionales</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
+                                <i data-lucide="check" class="w-4 h-4"></i>
+                            </div>
+                            <span class="text-xs font-medium text-slate-200">Cumplir con leyes nacionales</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
+                                <i data-lucide="check" class="w-4 h-4"></i>
+                            </div>
+                            <span class="text-xs font-medium text-slate-200">Fomentar entornos sanos</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
+                                <i data-lucide="check" class="w-4 h-4"></i>
+                            </div>
+                            <span class="text-xs font-medium text-slate-200">Erradicar mitos dañinos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LLAMADO DE ATENCIÓN DE SSO -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-2xl shadow-sm">
+                <div class="flex gap-3">
+                    <i data-lucide="alert-triangle" class="w-6 h-6 text-amber-600 shrink-0"></i>
+                    <div>
+                        <h4 class="font-bold text-amber-900 text-sm">Instrucción Interactiva</h4>
+                        <p class="text-amber-800 text-xs mt-1 leading-relaxed">
+                            Navega por cada pestaña en la barra lateral izquierda para completar el entrenamiento teórico. En el Módulo 3, resolverás un interactivo de mitos y realidades que validará tus competencias en salud ocupacional.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 1: MARCO LEGAL EN GUATEMALA -->
+        <section id="modulo-legal" class="modulo space-y-8">
+            <div class="border-b border-slate-200 pb-6">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-2">
+                    <i data-lucide="gavel" class="w-4 h-4"></i> Módulo 1
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Obligatoriedad Legal en Guatemala</h2>
+                <p class="text-slate-600 mt-2 text-lg">¿Por qué las industrias y empresas de Guatemala están obligadas por ley a implementar esta capacitación?</p>
+            </div>
+
+            <!-- ACORDEÓN INTERACTIVO LEGAL -->
+            <div class="space-y-4">
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc-1')" class="w-full flex items-center justify-between p-5 text-left font-bold text-slate-900 hover:bg-slate-50 transition-colors">
+                        <span class="flex items-center gap-3">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600 text-sm">1</span>
+                            Acuerdo Gubernativo 229-2014 (Reglamento de SSO)
+                        </span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300" id="icon-acc-1"></i>
+                    </button>
+                    <div id="acc-1" class="accordion-content px-6 text-slate-600 text-sm leading-relaxed space-y-2">
+                        <p class="font-semibold text-slate-800">Artículo 4 (Obligaciones Generales de los Patronos):</p>
+                        <p>
+                            Todo patrono en el territorio nacional está obligado a adoptar medidas de Salud y Seguridad Ocupacional para proteger la vida y la integridad de sus trabajadores. Específicamente, el inciso (c) exige **"Dar cumplimiento a la Política Nacional de VIH/SIDA en el lugar de trabajo"**.
+                        </p>
+                        <p>
+                            La implementación periódica de capacitaciones sobre VIH es un requerimiento legal directo para evitar sanciones económicas severas contempladas en los reglamentos del Ministerio de Trabajo (MINTRAB) y del Instituto Guatemalteco de Seguridad Social (IGSS).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc-2')" class="w-full flex items-center justify-between p-5 text-left font-bold text-slate-900 hover:bg-slate-50 transition-colors">
+                        <span class="flex items-center gap-3">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600 text-sm">2</span>
+                            Decreto Número 27-2000 (Ley General de Combate al VIH)
+                        </span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300" id="icon-acc-2"></i>
+                    </button>
+                    <div id="acc-2" class="accordion-content px-6 text-slate-600 text-sm leading-relaxed space-y-2">
+                        <p class="font-semibold text-slate-800">Ley General para el Combate del Virus de Inmunodeficiencia Humana y SIDA:</p>
+                        <p>
+                            Este decreto establece el marco nacional para promover la protección y defensa de los derechos humanos ante el VIH. El Estado de Guatemala establece que es de interés público la educación, prevención y tratamiento del VIH.
+                        </p>
+                        <p>
+                            A nivel laboral, obliga a fomentar un clima de respeto y viabilizar campañas informativas. La ley prohíbe terminantemente la discriminación o marginación de cualquier persona debido a su estado serológico en la contratación, permanencia o desarrollo laboral.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button onclick="toggleAccordion('acc-3')" class="w-full flex items-center justify-between p-5 text-left font-bold text-slate-900 hover:bg-slate-50 transition-colors">
+                        <span class="flex items-center gap-3">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600 text-sm">3</span>
+                            Prohibición de Tamizaje Obligatorio (Pruebas de Empleo)
+                        </span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300" id="icon-acc-3"></i>
+                    </button>
+                    <div id="acc-3" class="accordion-content px-6 text-slate-600 text-sm leading-relaxed space-y-2">
+                        <p class="font-semibold text-slate-800">Artículo 6 del Acuerdo Gubernativo 229-2014:</p>
+                        <p>
+                            Es una **prohibición expresa** para los patronos en Guatemala: **"Constituir como requisito para obtener un puesto laboral, la prueba de VIH/SIDA"** (así como exigir su renovación). 
+                        </p>
+                        <p>
+                            Cualquier intento de forzar al trabajador o candidato a una plaza laboral a someterse a esta prueba es ilegal y sujeto a demandas penales por discriminación conforme a la legislación laboral del país.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TARJETA RESUMEN -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <div class="bg-red-50 border-l-4 border-red-500 rounded-r-2xl p-6">
+                    <h4 class="font-bold text-red-800 uppercase text-xs mb-1.5 flex items-center gap-2">
+                        <i data-lucide="ban" class="w-4 h-4"></i> Infracción Gravísima
+                    </h4>
+                    <p class="text-slate-700 text-xs leading-relaxed">
+                        Exigir una prueba de VIH antes de una contratación o despedir a un colaborador al enterarse de su diagnóstico son actos constitutivos de delito en Guatemala, sancionados con multas severas impuestas por el Ministerio de Trabajo y Previsión Social.
+                    </p>
+                </div>
+                <div class="bg-emerald-50 border-l-4 border-emerald-500 rounded-r-2xl p-6">
+                    <h4 class="font-bold text-emerald-800 uppercase text-xs mb-1.5 flex items-center gap-2">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> Meta de la Planta
+                    </h4>
+                    <p class="text-slate-700 text-xs leading-relaxed">
+                        Nuestra política de SSO es clara: un ambiente libre de estigma mejora el reporte de incidentes y accidentes de trabajo, permitiendo resguardar la salud integral de todo el personal sin discriminación.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 2: CONCEPTOS CIENTÍFICOS CLAVE -->
+        <section id="modulo-conceptos" class="modulo space-y-8">
+            <div class="border-b border-slate-200 pb-6">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-2">
+                    <i data-lucide="microscope" class="w-4 h-4"></i> Módulo 2
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Ciencia Médica Básica: VIH vs SIDA</h2>
+                <p class="text-slate-600 mt-2 text-lg">Entendiendo la diferencia biológica para erradicar el miedo infundado en nuestros puestos laborales.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- TARJETA VIH -->
+                <div class="card-industrial rounded-2xl p-6 shadow-sm border-l-4 border-orange-500">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 bg-orange-100 text-orange-600 text-[10px] font-bold rounded-md uppercase">El Virus</span>
+                        <div class="p-2 bg-slate-100 text-slate-700 rounded-xl">
+                            <i data-lucide="dna" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">VIH (Virus de Inmunodeficiencia Humana)</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Es el agente infeccioso (microorganismo) que ingresa al cuerpo. Su único objetivo es atacar y destruir progresivamente las células de defensa, específicamente los linfocitos T CD4 del sistema inmunológico.
+                    </p>
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-slate-700 text-xs italic">
+                        <strong>Nota de salud:</strong> Una persona con VIH puede vivir décadas sin presentar síntomas ni desarrollar complicaciones médicas, sintiéndose completamente sana y realizando trabajo pesado con total normalidad.
+                    </div>
+                </div>
+
+                <!-- TARJETA SIDA -->
+                <div class="card-industrial rounded-2xl p-6 shadow-sm border-l-4 border-red-500">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 bg-red-100 text-red-600 text-[10px] font-bold rounded-md uppercase">La Etapa Clínica</span>
+                        <div class="p-2 bg-slate-100 text-slate-700 rounded-xl">
+                            <i data-lucide="activity" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">SIDA (Síndrome de Inmuno Deficiencia Adquirida)</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Es la fase avanzada de la infección por VIH. Ocurre únicamente cuando el sistema inmunitario está gravemente dañado y debilitado, perdiendo la capacidad de defenderse de infecciones oportunistas (tuberculosis, neumonía, etc.).
+                    </p>
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-slate-700 text-xs italic">
+                        <strong>Realidad médica:</strong> No toda persona diagnosticada con VIH llega a desarrollar SIDA si recibe su tratamiento de forma oportuna. El SIDA es una etapa prevenible y reversible.
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMPORTANCIA DEL TRATAMIENTO Y DIAGNÓSTICO -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="shield-plus" class="w-5 h-5 text-emerald-600"></i>
+                    La Revolución del Tratamiento Antirretroviral (TARV)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-2">
+                        <h4 class="font-semibold text-slate-800 text-sm">¿Cómo actúa el TARV?</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            El tratamiento actual consiste en la toma diaria de medicamentos vía oral que bloquean la reproducción del virus, impidiendo que siga destruyendo defensas del cuerpo humano.
+                        </p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="font-semibold text-slate-800 text-sm">Indetectable = Intransmisible (I = I)</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Científicamente se ha comprobado que cuando una persona se apega a su tratamiento, el virus baja a niveles tan bajos que las pruebas convencionales de laboratorio no lo detectan. En este estado, el virus **NO se puede transmitir** por ninguna vía.
+                        </p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="font-semibold text-slate-800 text-sm">Diagnóstico Temprano</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Hacerse una prueba anual voluntaria es crucial. Detectar el VIH a tiempo evita el deterioro del cuerpo y permite iniciar el TARV inmediatamente, asegurando una expectativa de vida idéntica a la de una persona sin el virus.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 3: DOCK DINÁMICO DE MITOS Y REALIDADES -->
+        <section id="modulo-mitos" class="modulo space-y-8">
+            <div class="border-b border-slate-200 pb-6">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-2">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i> Módulo 3
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Desafío Interactivo: Mitos y Realidades</h2>
+                <p class="text-slate-600 mt-2 text-lg">Ponte a prueba respondiendo a las preguntas. Es fundamental combatir el estigma con información científica verídica.</p>
+            </div>
+
+            <!-- INTERACTIVO DE PREGUNTAS (JAVASCRIPT) -->
+            <div class="bg-white border-2 border-slate-200 rounded-3xl p-8 shadow-md flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden" id="contenedor-juego">
+                <!-- Estado del juego -->
+                <div class="w-full max-w-lg space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="px-3.5 py-1.5 bg-orange-100 text-orange-600 rounded-lg text-xs font-bold uppercase" id="num-pregunta">Pregunta 1 de 5</span>
+                        <span class="text-sm font-semibold text-slate-500">Puntaje: <span id="puntos-juego" class="text-orange-500 font-bold text-base">0</span></span>
+                    </div>
+
+                    <!-- Texto de la afirmación -->
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 min-h-[110px] flex items-center justify-center text-center">
+                        <p id="afirmacion-texto" class="text-slate-800 font-bold text-lg leading-snug">Cargando afirmación...</p>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="grid grid-cols-2 gap-4" id="botones-accion-juego">
+                        <button onclick="responderJuego('MITO')" class="btn-game py-4 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform">
+                            <i data-lucide="x-circle" class="w-5 h-5"></i> Mito
+                        </button>
+                        <button onclick="responderJuego('REALIDAD')" class="btn-game py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i> Realidad
+                        </button>
+                    </div>
+
+                    <!-- Tarjeta de Feedback (Inicialmente oculta) -->
+                    <div id="feedback-card" class="hidden p-5 rounded-2xl border flex flex-col gap-3 transition-all duration-300">
+                        <div class="flex items-center gap-2">
+                            <div id="feedback-icon-container" class="p-1 rounded-full text-white">
+                                <!-- Se inyecta dinámicamente un check o x -->
+                            </div>
+                            <span id="feedback-title" class="font-extrabold text-sm uppercase tracking-wider">¡Correcto!</span>
+                        </div>
+                        <p id="feedback-explanation" class="text-slate-700 text-xs leading-relaxed">Aquí se muestra la explicación.</p>
+                        <button onclick="siguientePregunta()" class="mt-2 self-end px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl flex items-center gap-2.5">
+                            Siguiente <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESUMEN DE TRANSMISIÓN / NO TRANSMISIÓN -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-emerald-50/50 border border-emerald-200 rounded-2xl p-6">
+                    <h3 class="font-bold text-emerald-900 text-base mb-3 flex items-center gap-2.5">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600"></i>
+                        ÚNICAS vías que sí transmiten el VIH
+                    </h3>
+                    <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                            Relaciones sexuales desprotegidas (sin preservativo de látex).
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                            Transfusión de sangre contaminada o injertos no controlados.
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                            Compartir jeringas, agujas u otros objetos punzocortantes no estériles.
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                            Transmisión perinatal: de madre a hijo en embarazo, parto o lactancia.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-rose-50/50 border border-rose-200 rounded-2xl p-6">
+                    <h3 class="font-bold text-rose-900 text-base mb-3 flex items-center gap-2.5">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-rose-600"></i>
+                        Vías cotidianas que NO transmiten VIH
+                    </h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-slate-700 font-medium">
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Abrazar o dar la mano</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Compartir vasos o platos</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Usar baños compartidos</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Compartir herramientas</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Picaduras de insectos</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Tos o estornudos</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Compartir comedor</span>
+                        <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Sudor o lágrimas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 4: PROTOCOLO OCUPACIONAL EN PLANTA DE CEMENTO -->
+        <section id="modulo-planta" class="modulo space-y-8">
+            <div class="border-b border-slate-200 pb-6">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-2">
+                    <i data-lucide="hard-hat" class="w-4 h-4"></i> Módulo 4
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Prevención y Protocolo ante Exposición Ocupacional</h2>
+                <p class="text-slate-600 mt-2 text-lg">En una planta de cemento el riesgo es bajo, pero debemos saber cómo actuar en primeros auxilios y accidentes de campo.</p>
+            </div>
+
+            <!-- PREVENCIÓN EN PLANTA (EPI) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
+                        <i data-lucide="shield" class="w-5 h-5 text-orange-600"></i>
+                        Medidas de Seguridad en el Trabajo Diario
+                    </h3>
+                    <div class="space-y-4 text-xs text-slate-600">
+                        <div class="flex gap-3">
+                            <span class="p-1.5 bg-orange-100 text-orange-600 rounded-lg shrink-0 h-7 w-7 flex items-center justify-center font-bold">1</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Uso Obligatorio de EPP en Accidentes</h4>
+                                <p class="mt-0.5">Siempre que deba realizar primeros auxilios o limpiar un derrame con fluidos corporales o sangre, utilice guantes impermeables de látex o nitrilo de su kit de emergencia.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="p-1.5 bg-orange-100 text-orange-600 rounded-lg shrink-0 h-7 w-7 flex items-center justify-center font-bold">2</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Cubrir Heridas Existentes</h4>
+                                <p class="mt-0.5">Si presenta cortes o escoriaciones en manos o brazos, cúbralos adecuadamente con apósitos adhesivos impermeables antes de iniciar su turno de trabajo.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="p-1.5 bg-orange-100 text-orange-600 rounded-lg shrink-0 h-7 w-7 flex items-center justify-center font-bold">3</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Higiene de Manos y Desinfección</h4>
+                                <p class="mt-0.5">Lave inmediatamente la piel expuesta a sangre o fluidos con abundante agua y jabón antibacterial de la planta.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
+                        <i data-lucide="flame" class="w-5 h-5 text-orange-600"></i>
+                        Manejo de Punzocortantes en Planta
+                    </h3>
+                    <div class="space-y-4 text-xs text-slate-600">
+                        <div class="flex gap-3">
+                            <span class="p-1.5 bg-rose-100 text-rose-600 rounded-lg shrink-0 h-7 w-7 flex items-center justify-center font-bold">A</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Cuchillas y Herramientas Mecánicas</h4>
+                                <p class="mt-0.5">Durante labores de desatascado, mantenimiento de cribas o cortes de sacos de cemento, utilice los guantes de protección mecánica reforzados.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="p-1.5 bg-rose-100 text-rose-600 rounded-lg shrink-0 h-7 w-7 flex items-center justify-center font-bold">B</span>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Desecho Seguro de Metales y Alambres</h4>
+                                <p class="mt-0.5">No deje objetos metálicos afilados, alambres o despojos de soldadura expuestos en las pasarelas o andamios de la planta. Deséchelos en los contenedores designados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO A PASO EXPOSICIÓN ACCIDENTAL -->
+            <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-md">
+                <h3 class="font-bold text-lg mb-6 flex items-center gap-2.5 text-orange-400">
+                    <i data-lucide="alert-octagon" class="w-5.5 h-5.5 text-orange-500 animate-pulse"></i>
+                    Protocolo Inmediato ante Exposición con Sangre
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                    <div class="p-4 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                        <div class="font-bold text-orange-500 mb-1">PASO 1</div>
+                        <div class="font-bold text-slate-100 mb-1">Primeros Auxilios</div>
+                        <p class="text-slate-400">Lave inmediatamente la herida con abundante agua y jabón. Si es en mucosas (ojos), enjuague con suero fisiológico o abundante agua.</p>
+                    </div>
+                    <div class="p-4 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                        <div class="font-bold text-orange-500 mb-1">PASO 2</div>
+                        <div class="font-bold text-slate-100 mb-1">Reporte Rápido</div>
+                        <p class="text-slate-400">Informe inmediatamente al monitor de SSO o al jefe directo para activar el seguro de accidentes y el protocolo interno.</p>
+                    </div>
+                    <div class="p-4 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                        <div class="font-bold text-orange-500 mb-1">PASO 3</div>
+                        <div class="font-bold text-slate-100 mb-1">Evaluación Médica</div>
+                        <p class="text-slate-400">Acuda de urgencia al servicio de salud de la planta o al centro del IGSS asignado de manera inmediata.</p>
+                    </div>
+                    <div class="p-4 bg-slate-800/80 rounded-xl border border-slate-700/50">
+                        <div class="font-bold text-orange-500 mb-1">PASO 4</div>
+                        <div class="font-bold text-slate-100 mb-1">Uso de PEP (Medicamento)</div>
+                        <p class="text-slate-400">Si hay riesgo real, la Profilaxis Post-Exposición (PEP) debe iniciarse **en las primeras 72 horas** como máximo para evitar la infección.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 5: DERECHOS HUMANOS Y NO DISCRIMINACIÓN -->
+        <section id="modulo-derechos" class="modulo space-y-8">
+            <div class="border-b border-slate-200 pb-6">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-2">
+                    <i data-lucide="heart-handshake" class="w-4 h-4"></i> Módulo 5
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Derechos Laborales y No Discriminación</h2>
+                <p class="text-slate-600 mt-2 text-lg">La base de nuestra cultura SSO en la cementera: confidencialidad absoluta y erradicación del estigma.</p>
+            </div>
+
+            <!-- TARJETAS DE DERECHOS FUNDAMENTALES -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card-industrial rounded-2xl p-6 shadow-sm flex flex-col gap-3">
+                    <div class="p-3 bg-indigo-50 text-indigo-600 rounded-2xl w-12 h-12 flex items-center justify-center">
+                        <i data-lucide="eye-off" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Confidencialidad Médica</h3>
+                    <p class="text-slate-600 text-xs leading-relaxed">
+                        Nadie está obligado a revelar su diagnóstico a compañeros, supervisores o gerentes. La información clínica en los archivos del médico ocupacional de la planta está protegida por secreto profesional y ley constitucional.
+                    </p>
+                </div>
+
+                <div class="card-industrial rounded-2xl p-6 shadow-sm flex flex-col gap-3">
+                    <div class="p-3 bg-teal-50 text-teal-600 rounded-2xl w-12 h-12 flex items-center justify-center">
+                        <i data-lucide="user-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Estabilidad Laboral</h3>
+                    <p class="text-slate-600 text-xs leading-relaxed">
+                        Tener un diagnóstico positivo de VIH no es motivo justificable para la finalización de un contrato de trabajo, reubicación forzada desmejorada o bloqueo de ascensos internos en la planta.
+                    </p>
+                </div>
+
+                <div class="card-industrial rounded-2xl p-6 shadow-sm flex flex-col gap-3">
+                    <div class="p-3 bg-rose-50 text-rose-600 rounded-2xl w-12 h-12 flex items-center justify-center">
+                        <i data-lucide="scale" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base">Cero Tolerancia</h3>
+                    <p class="text-slate-600 text-xs leading-relaxed">
+                        La burla, el aislamiento deliberado, los rumores sobre la salud o la negación de herramientas a un compañero son considerados faltas gravísimas de conducta sujetas a destitución y reporte legal.
+                    </p>
+                </div>
+            </div>
+
+            <!-- DECLARACIÓN DE LIDERAZGO SSO -->
+            <div class="bg-gradient-to-r from-orange-600 to-amber-500 rounded-3xl p-8 text-white shadow-lg">
+                <div class="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+                    <div class="space-y-2 max-w-xl">
+                        <h3 class="text-2xl font-bold text-slate-100">¿Fuiste testigo de algún acto discriminatorio?</h3>
+                        <p class="text-slate-100 text-xs leading-relaxed">
+                            Nuestra cementera cuenta con un canal ético directo y confidencial supervisado por el comité de SSO y Recursos Humanos. El estigma no solo destruye el clima de trabajo, sino que pone en peligro a las personas al ocultar incidentes de riesgo.
+                        </p>
+                    </div>
+                    <div class="shrink-0">
+                        <a href="mailto:canal.etico@cementera.com" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-950 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all shadow-md">
+                            <i data-lucide="mail" class="w-4 h-4"></i> Reportar Internamente
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CONTROLADORES DE INTERACCIÓN LOGICAL (JAVASCRIPT) -->
+    <script>
+        // AFIRMACIONES DEL JUEGO DINÁMICO (MITO O REALIDAD)
+        const preguntasJuego = [
+            {
+                texto: "1. ¿El VIH se puede contagiar por un abrazo o saludo de manos de un compañero de planta?",
+                tipo: "MITO",
+                explicacion: "El afecto cotidiano, compartir espacios, abrazar o saludar de manos no transmite el virus bajo ninguna circunstancia. El virus no sobrevive en la piel ni se transmite sin contacto de fluidos de riesgo directo."
+            },
+            {
+                texto: "2. Una persona con VIH en tratamiento indetectable puede realizar trabajos de mantenimiento mecánico pesados sin poner en riesgo a otros.",
+                tipo: "REALIDAD",
+                explicacion: "¡Es correcto! La fórmula científica comprobada I=I (Indetectable = Intransmisible) garantiza que bajo el tratamiento adecuado la persona puede vivir y trabajar en cualquier puesto industrial de forma normal sin riesgo ocupacional."
+            },
+            {
+                texto: "3. El uso de baños de la planta, comedores, vasos o cubiertos compartidos transmite la infección de VIH.",
+                tipo: "MITO",
+                explicacion: "Es totalmente un MITO. El virus no se propaga a través de la saliva, el sudor, la orina o el aire. Compartir estos recursos en la planta es 100% seguro."
+            },
+            {
+                texto: "4. La Profilaxis Post-Exposición (PEP) puede prevenir de forma efectiva el VIH tras un accidente laboral si se inicia de forma urgente.",
+                tipo: "REALIDAD",
+                explicacion: "¡Así es! Si un colaborador de primeros auxilios entra en contacto de riesgo directo con sangre ajena en una herida abierta, el tratamiento PEP (antirretrovirales preventivos) iniciado antes de las 72 horas puede bloquear el virus eficazmente."
+            },
+            {
+                texto: "5. En Guatemala, la industria puede solicitar pruebas obligatorias de VIH como condición para ascender de puesto a un colaborador.",
+                tipo: "MITO",
+                explicacion: "¡Totalmente falso! El Acuerdo Gubernativo 229-2014 prohíbe expresamente exigir pruebas de VIH para ingresar o permanecer en el empleo. Hacerlo se considera una violación directa a las leyes laborales del país."
+            }
+        ];
+
+        let preguntaActual = 0;
+        let puntaje = 0;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Inicializar iconos de Lucide
+            lucide.createIcons();
+            
+            // Cargar la primera pregunta de Mitos y Realidades
+            inicializarPreguntaJuego();
+        });
+
+        // 1. MANEJO DE CAMBIO DE MODULOS
+        function cambiarModulo(idModulo, boton, porcentaje) {
+            // Ocultar todos los módulos con remoción de clases de activación
+            document.querySelectorAll('.modulo').forEach(m => {
+                m.classList.remove('activo');
+            });
+            
+            // Mostrar módulo seleccionado de forma suave
+            const moduloActivo = document.getElementById(idModulo);
+            if (moduloActivo) {
+                moduloActivo.classList.add('activo');
+            }
+            
+            // Actualizar estados del botón lateral
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.className = "menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50";
+            });
+            
+            // Resaltar botón activo
+            boton.className = "menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700/50 shadow-sm shadow-orange-500/10";
+            
+            // Actualizar la barra de progreso
+            document.getElementById('txt-progreso').innerText = `${porcentaje}%`;
+            document.getElementById('barra-progreso').style.width = `${porcentaje}%`;
+            
+            // Forzar renderizado de iconos en el nuevo módulo activo
+            lucide.createIcons();
+        }
+
+        // 2. MANEJO DE ACORDEONES (MARCO LEGAL)
+        function toggleAccordion(id) {
+            const contenido = document.getElementById(id);
+            const icono = document.getElementById(`icon-${id}`);
+            
+            if (contenido.classList.contains('abierto')) {
+                contenido.classList.remove('abierto');
+                icono.style.transform = 'rotate(0deg)';
+            } else {
+                // Cerrar todos los acordeones primero
+                document.querySelectorAll('.accordion-content').forEach(acc => acc.classList.remove('abierto'));
+                document.querySelectorAll('[id^="icon-acc"]').forEach(ic => ic.style.transform = 'rotate(0deg)');
+                
+                contenido.classList.add('abierto');
+                icono.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // 3. JUEGO INTERACTIVO MITOS Y REALIDADES
+        function inicializarPreguntaJuego() {
+            const q = preguntasJuego[preguntaActual];
+            document.getElementById('num-pregunta').innerText = `Pregunta ${preguntaActual + 1} de ${preguntasJuego.length}`;
+            document.getElementById('afirmacion-texto').innerText = q.texto;
+            
+            // Ocultar feedback y habilitar botones de decisión
+            document.getElementById('feedback-card').className = "hidden p-5 rounded-2xl border flex flex-col gap-3 transition-all duration-300";
+            document.getElementById('botones-accion-juego').classList.remove('hidden');
+        }
+
+        function responderJuego(seleccion) {
+            const q = preguntasJuego[preguntaActual];
+            const feedbackCard = document.getElementById('feedback-card');
+            const feedbackIconContainer = document.getElementById('feedback-icon-container');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const botonesAccion = document.getElementById('botones-accion-juego');
+            
+            botonesAccion.classList.add('hidden'); // Desactivar respuesta doble
+
+            let esCorrecto = (seleccion === q.tipo);
+            if (esCorrecto) {
+                puntaje++;
+                document.getElementById('puntos-juego').innerText = puntaje;
+                
+                feedbackCard.className = "p-5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 flex flex-col gap-3 transition-all duration-300";
+                feedbackIconContainer.className = "p-1.5 bg-emerald-600 text-white rounded-full flex items-center justify-center shrink-0";
+                feedbackIconContainer.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                feedbackTitle.className = "font-extrabold text-sm uppercase tracking-wider text-emerald-800";
+                feedbackTitle.innerText = "¡Correcto!";
+            } else {
+                feedbackCard.className = "p-5 rounded-2xl border-2 border-rose-500 bg-rose-50 flex flex-col gap-3 transition-all duration-300";
+                feedbackIconContainer.className = "p-1.5 bg-rose-600 text-white rounded-full flex items-center justify-center shrink-0";
+                feedbackIconContainer.innerHTML = '<i data-lucide="x" class="w-4 h-4"></i>';
+                feedbackTitle.className = "font-extrabold text-sm uppercase tracking-wider text-rose-800";
+                feedbackTitle.innerText = "Respuesta Incorrecta";
+            }
+
+            feedbackExplanation.innerText = q.explicacion;
+            feedbackCard.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function siguientePregunta() {
+            preguntaActual++;
+            if (preguntaActual < preguntasJuego.length) {
+                inicializarPreguntaJuego();
+            } else {
+                mostrarResultadoFinalJuego();
+            }
+        }
+
+        function mostrarResultadoFinalJuego() {
+            const contenedor = document.getElementById('contenedor-juego');
+            let medallaHTML = '';
+            
+            if (puntaje >= 4) {
+                medallaHTML = `
+                    <div class="p-4 bg-emerald-100 text-emerald-600 rounded-full mb-4">
+                        <i data-lucide="award" class="w-16 h-16 animate-bounce"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-950">¡Excelente Desempeño!</h3>
+                    <p class="text-slate-600 text-sm max-w-sm mt-2 text-center">Insignia de **Embajador de la Salud Ocupacional e Inclusión** ganada. Demostraste un conocimiento sólido y libre de estigmas.</p>
+                `;
+            } else {
+                medallaHTML = `
+                    <div class="p-4 bg-amber-100 text-amber-600 rounded-full mb-4">
+                        <i data-lucide="info" class="w-16 h-16"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-950">Entrenamiento Completado</h3>
+                    <p class="text-slate-600 text-sm max-w-sm mt-2 text-center">Te invitamos a repasar nuevamente las secciones conceptuales para afianzar tus conocimientos sobre la prevención del VIH en la planta.</p>
+                `;
+            }
+
+            contenedor.innerHTML = `
+                <div class="flex flex-col items-center text-center p-6 space-y-4">
+                    ${medallaHTML}
+                    <div class="bg-slate-50 border border-slate-100 rounded-xl px-6 py-3 font-semibold text-slate-800">
+                        Puntuación final: <span class="text-orange-500 font-bold">${puntaje} de ${preguntasJuego.length}</span> respuestas correctas.
+                    </div>
+                    <button onclick="reiniciarJuego()" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Intentar Nuevamente
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function reiniciarJuego() {
+            preguntaActual = 0;
+            puntaje = 0;
+            
+            // Restablecer la estructura de juego inicial
+            document.getElementById('contenedor-juego').innerHTML = `
+                <div class="w-full max-w-lg space-y-6">
+                    <div class="flex justify-between items-center">
+                        <span class="px-3.5 py-1.5 bg-orange-100 text-orange-600 rounded-lg text-xs font-bold uppercase" id="num-pregunta">Pregunta 1 de 5</span>
+                        <span class="text-sm font-semibold text-slate-500">Puntaje: <span id="puntos-juego" class="text-orange-500 font-bold text-base">0</span></span>
+                    </div>
+
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 min-h-[110px] flex items-center justify-center text-center">
+                        <p id="afirmacion-texto" class="text-slate-800 font-bold text-lg leading-snug">Cargando afirmación...</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4" id="botones-accion-juego">
+                        <button onclick="responderJuego('MITO')" class="btn-game py-4 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform">
+                            <i data-lucide="x-circle" class="w-5 h-5"></i> Mito
+                        </button>
+                        <button onclick="responderJuego('REALIDAD')" class="btn-game py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i> Realidad
+                        </button>
+                    </div>
+
+                    <div id="feedback-card" class="hidden p-5 rounded-2xl border flex flex-col gap-3 transition-all duration-300">
+                        <div class="flex items-center gap-2">
+                            <div id="feedback-icon-container" class="p-1 rounded-full text-white"></div>
+                            <span id="feedback-title" class="font-extrabold text-sm uppercase tracking-wider">¡Correcto!</span>
+                        </div>
+                        <p id="feedback-explanation" class="text-slate-700 text-xs leading-relaxed">Aquí se muestra la explicación.</p>
+                        <button onclick="siguientePregunta()" class="mt-2 self-end px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl flex items-center gap-2.5">
+                            Siguiente <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            inicializarPreguntaJuego();
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
