@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitación Digital SSO: Ruido Laboral y Protección Auditiva en la Industria de Cemento</title>
+    <!-- Importación de Tailwind CSS para un diseño moderno y responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Iconos interactivos Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+            color: #1e293b; 
+        }
+        
+        /* Transiciones de módulos */
+        .modulo { 
+            display: none; 
+            opacity: 0; 
+            transform: translateY(8px); 
+            transition: all 0.3s ease-in-out; 
+        }
+        .modulo.activo { 
+            display: block; 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        
+        /* Hover de tarjetas interactivas */
+        .card-hover { 
+            transition: all 0.25s ease; 
+        }
+        .card-hover:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08); 
+        }
+
+        /* Estilo de la barra de progreso */
+        .progress-bar-fill {
+            transition: width 0.4s ease-out;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen bg-slate-50 text-slate-800 flex-col md:flex-row">
+
+    <!-- BARRA LATERAL DE NAVEGACIÓN -->
+    <aside class="w-full md:w-80 bg-slate-900 text-white flex flex-col justify-between sticky top-0 md:h-screen shrink-0 z-20 border-r border-slate-800 shadow-xl">
+        <div class="p-5 overflow-y-auto max-h-[85vh] md:max-h-none">
+            <!-- LOGO DE LA ORGANIZACIÓN Y TÍTULO -->
+            <div class="flex flex-col gap-3 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="bg-orange-600 p-2.5 rounded-xl text-white flex items-center justify-center shadow-lg shadow-orange-600/30">
+                        <i data-lucide="volume-2" class="w-6 h-6 animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-sm leading-tight text-white uppercase tracking-wider">Industria de Cemento</h1>
+                        <p class="text-xs text-orange-500 font-bold tracking-widest uppercase">Salud y Seguridad (SSO)</p>
+                    </div>
+                </div>
+                <div class="mt-2 bg-slate-800/80 rounded-lg p-2 border border-slate-700/50">
+                    <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-1">PROGRESO DEL CURSO</div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                            <div id="cursoProgress" class="bg-gradient-to-r from-orange-500 to-emerald-500 h-2 progress-bar-fill" style="width: 10%;"></div>
+                        </div>
+                        <span id="cursoProgressText" class="text-xs font-bold text-orange-400">10%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="h-px bg-slate-800 mb-4"></div>
+            
+            <!-- MENÚ DE NAVEGACIÓN MODULAR -->
+            <nav class="space-y-1 text-xs" id="sidebar-menu">
+                <button onclick="cambiarModulo('modulo-objetivo', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-orange-400 bg-slate-800 border-l-4 border-orange-500">
+                    <span class="flex items-center gap-2"><i data-lucide="target" class="w-4 h-4 text-orange-500"></i> Objetivos del Curso</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-orange-500 hidden" id="chk-modulo-objetivo"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m1', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="waveform" class="w-4 h-4"></i> M1: ¿Qué es el ruido?</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m1"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m2', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> M2: Efectos en la Salud</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m2"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m3', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="gauge" class="w-4 h-4"></i> M3: ¿Existe riesgo?</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m3"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m4', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="sliders" class="w-4 h-4"></i> M4: Medidas de Control</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m4"></i>
+                </button>
+                <!-- Simulador Destacado -->
+                <button onclick="cambiarModulo('modulo-simulador', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50 bg-slate-950 border border-orange-500/30">
+                    <span class="flex items-center gap-2"><i data-lucide="calculator" class="w-4 h-4 text-orange-400"></i> Simulación Interactiva</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-simulador"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m5', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="headphones" class="w-4 h-4"></i> M5: Protectores Auditivos</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m5"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m6', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4"></i> M6: Cuidado del EPP</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m6"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m7', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="heart-pulse" class="w-4 h-4"></i> M7: Conservación Auditiva</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m7"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m8', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i> M8: Señales de Alarma</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m8"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m9', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> M9: Responsabilidades</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m9"></i>
+                </button>
+                <button onclick="cambiarModulo('modulo-m10', this)" class="menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50 border border-emerald-500/30">
+                    <span class="flex items-center gap-2"><i data-lucide="graduation-cap" class="w-4 h-4 text-emerald-400"></i> M10: Evaluación Final</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500 hidden" id="chk-modulo-m10"></i>
+                </button>
+            </nav>
+        </div>
+        
+        <div class="p-4 bg-slate-950 border-t border-slate-800 text-center text-[10px] text-slate-400">
+            <span class="font-medium">Salud y Seguridad Ocupacional © 2026</span>
+        </div>
+    </aside>
+
+    <!-- CUERPO PRINCIPAL DE CONTENIDOS -->
+    <main class="flex-1 overflow-y-auto p-6 md:p-12 max-w-5xl w-full mx-auto">
+        
+        <!-- MODULO: OBJETIVO DE LA CAPACITACIÓN -->
+        <section id="modulo-objetivo" class="modulo activo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="target" class="w-4 h-4"></i> Introducción del Curso
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Capacitación sobre Ruido Laboral y Protección Auditiva</h2>
+                <p class="text-slate-500 text-sm mt-1">Higiene y Seguridad en Plantas de Cemento.</p>
+            </div>
+
+            <!-- Banner Principal de Bienvenida -->
+            <div class="relative rounded-2xl overflow-hidden bg-slate-900 text-white p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg">
+                <div class="space-y-4 max-w-lg">
+                    <span class="bg-orange-500 text-slate-900 font-extrabold text-xs px-2.5 py-1 rounded-full uppercase">Industria Cementera</span>
+                    <h3 class="text-xl md:text-2xl font-bold">La audición perdida jamás se recupera. Aprende a protegerte.</h3>
+                    <p class="text-slate-300 text-xs leading-relaxed">
+                        En las operaciones de fabricación de cemento, los niveles de presión sonora pueden ser extremos. Esta capacitación interactiva te brindará las herramientas y conocimientos prácticos indispensables para salvaguardar tu salud auditiva en el campo.
+                    </p>
+                </div>
+                <!-- Gráfico representativo o imagen: recomendación de guardar como "banner-intro.png" -->
+                <div class="w-full md:w-64 flex justify-center">
+                    <svg viewBox="0 0 200 200" class="w-40 h-40" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="80" fill="#1e293b" stroke="#ea580c" stroke-width="4"/>
+                        <circle cx="100" cy="100" r="60" fill="#ea580c" fill-opacity="0.2" />
+                        <path d="M70 100 A30 30 0 0 1 130 100" fill="none" stroke="#ea580c" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M80 100 A20 20 0 0 1 120 100" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M90 100 A10 10 0 0 1 110 100" fill="none" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
+                        <line x1="50" y1="100" x2="150" y2="100" stroke="#f97316" stroke-dasharray="4 4" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Objetivos de Aprendizaje -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="font-bold text-lg text-slate-950 mb-4 flex items-center gap-2">
+                    <i data-lucide="check-square" class="text-orange-600"></i> Objetivos del Curso
+                </h3>
+                <p class="text-slate-600 text-xs mb-4">Al finalizar esta capacitación interactiva, el colaborador será capaz de:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 card-hover">
+                        <div class="bg-red-100 text-red-700 p-1.5 rounded-lg font-bold text-xs shrink-0">1</div>
+                        <p class="text-xs text-slate-700"><span class="font-bold block text-slate-900">Identificar los riesgos</span> asociados a la exposición al ruido industrial y sus límites seguros.</p>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 card-hover">
+                        <div class="bg-orange-100 text-orange-700 p-1.5 rounded-lg font-bold text-xs shrink-0">2</div>
+                        <p class="text-xs text-slate-700"><span class="font-bold block text-slate-900">Comprender los efectos</span> patológicos directos e indirectos que tiene el ruido en el cuerpo.</p>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 card-hover">
+                        <div class="bg-emerald-100 text-emerald-700 p-1.5 rounded-lg font-bold text-xs shrink-0">3</div>
+                        <p class="text-xs text-slate-700"><span class="font-bold block text-slate-900">Aplicar medidas de control</span> según la estricta jerarquía de prevención en higiene industrial.</p>
+                    </div>
+                    <div class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 card-hover">
+                        <div class="bg-blue-100 text-blue-700 p-1.5 rounded-lg font-bold text-xs shrink-0">4</div>
+                        <p class="text-xs text-slate-700"><span class="font-bold block text-slate-900">Utilizar adecuadamente</span> y cuidar sus protectores auditivos (desechables, reutilizables o copas).</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3">
+                    <i data-lucide="award" class="text-emerald-600 w-5 h-5 shrink-0"></i>
+                    <p class="text-xs text-emerald-800">Participa activamente en el <strong>Programa de Conservación Auditiva</strong> de la empresa para evitar incidentes y patologías.</p>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-end pt-4">
+                <button onclick="completarModulo('modulo-objetivo', 'modulo-m1')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Entendido y Continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 1: ¿QUÉ ES EL RUIDO LABORAL? -->
+        <section id="modulo-m1" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="waveform" class="w-4 h-4"></i> Módulo 1
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Física Básica del Ruido</h2>
+                <p class="text-slate-500 text-sm mt-1">Cómo se origina, diferencia del sonido y variables clave de medición.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Conceptos Clave -->
+                <div class="space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+                        <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                            <i data-lucide="help-circle" class="text-orange-500"></i> Sonido vs. Ruido
+                        </h3>
+                        <div class="space-y-3 text-xs leading-relaxed">
+                            <p class="text-slate-600">
+                                <strong class="text-slate-900">El Sonido:</strong> Es una vibración acústica que se propaga en forma de onda por un medio elástico (como el aire) y que resulta agradable o útil para el oído humano.
+                            </p>
+                            <p class="text-slate-600">
+                                <strong class="text-slate-900">El Ruido:</strong> Es un sonido desagradable, molesto, inútil o con un nivel de intensidad perjudicial que interfiere con la comunicación, el bienestar o que de manera crítica <span class="text-red-600 font-semibold">daña las células del oído</span>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+                        <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                            <i data-lucide="gauge" class="text-orange-500"></i> ¿Cómo se mide el ruido?
+                        </h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            El oído humano percibe un rango gigantesco de presiones acústicas. Para medirlo, usamos una escala logarítmica llamada <strong>Decibel (dB)</strong>. 
+                        </p>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-xs text-slate-700">
+                            <strong>Filtro de ponderación dB(A):</strong> Filtra las frecuencias del sonido asemejándose a cómo percibe y sufre el oído humano real. Es el estándar legal obligatorio de uso industrial.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ilustración Dinámica dB e imagen recomendada: "ruido-definicion.png" -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-950 text-base mb-2">Escala de Ruido de Referencia</h3>
+                        <p class="text-slate-500 text-xs mb-4">La exposición prolongada a niveles de ruido mayores a 85 dB(A) causa daño auditivo permanente irreversible.</p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs p-1 bg-red-50 border-l-4 border-red-500 text-red-900 rounded-r">
+                            <span class="font-mono font-bold">110+ dB(A)</span>
+                            <span>Crusher / Trituradora en Operación</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs p-1 bg-orange-50 border-l-4 border-orange-500 text-orange-900 rounded-r">
+                            <span class="font-mono font-bold">100 dB(A)</span>
+                            <span>Molienda de Clinker (Molino)</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs p-1 bg-amber-50 border-l-4 border-amber-500 text-amber-900 rounded-r">
+                            <span class="font-mono font-bold">90 dB(A)</span>
+                            <span>Área de Ensacado / Compresores</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs p-1 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-900 rounded-r">
+                            <span class="font-mono font-bold">85 dB(A)</span>
+                            <span>Límite de Acción Ocupacional (8 hrs)</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs p-1 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-900 rounded-r">
+                            <span class="font-mono font-bold">60 dB(A)</span>
+                            <span>Sala de Control / Oficinas</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                        <p class="text-xs text-amber-900 leading-normal">
+                            <strong>Dosis de Ruido:</strong> Relación entre el nivel de presión sonora (dB) y el <strong>tiempo real de exposición</strong> del trabajador en su jornada laboral de 8 horas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-objetivo', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m1', 'modulo-m2')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 2: ¿CÓMO AFECTA EL RUIDO AL ORGANISMO? -->
+        <section id="modulo-m2" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="activity" class="w-4 h-4"></i> Módulo 2
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Efectos Fisiológicos y Psicológicos del Ruido</h2>
+                <p class="text-slate-500 text-sm mt-1">El ruido no solo destruye tus oídos, desgasta todo tu sistema nervioso.</p>
+            </div>
+
+            <!-- Secciones Audibles y No Audibles en columnas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Efectos Auditivos -->
+                <div class="bg-white border border-red-200 rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3 border-b border-red-50 pb-3 text-red-600">
+                        <i data-lucide="ear" class="w-6 h-6"></i>
+                        <h3 class="font-bold text-base text-slate-900">Efectos Directos Auditivos</h3>
+                    </div>
+
+                    <div class="space-y-4 text-xs">
+                        <div class="flex gap-3">
+                            <span class="w-2 h-2 rounded-full bg-red-500 shrink-0 mt-1.5"></span>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Fatiga Auditiva y Desplazamiento Temporal</h4>
+                                <p class="text-slate-600">Sordera temporal al final del turno. Recuperable temporalmente con descanso profundo de 12 a 16 horas.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="w-2 h-2 rounded-full bg-red-500 shrink-0 mt-1.5"></span>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Hipoacusia Inducida por Ruido (HIR)</h4>
+                                <p class="text-slate-600">Pérdida permanente e irreversible de las células ciliadas del oído interno. No existe tratamiento ni cirugía reconstructiva.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <span class="w-2 h-2 rounded-full bg-red-500 shrink-0 mt-1.5"></span>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Tinnitus (Acúfeno continuo)</h4>
+                                <p class="text-slate-600">Zumbido, silbido o chasquido constante en el interior del oído que causa desesperación física y mental crónica.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Efectos No Auditivos -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-100 pb-3 text-slate-600">
+                        <i data-lucide="brain" class="w-6 h-6 text-slate-500"></i>
+                        <h3 class="font-bold text-base text-slate-900">Efectos Sistémicos No Auditivos</h3>
+                    </div>
+
+                    <div class="space-y-4 text-xs">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="font-bold text-slate-900 block mb-1">Nivel Cardíaco</span>
+                                <p class="text-slate-600 text-[11px]">Elevación sostenida de la presión arterial y taquicardia refleja.</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="font-bold text-slate-900 block mb-1">Estrés Crónico</span>
+                                <p class="text-slate-600 text-[11px]">Aumento de cortisol e irritabilidad en las relaciones interpersonales.</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="font-bold text-slate-900 block mb-1">Sueño / Fatiga</span>
+                                <p class="text-slate-600 text-[11px]">Insomnio crónico y mala recuperación física diaria.</p>
+                            </div>
+                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                <span class="font-bold text-slate-900 block mb-1">Accidentabilidad</span>
+                                <p class="text-slate-600 text-[11px]">Dificulta la concentración táctica y enmascara alarmas del entorno.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recomendación de imagen: "danos-oido.png" -->
+            <div class="bg-red-50 border border-red-200 rounded-2xl p-5 text-xs text-red-900 flex items-start gap-4">
+                <i data-lucide="alert-octagon" class="w-6 h-6 text-red-600 shrink-0 mt-0.5"></i>
+                <div class="space-y-1">
+                    <span class="font-bold text-sm uppercase block">El Daño Auditivo es Permanente</span>
+                    <p class="leading-relaxed">
+                        Las células ciliadas del oído interno captan la vibración del sonido y la envían al cerebro. Al estar expuesto a niveles altos de ruido por encima de 85 dB(A) estas se cansan, se atrofian y finalmente mueren. <strong>Las células ciliadas humanas no tienen capacidad de regeneración.</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m1', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m2', 'modulo-m3')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 3: ¿CÓMO SABER SI EXISTE RIESGO? -->
+        <section id="modulo-m3" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="gauge" class="w-4 h-4"></i> Módulo 3
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Evaluaciones de Ruido e Higiene Industrial</h2>
+                <p class="text-slate-500 text-sm mt-1">Cómo la empresa monitorea y mapea de forma científica el ruido ambiental.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                <div>
+                    <h3 class="font-bold text-slate-950 text-base mb-2">Herramientas Científicas de Medición</h3>
+                    <p class="text-slate-500 text-xs">El ruido no se estima al azar, se cuantifica utilizando herramientas certificadas y calibradas periódicamente.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 card-hover space-y-3">
+                        <div class="bg-orange-100 text-orange-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                            <i data-lucide="activity"></i>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-950">1. Dosimetrías Personales</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Un pequeño medidor (dosímetro) acoplado al collarín del operario registra su dosis real acumulada de exposición durante toda la jornada de trabajo.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 card-hover space-y-3">
+                        <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                            <i data-lucide="waveform"></i>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-950">2. Mediciones Ambientales</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            A través de sonómetros integradores clase 1, el equipo de Higiene Industrial mide zonas puntuales de ruido para levantar el "Mapa de Ruido" de la planta de cemento.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 card-hover space-y-3">
+                        <div class="bg-emerald-100 text-emerald-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                            <i data-lucide="map"></i>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-950">3. Mapas de Ruido</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Zonificación gráfica para identificar áreas de uso obligatorio de EPP auditivo, limitando el acceso a personal no autorizado.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl text-xs text-orange-900 leading-normal">
+                    <strong>¡Atención Operarios de Cemento!</strong> En plantas cementeras, el monitoreo constante es clave para el control de ingeniería. Si ves al higienista con un equipo o instalándote un dosímetro, recuerda realizar tu jornada diaria normal, evitando ruidos falsos en el micrófono (golpearlo, soplarlo o quitártelo).
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m2', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m3', 'modulo-m4')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 4: MEDIDAS DE CONTROL DEL RUIDO -->
+        <section id="modulo-m4" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="sliders" class="w-4 h-4"></i> Módulo 4
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Jerarquía de Controles de Ruido</h2>
+                <p class="text-slate-500 text-sm mt-1">Cómo mitigar el peligro acústico de la forma más efectiva posible.</p>
+            </div>
+
+            <!-- Jerarquía de Controles -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                <div>
+                    <h3 class="font-bold text-slate-950 text-base mb-2">La Pirámide de Control en Planta</h3>
+                    <p class="text-slate-500 text-xs mb-4">El EPP es siempre la ÚLTIMA línea de defensa, cuando el ruido no se ha podido eliminar, sustituir o controlar técnicamente.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Eliminación -->
+                    <div class="flex items-center gap-4 p-3 bg-red-50 border-l-4 border-red-500 rounded-r-xl">
+                        <div class="font-extrabold text-xs text-red-600 w-24 shrink-0 uppercase tracking-wider">Eliminación</div>
+                        <div class="text-xs text-slate-700">Eliminar completamente el proceso ruidoso mediante reingeniería del proceso técnico de molienda.</div>
+                    </div>
+                    <!-- Sustitución -->
+                    <div class="flex items-center gap-4 p-3 bg-orange-50 border-l-4 border-orange-500 rounded-r-xl">
+                        <div class="font-extrabold text-xs text-orange-600 w-24 shrink-0 uppercase tracking-wider">Sustitución</div>
+                        <div class="text-xs text-slate-700">Cambiar maquinaria vieja por tecnología moderna de bajo impacto acústico (ej. transmisiones por correa en lugar de engranajes ruidosos).</div>
+                    </div>
+                    <!-- Ingeniería -->
+                    <div class="flex items-center gap-4 p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-xl">
+                        <div class="font-extrabold text-xs text-yellow-600 w-24 shrink-0 uppercase tracking-wider">Ingeniería</div>
+                        <div class="text-xs text-slate-700">Encapsular el molino con cabinas acústicas especiales, uso de silenciadores neumáticos y mantenimiento de lubricación diaria a las bandas transportadoras.</div>
+                    </div>
+                    <!-- Administrativos -->
+                    <div class="flex items-center gap-4 p-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl">
+                        <div class="font-extrabold text-xs text-blue-600 w-24 shrink-0 uppercase tracking-wider">Adm.</div>
+                        <div class="text-xs text-slate-700">Rotación de personal en áreas críticas, señalización clara de zonas ruidosas y reducción programada del tiempo de permanencia.</div>
+                    </div>
+                    <!-- EPP -->
+                    <div class="flex items-center gap-4 p-3 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-xl">
+                        <div class="font-extrabold text-xs text-emerald-600 w-24 shrink-0 uppercase tracking-wider">EPP</div>
+                        <div class="text-xs text-slate-700 font-semibold">Uso obligatorio de protectores auditivos de acuerdo al nivel real de dB. (Última opción técnica).</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m3', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m4', 'modulo-simulador')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Ver Simulador Interactivo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO: SIMULADOR INTERACTIVO -->
+        <section id="modulo-simulador" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="calculator" class="w-4 h-4"></i> Taller Práctico Interactiva
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Simulador de Exposición y Atenuación de EPP</h2>
+                <p class="text-slate-500 text-sm mt-1">Experimenta en tiempo real con los niveles de ruido y aprende el impacto del EPP.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Columna de Ajustes e Input -->
+                <div class="lg:col-span-7 space-y-4">
+                    <!-- Panel Selección de Áreas -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-950 text-xs uppercase tracking-wider text-slate-500">Paso 1: Selecciona un Área o Ajusta el Nivel de Ruido</h3>
+                        
+                        <!-- Presets de Planta Cemento -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <button onclick="ajustarRuidoPreset(65, 'Oficinas / Sala Control')" class="p-2 border border-slate-200 hover:border-emerald-500 rounded-lg text-[11px] font-semibold text-slate-700 hover:text-emerald-700 transition-all text-left flex flex-col justify-between">
+                                <span>Oficinas / Control</span>
+                                <span class="text-emerald-600 font-bold font-mono">65 dB(A)</span>
+                            </button>
+                            <button onclick="ajustarRuidoPreset(88, 'Área de Ensacado')" class="p-2 border border-slate-200 hover:border-yellow-500 rounded-lg text-[11px] font-semibold text-slate-700 hover:text-yellow-700 transition-all text-left flex flex-col justify-between">
+                                <span>Área de Ensacado</span>
+                                <span class="text-yellow-600 font-bold font-mono">88 dB(A)</span>
+                            </button>
+                            <button onclick="ajustarRuidoPreset(93, 'Hornos Rotatorios')" class="p-2 border border-slate-200 hover:border-orange-500 rounded-lg text-[11px] font-semibold text-slate-700 hover:text-orange-700 transition-all text-left flex flex-col justify-between">
+                                <span>Hornos Rotatorios</span>
+                                <span class="text-orange-600 font-bold font-mono">93 dB(A)</span>
+                            </button>
+                            <button onclick="ajustarRuidoPreset(102, 'Molienda de Clinker')" class="p-2 border border-slate-200 hover:border-red-500 rounded-lg text-[11px] font-semibold text-slate-700 hover:text-red-700 transition-all text-left flex flex-col justify-between">
+                                <span>Molienda Clinker</span>
+                                <span class="text-red-600 font-bold font-mono">102 dB(A)</span>
+                            </button>
+                            <button onclick="ajustarRuidoPreset(108, 'Trituradora de Piedra')" class="p-2 border border-slate-200 hover:border-red-600 rounded-lg text-[11px] font-semibold text-slate-700 hover:text-red-800 transition-all text-left flex flex-col justify-between">
+                                <span>Trituradora</span>
+                                <span class="text-red-700 font-bold font-mono">108 dB(A)</span>
+                            </button>
+                        </div>
+
+                        <!-- Slider Customizador de dB -->
+                        <div class="pt-3 border-t border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="sliderRuido" class="text-xs font-semibold text-slate-700">Ajuste manual del ruido:</label>
+                                <span class="text-base font-black font-mono text-slate-900" id="txtRuidoSlider">85 dB(A)</span>
+                            </div>
+                            <input type="range" id="sliderRuido" min="60" max="115" value="85" oninput="actualizarSlider(this.value)" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-orange-600">
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+                                <span>60 dB(A)</span>
+                                <span>Límite (85 dB)</span>
+                                <span>115 dB(A)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel Selección de EPP -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-950 text-xs uppercase tracking-wider text-slate-500">Paso 2: Selecciona el Tipo de Protector Auditivo (EPP)</h3>
+                        
+                        <div class="space-y-2">
+                            <!-- Sin EPP -->
+                            <label class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                                <input type="radio" name="selectEpp" value="ninguno" checked onchange="calcularMitigacion()" class="w-4 h-4 text-orange-600 accent-orange-600">
+                                <div class="text-xs flex-1">
+                                    <span class="font-bold text-slate-900 block">Ninguno (Oído Descubierto)</span>
+                                    <span class="text-slate-500">Sin ningún tipo de atenuación física.</span>
+                                </div>
+                                <span class="bg-slate-100 text-slate-600 font-mono font-extrabold text-[10px] px-2 py-1 rounded">0 NRR</span>
+                            </label>
+
+                            <!-- Tapón Desechable -->
+                            <label class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                                <input type="radio" name="selectEpp" value="desechable" onchange="calcularMitigacion()" class="w-4 h-4 text-orange-600 accent-orange-600">
+                                <div class="text-xs flex-1">
+                                    <span class="font-bold text-slate-900 block">Tapones de Espuma Desechables</span>
+                                    <span class="text-slate-500">Atenuación práctica real corregida de ~11 dB(A).</span>
+                                </div>
+                                <span class="bg-orange-100 text-orange-700 font-mono font-extrabold text-[10px] px-2 py-1 rounded">29 NRR</span>
+                            </label>
+
+                            <!-- Tapón Reutilizable -->
+                            <label class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                                <input type="radio" name="selectEpp" value="reutilizable" onchange="calcularMitigacion()" class="w-4 h-4 text-orange-600 accent-orange-600">
+                                <div class="text-xs flex-1">
+                                    <span class="font-bold text-slate-900 block">Tapones de Silicona Reutilizables</span>
+                                    <span class="text-slate-500">Atenuación práctica real corregida de ~9 dB(A).</span>
+                                </div>
+                                <span class="bg-yellow-100 text-yellow-700 font-mono font-extrabold text-[10px] px-2 py-1 rounded">25 NRR</span>
+                            </label>
+
+                            <!-- Orejeras de Copa -->
+                            <label class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                                <input type="radio" name="selectEpp" value="orejera" onchange="calcularMitigacion()" class="w-4 h-4 text-orange-600 accent-orange-600">
+                                <div class="text-xs flex-1">
+                                    <span class="font-bold text-slate-900 block">Orejeras de Copa (Casco o Diadema)</span>
+                                    <span class="text-slate-500">Atenuación práctica real corregida de ~10 dB(A).</span>
+                                </div>
+                                <span class="bg-blue-100 text-blue-700 font-mono font-extrabold text-[10px] px-2 py-1 rounded">27 NRR</span>
+                            </label>
+
+                            <!-- Doble Protección -->
+                            <label class="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                                <input type="radio" name="selectEpp" value="doble" onchange="calcularMitigacion()" class="w-4 h-4 text-orange-600 accent-orange-600">
+                                <div class="text-xs flex-1">
+                                    <span class="font-bold text-slate-900 block">Doble Protección (Tapón + Orejera)</span>
+                                    <span class="text-slate-500">Suma logarítmica sugerida de seguridad: ~16 dB(A) de reducción real.</span>
+                                </div>
+                                <span class="bg-emerald-100 text-emerald-700 font-mono font-extrabold text-[10px] px-2 py-1 rounded">Doble</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna de Resultados y Diagnósticos en tiempo real -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-slate-900 text-white border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4 relative overflow-hidden flex flex-col justify-between h-full">
+                        
+                        <div>
+                            <span class="text-[10px] tracking-widest font-extrabold text-orange-500 block mb-1">CÁLCULO DE EXPOSICIÓN REAL</span>
+                            <h3 id="txtAreaSeleccionada" class="font-black text-lg text-white">Molino de Clinker</h3>
+                        </div>
+
+                        <!-- Visualización del Ruido Residual -->
+                        <div class="py-4 border-y border-slate-800 text-center space-y-1 relative">
+                            <!-- Indicador de Alerta de Fondo -->
+                            <div id="simuladorAlertaIndicador" class="absolute inset-0 bg-red-600/10 blur-xl rounded-full"></div>
+                            
+                            <span class="text-[10px] text-slate-400 block relative">PRESIÓN SONORA RECIBIDA POR EL TRABAJADOR</span>
+                            <span id="resRuidoReal" class="text-5xl font-black font-mono tracking-tight text-red-500 relative">102 <span class="text-sm font-medium">dB(A)</span></span>
+                            
+                            <div class="pt-2 relative">
+                                <span id="resEstadoAuditivo" class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500 text-slate-950">
+                                    PELIGRO EXTREMO
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Tiempo de Exposición Recomendado por NIOSH -->
+                        <div class="p-3.5 bg-slate-850 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] text-slate-400 font-bold block">TIEMPO DE EXPOSICIÓN DIARIO PERMITIDO</span>
+                            <div class="flex items-baseline gap-1 text-white">
+                                <span id="resTiempoMax" class="text-2xl font-extrabold font-mono tracking-tight">15</span>
+                                <span class="text-xs text-slate-300 font-medium" id="resTiempoUnidad">minutos</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 leading-normal" id="txtFormulaExplicacion">
+                                NIOSH indica que a partir de 85 dB(A) el tiempo seguro se reduce a la mitad por cada 3 dB de incremento.
+                            </p>
+                        </div>
+
+                        <!-- Pequeño gráfico de barra de seguridad interactiva -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                                <span>Células Auditivas:</span>
+                                <span id="txtSaludCilia" class="text-red-500 font-bold">Daño Crónico Inminente</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div id="barSaludCilia" class="bg-red-500 h-2 progress-bar-fill" style="width: 15%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m4', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-simulador', 'modulo-m5')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Comprendido, pasar a M5 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 5: PROTECTORES AUDITIVOS -->
+        <section id="modulo-m5" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="headphones" class="w-4 h-4"></i> Módulo 5
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Tipos de Equipos de Protección Auditiva (EPP)</h2>
+                <p class="text-slate-500 text-sm mt-1">Cuáles existen, qué significa el NRR/SNR y la compatibilidad en campo.</p>
+            </div>
+
+            <!-- Tipos de Protectores en Grid interactivo -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Tarjeta 1: Desechables -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 card-hover flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <span class="bg-orange-100 text-orange-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">Alta Atenuación</span>
+                        <h3 class="font-extrabold text-slate-950 text-base">Tapones Desechables de Espuma</h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Fabricados en poliuretano expandible. Se enrollan antes de colocarse para que se adapten a la perfección al conducto auditivo. Ofrecen el NRR más alto si se colocan de forma perfecta.
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-500 font-mono">
+                        <span>Atenuación real aproximada:</span>
+                        <span class="font-extrabold text-orange-600">~11 dB(A)</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Reutilizables -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 card-hover flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <span class="bg-yellow-100 text-yellow-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">Medio/Largo Plazo</span>
+                        <h3 class="font-extrabold text-slate-950 text-base">Tapones Reutilizables de Silicona</h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Diseñados con diseño de "sombrilla" o tres falanges elásticas. Son fáciles de limpiar, higiénicos para ambientes con mucho polvo fino de clinker y se conectan con un cordón de seguridad.
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-500 font-mono">
+                        <span>Atenuación real aproximada:</span>
+                        <span class="font-extrabold text-yellow-600">~9 dB(A)</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3: Copa -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 card-hover flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <span class="bg-blue-100 text-blue-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">Fácil de Poner</span>
+                        <h3 class="font-extrabold text-slate-950 text-base">Orejeras de Copa</h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Copas rígidas con almohadillas amortiguadoras que cubren toda la oreja. Pueden fijarse directo a los cascos de seguridad cementeros. Cómodas para personas con conductos pequeños.
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-500 font-mono">
+                        <span>Atenuación real aproximada:</span>
+                        <span class="font-extrabold text-blue-600">~10 dB(A)</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 4: Personalizados -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 card-hover flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <span class="bg-purple-100 text-purple-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">Hechos a Medida</span>
+                        <h3 class="font-extrabold text-slate-950 text-base">Moldes Personalizados</h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Fabricados con resina médica directamente de la impresión física de tu conducto auditivo. Máxima comodidad, reutilizables a largo plazo con ajuste perfecto garantizado.
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-[11px] text-slate-500 font-mono">
+                        <span>Atenuación real aproximada:</span>
+                        <span class="font-extrabold text-purple-600">De acuerdo a diseño</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compatibilidad Técnica -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-3">
+                <h3 class="font-bold text-slate-950 text-base flex items-center gap-2">
+                    <i data-lucide="shield" class="text-orange-500"></i> Compatibilidad con Casco, Lentes y Respiradores
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    En plantas de cemento se utiliza de manera indispensable: casco, lentes de protección contra polvo y mascarillas N95 o respiradores de medio rostro. Asegúrate de:
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="font-bold text-slate-900 block mb-1">Copa acoplada a casco</span>
+                        <p class="text-slate-600">Verifica que las copas sellen al 100% sobre tu oreja y no queden sobrepuestas flojamente en el armazón de plástico del casco.</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="font-bold text-slate-900 block mb-1">Las patillas de las gafas</span>
+                        <p class="text-slate-600">Evita que la patilla de tus lentes de protección cree un canal de fuga que decolore el sellado de aire de tus orejeras.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-simulador', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m5', 'modulo-m6')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 6: CUIDADO DEL PROTECTOR AUDITIVO -->
+        <section id="modulo-m6" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Módulo 6
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Cuidado, Limpieza e Higiene de los Protectores</h2>
+                <p class="text-slate-500 text-sm mt-1">Cómo alargar la vida de tus protectores evitando infecciones de oído.</p>
+            </div>
+
+            <!-- Reglas de Cuidado y Mantenimiento -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-950 text-base">Buenas Prácticas de Higiene</h3>
+                    
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 flex gap-3">
+                            <i data-lucide="check" class="w-5 h-5 shrink-0 text-emerald-600"></i>
+                            <div>
+                                <span class="font-bold block">Limpieza diaria</span>
+                                <p class="text-[11px] mt-0.5">Lava tus tapones reutilizables con agua limpia y jabón neutro suave al final de tu turno de trabajo. Déjalos secar al aire libre lejos del polvo de clinker.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 flex gap-3">
+                            <i data-lucide="check" class="w-5 h-5 shrink-0 text-emerald-600"></i>
+                            <div>
+                                <span class="font-bold block">Almacenamiento Seguro</span>
+                                <p class="text-[11px] mt-0.5">Guárdalos siempre en su estuche plástico limpio original. No los tires sueltos en tus bolsas del overol o caja de herramientas de taller.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-emerald-50 text-emerald-900 rounded-xl border border-emerald-100 flex gap-3">
+                            <i data-lucide="check" class="w-5 h-5 shrink-0 text-emerald-600"></i>
+                            <div>
+                                <span class="font-bold block">Inspección Periódica</span>
+                                <p class="text-[11px] mt-0.5">Revisa el estado de la goma elástica o espuma. Si están agrietados, duros o deformados, solicita el reemplazo inmediato al departamento de EPP.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prohibiciones Críticas -->
+                <div class="bg-red-50 border border-red-200 rounded-2xl p-6 shadow-sm space-y-4 text-red-900">
+                    <h3 class="font-bold text-red-950 text-base flex items-center gap-2">
+                        <i data-lucide="ban" class="w-5 h-5 text-red-600"></i> Lo que NUNCA debes hacer
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex gap-3">
+                            <i data-lucide="x" class="w-5 h-5 text-red-600 shrink-0"></i>
+                            <p><strong>NUNCA modifiques tus protectores:</strong> No recortes el extremo de tus tapones de espuma ni les perfores agujeros. Esto destruye su atenuación acústica a 0 NRR.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <i data-lucide="x" class="w-5 h-5 text-red-600 shrink-0"></i>
+                            <p><strong>NUNCA compartas tus protectores:</strong> Los tapones reutilizables y personalizados son de uso estrictamente personal. Compartirlos propaga hongos e infecciones bacterianas graves de forma inmediata.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <i data-lucide="x" class="w-5 h-5 text-red-600 shrink-0"></i>
+                            <p><strong>NUNCA los coloques con las manos sucias:</strong> En una planta cementera, el polvo fino de sílice y caliza puede adherirse a tus tapones, lastimando e infectando tu conducto auditivo al empujarlos hacia adentro.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m5', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m6', 'modulo-m7')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 7: PROGRAMA DE CONSERVACIÓN AUDITIVA -->
+        <section id="modulo-m7" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="heart-pulse" class="w-4 h-4"></i> Módulo 7
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Programa de Conservación Auditiva (PCA)</h2>
+                <p class="text-slate-500 text-sm mt-1">Cómo se estructura la protección médica continua en tu centro de trabajo.</p>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                <div>
+                    <h3 class="font-bold text-slate-950 text-base mb-2">¿Cómo Participas tú como Colaborador?</h3>
+                    <p class="text-slate-500 text-xs">El PCA de la empresa tiene éxito únicamente si te comprometes de manera activa.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Tarjeta: Audiometrias -->
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex gap-3">
+                        <i data-lucide="activity" class="w-8 h-8 text-orange-600 shrink-0"></i>
+                        <div class="text-xs">
+                            <span class="font-bold text-slate-950 block">Audiometrías Periódicas Anuales</span>
+                            <p class="text-slate-600 mt-1">Exámenes médicos auditivos obligatorios en cabina sonoamortiguada para detectar de manera temprana caídas en los umbrales auditivos de tu oído.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta: Uso de EPP -->
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex gap-3">
+                        <i data-lucide="headphones" class="w-8 h-8 text-orange-600 shrink-0"></i>
+                        <div class="text-xs">
+                            <span class="font-bold text-slate-950 block">Uso Obligatorio de EPP</span>
+                            <p class="text-slate-600 mt-1">Uso ininterrumpido en todas las áreas de planta identificadas como críticas. Una sola hora sin protección en un área de 100 dB nulifica el cuidado del día entero.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta: Reporte de Daños -->
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex gap-3">
+                        <i data-lucide="megaphone" class="w-8 h-8 text-orange-600 shrink-0"></i>
+                        <div class="text-xs">
+                            <span class="font-bold text-slate-950 block">Reporte Inmediato de Daños</span>
+                            <p class="text-slate-600 mt-1">Notificación inmediata a tu jefe de SSO si detectas ruidos inusuales en máquinas o si tu protector ha sufrido rotura física.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta: Capacitaciones -->
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex gap-3">
+                        <i data-lucide="calendar" class="w-8 h-8 text-orange-600 shrink-0"></i>
+                        <div class="text-xs">
+                            <span class="font-bold text-slate-950 block">Capacitaciones Frecuentes</span>
+                            <p class="text-slate-600 mt-1">Asistencia a las charlas, entrenamientos prácticos sobre el ruido y autoevaluaciones periódicas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m6', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m7', 'modulo-m8')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 8: SEÑALES DE ALARMA -->
+        <section id="modulo-m8" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="alert-triangle" class="w-4 h-4"></i> Módulo 8
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Señales de Alarma Médica Auditiva</h2>
+                <p class="text-slate-500 text-sm mt-1">Cuándo debes acudir de inmediato al médico ocupacional de la planta.</p>
+            </div>
+
+            <!-- Checklist de Alarma en Tarjeta Destacada -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+                <div>
+                    <h3 class="font-bold text-slate-950 text-base mb-2">Síntomas Clínicos de Daño Auditivo</h3>
+                    <p class="text-slate-500 text-xs">Si presentas de manera constante uno o más de estos síntomas, asiste con nuestro médico de planta de inmediato:</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="flex gap-3 p-3 bg-red-50/50 rounded-xl border border-red-100">
+                        <i data-lucide="bell-ring" class="text-red-600 shrink-0 w-5 h-5"></i>
+                        <div>
+                            <span class="font-bold text-slate-950 block">Zumbidos o Silbidos persistentes (Tinnitus)</span>
+                            <p class="text-slate-600 mt-0.5">Sientes silbidos intensos al estar en silencio o al intentar dormir en casa.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 p-3 bg-red-50/50 rounded-xl border border-red-100">
+                        <i data-lucide="volume-x" class="text-red-600 shrink-0 w-5 h-5"></i>
+                        <div>
+                            <span class="font-bold text-slate-950 block">Sensación de Escuchar Menos</span>
+                            <p class="text-slate-600 mt-0.5">Sientes que tienes los oídos tapados constantemente o necesitas subir de manera exagerada el volumen de la TV.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 p-3 bg-red-50/50 rounded-xl border border-red-100">
+                        <i data-lucide="message-square-off" class="text-red-600 shrink-0 w-5 h-5"></i>
+                        <div>
+                            <span class="font-bold text-slate-950 block">Dificultad de Comprensión Oral</span>
+                            <p class="text-slate-600 mt-0.5">Escuchas que la gente te habla, pero no logras distinguir ni entender con claridad lo que te están diciendo.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 p-3 bg-red-50/50 rounded-xl border border-red-100">
+                        <i data-lucide="frown" class="text-red-600 shrink-0 w-5 h-5"></i>
+                        <div>
+                            <span class="font-bold text-slate-950 block">Dolor Directo, Supuración u Otitis</span>
+                            <p class="text-slate-600 mt-0.5">Sientes molestias punzantes o secreción de líquidos inusuales dentro del oído.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-yellow-50 border border-yellow-200 rounded-xl text-xs text-yellow-900 leading-normal">
+                    <strong>¡Recuerda!</strong> No esperes a perder el oído por completo. El daño de las células ciliadas es gradual y silencioso; la prevención y detección a tiempo salvan tu audición.
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m7', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m8', 'modulo-m9')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 9: RESPONSABILIDADES -->
+        <section id="modulo-m9" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="users" class="w-4 h-4"></i> Módulo 9
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Compromiso y Responsabilidades Compartidas</h2>
+                <p class="text-slate-500 text-sm mt-1">Cuáles son los roles ineludibles de la Empresa y de ti como Colaborador.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Responsabilidades de la Empresa -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2 text-slate-900">
+                        <i data-lucide="building-2" class="w-5 h-5 text-orange-600"></i>
+                        <h3 class="font-extrabold text-base">Responsabilidades de la Empresa</h3>
+                    </div>
+
+                    <ul class="space-y-2 text-xs text-slate-700">
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0 mt-1.5"></span>
+                            <span>Medir y mapear científicamente el ruido ambiental de la planta cementera de forma anual.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0 mt-1.5"></span>
+                            <span>Diseñar e implementar controles físicos de ingeniería (barreras, amortiguación, lubricación).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0 mt-1.5"></span>
+                            <span>Proporcionar protectores auditivos de alto desempeño homologados gratuitamente a los trabajadores.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0 mt-1.5"></span>
+                            <span>Capacitar de forma continua a toda la plantilla y agendar los exámenes de audiometría anuales.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Responsabilidades del Colaborador -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2 border-b border-slate-100 pb-2 text-slate-900">
+                        <i data-lucide="user-check" class="w-5 h-5 text-emerald-600"></i>
+                        <h3 class="font-extrabold text-base">Responsabilidades del Colaborador</h3>
+                    </div>
+
+                    <ul class="space-y-2 text-xs text-slate-700">
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5"></span>
+                            <span>Usar correctamente tus protectores auditivos asignados durante toda tu jornada de exposición.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5"></span>
+                            <span>Cuidar tus protectores, lavándolos y guardándolos higiénicamente en su estuche original.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5"></span>
+                            <span>Reportar inmediatamente cualquier daño en tu protector u observaciones de ruido excesivo en maquinaria.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1.5"></span>
+                            <span>Asistir puntualmente a las evaluaciones de audiometría ocupacional de la empresa.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Botonera de control -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m8', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                </button>
+                <button onclick="completarModulo('modulo-m9', 'modulo-m10')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
+                    Ir a la Evaluación Final <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODULO 10: EVALUACIÓN FINAL -->
+        <section id="modulo-m10" class="modulo space-y-6">
+            <div class="border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-2 text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">
+                    <i data-lucide="graduation-cap" class="w-4 h-4 text-emerald-500"></i> Módulo 10
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Evaluación Final de Competencias</h2>
+                <p class="text-slate-500 text-sm mt-1">Resuelve la evaluación oficial integrada de forma digital.</p>
+            </div>
+
+            <!-- Contenedor del Iframe con cargador de seguridad -->
+            <div class="w-full bg-white border border-slate-200 rounded-3xl p-4 md:p-6 shadow-md flex flex-col items-center">
+                <div class="w-full max-w-4xl bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 relative min-h-[600px] shadow-inner">
+                    <!-- INTEGRACIÓN DEL FORMULARIO EXTERNO DE MICROSOFT FORMS -->
+                    <iframe width="100%" height="650px" src="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=R74bQeX7JUCmrieWPa2zRnkQANe8zvtBtjOVN904RcNUMFNZQVZaRTdRUFBGTDMwT09LWDk5VEVGNS4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" style="border: none; width: 100%; min-height: 650px; background-color: white;" allowfullscreen webkitallowfullscreen mozallowfullscreen msallowfullscreen></iframe>
+                </div>
+                
+                <div class="mt-4 flex items-center gap-2 text-[10px] text-slate-400 font-mono">
+                    <i data-lucide="lock" class="w-3.5 h-3.5 text-emerald-500"></i>
+                    <span>Conexión de Seguridad Cifrada Sincronizada • SSO Corporativo Microsoft Forms</span>
+                </div>
+            </div>
+
+            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 text-center">
+                <strong>¡Excelente Trabajo!</strong> Una vez finalizada tu evaluación de forma satisfactoria en el recuadro superior, avisa a tu supervisor de Higiene y Seguridad para registrar de forma oficial tu participación e idoneidad.
+            </div>
+
+            <!-- Botonera de control final -->
+            <div class="flex justify-between pt-4">
+                <button onclick="cambiarModulo('modulo-m9', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver a Repasar
+                </button>
+                <div class="bg-emerald-600 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-emerald-600/10 flex items-center gap-2">
+                    <i data-lucide="award" class="w-4 h-4"></i> ¡Capacitación Terminada!
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CONTROLADORES LÓGICOS (JAVASCRIPT) -->
+    <script>
+        // Arreglo de los módulos oficiales para poder controlar el progreso del curso
+        const modulosOrdenados = [
+            'modulo-objetivo',
+            'modulo-m1',
+            'modulo-m2',
+            'modulo-m3',
+            'modulo-m4',
+            'modulo-simulador',
+            'modulo-m5',
+            'modulo-m6',
+            'modulo-m7',
+            'modulo-m8',
+            'modulo-m9',
+            'modulo-m10'
+        ];
+
+        // Objeto para trackear los módulos que ya han sido leídos y completados
+        let modulosCompletados = {
+            'modulo-objetivo': true
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Inicializar todos los íconos dinámicos Lucide
+            lucide.createIcons();
+            
+            // Iniciar por primera vez el simulador de atenuación
+            actualizarSlider(85);
+            calcularMitigacion();
+            actualizarProgreso();
+        });
+
+        // Función interactiva para cambiar el módulo visible
+        function cambiarModulo(idModulo, boton) {
+            // Ocultar todos los módulos con transiciones suaves
+            document.querySelectorAll('.modulo').forEach(m => {
+                m.classList.remove('activo');
+            });
+            
+            // Mostrar módulo seleccionado
+            const modSeleccionado = document.getElementById(idModulo);
+            if (modSeleccionado) {
+                modSeleccionado.classList.add('activo');
+            }
+            
+            // Restablecer estilos de los botones del menú lateral
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.className = "menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800/50";
+            });
+            
+            // Aplicar estilo activo naranja al botón que se acaba de clickear
+            if (boton) {
+                boton.className = "menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-orange-400 bg-slate-800 border-l-4 border-orange-500";
+            } else {
+                // Si el cambio se hizo desde los botones internos (ej. Completar y Continuar), buscar el botón respectivo en el menú
+                const listaBotones = document.querySelectorAll('.menu-btn');
+                listaBotones.forEach(btn => {
+                    const onclickStr = btn.getAttribute('onclick');
+                    if (onclickStr && onclickStr.includes(idModulo)) {
+                        btn.className = "menu-btn w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-all text-orange-400 bg-slate-800 border-l-4 border-orange-500";
+                    }
+                });
+            }
+
+            // Marcar el módulo actual visitado como "completado"
+            modulosCompletados[idModulo] = true;
+            actualizarProgreso();
+
+            // Re-dibujar iconos de Lucide por si se pintan de nuevo
+            lucide.createIcons();
+            
+            // Scroll arriba suave de la vista de contenidos al cambiar de módulo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Función para validar la compleción de un módulo y mover al siguiente de manera automatizada
+        function completarModulo(idModuloActual, idModuloSiguiente) {
+            modulosCompletados[idModuloActual] = true;
+            
+            // Activar checkmark en la barra lateral
+            const chkElement = document.getElementById('chk-' + idModuloActual);
+            if (chkElement) {
+                chkElement.classList.remove('hidden');
+            }
+            
+            cambiarModulo(idModuloSiguiente, null);
+        }
+
+        // Actualizar porcentaje e indicadores del progreso global del curso
+        function actualizarProgreso() {
+            const modulosVisitados = Object.keys(modulosCompletados).length;
+            const totalModulos = modulosOrdenados.length;
+            const porcentajeCalculado = Math.round((modulosVisitados / totalModulos) * 100);
+
+            // Pintar porcentaje en barra de navegación superior de SSO
+            const bar = document.getElementById('cursoProgress');
+            const text = document.getElementById('cursoProgressText');
+            if (bar && text) {
+                bar.style.width = porcentajeCalculado + '%';
+                text.textContent = porcentajeCalculado + '%';
+            }
+
+            // Pintar los checks en el sidebar
+            modulosOrdenados.forEach(idMod => {
+                if (modulosCompletados[idMod]) {
+                    const chkElement = document.getElementById('chk-' + idMod);
+                    if (chkElement) {
+                        chkElement.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+
+        // LOGICA DE LA CALCULADORA / SIMULADOR DE RUIDO Y ATENUACIÓN DE EPP
+
+        // Presets rápidos del simulador
+        function ajustarRuidoPreset(dB, nombreArea) {
+            document.getElementById('txtAreaSeleccionada').textContent = nombreArea;
+            document.getElementById('sliderRuido').value = dB;
+            actualizarSlider(dB);
+            calcularMitigacion();
+        }
+
+        // Actualizar el indicador visual numérico del slider
+        function actualizarSlider(val) {
+            document.getElementById('txtRuidoSlider').textContent = val + " dB(A)";
+            calcularMitigacion();
+        }
+
+        // Calcula de forma interactiva el ruido residual que recibe el oído y el tiempo seguro de exposición
+        function calcularMitigacion() {
+            const nivelRuidoOriginal = parseInt(document.getElementById('sliderRuido').value);
+            
+            // Capturar EPP seleccionado
+            const epps = document.getElementsByName('selectEpp');
+            let eppSeleccionado = "ninguno";
+            for (let i = 0; i < epps.length; i++) {
+                if (epps[i].checked) {
+                    eppSeleccionado = epps[i].value;
+                    break;
+                }
+            }
+
+            // Definición de valores NRR y atenuación real corregida (OSHA/NIOSH de-rating estándar):
+            // Reducción real práctica del EPP = (NRR - 7) * 50% (aproximación realista de campo por mal ajuste)
+            let atenuacionReal = 0;
+            switch(eppSeleccionado) {
+                case "desechable":
+                    atenuacionReal = Math.round((29 - 7) * 0.5); // ~11 dB de reducción real en oído
+                    break;
+                case "reutilizable":
+                    atenuacionReal = Math.round((25 - 7) * 0.5); // ~9 dB de reducción real en oído
+                    break;
+                case "orejera":
+                    atenuacionReal = Math.round((27 - 7) * 0.5); // ~10 dB de reducción real en oído
+                    break;
+                case "doble":
+                    // Doble protección calcula la reducción mayor + 5 dB adicionales
+                    atenuacionReal = Math.round(((29 - 7) * 0.5) + 5); // ~16 dB de reducción real en oído
+                    break;
+                case "ninguno":
+                default:
+                    atenuacionReal = 0;
+                    break;
+            }
+
+            // Nivel de ruido final que ingresa realmente al oído del trabajador
+            let ruidoEfectivo = nivelRuidoOriginal - atenuacionReal;
+            if (ruidoEfectivo < 0) ruidoEfectivo = 0;
+
+            // Pintar ruido efectivo en el indicador visual
+            document.getElementById('resRuidoReal').innerHTML = `${ruidoEfectivo} <span class="text-sm font-medium">dB(A)</span>`;
+
+            // Calcular el Tiempo Máximo de Exposición permitido en base a las fórmulas científicas estandarizadas de higiene (NIOSH/OSHA)
+            // Límite basal NIOSH: 85 dB(A) permitidos por 8 horas. Por cada 3 dB(A) de aumento, el tiempo se divide exactamente por 2.
+            let tiempoHorasMax = 8;
+            if (ruidoEfectivo > 85) {
+                // Fórmula: T_max = 8 / (2 ^ ((L_efectivo - 85) / 3))
+                tiempoHorasMax = 8 / Math.pow(2, (ruidoEfectivo - 85) / 3);
+            } else {
+                tiempoHorasMax = 24; // Ruido seguro todo el día
+            }
+
+            // Traducir decimal de horas a horas y minutos limpios de lectura
+            let textoTiempo = "";
+            let textoUnidad = "";
+
+            if (ruidoEfectivo < 85) {
+                textoTiempo = "Sin Límite";
+                textoUnidad = "(Jornada de Trabajo Segura)";
+            } else {
+                if (tiempoHorasMax >= 1) {
+                    const horasRedondeadas = Math.floor(tiempoHorasMax);
+                    const minutosRestantes = Math.round((tiempoHorasMax - horasRedondeadas) * 60);
+                    if (minutosRestantes > 0) {
+                        textoTiempo = `${horasRedondeadas} h ${minutosRestantes}`;
+                        textoUnidad = "minutos permitidos";
+                    } else {
+                        textoTiempo = `${horasRedondeadas}`;
+                        textoUnidad = horasRedondeadas === 1 ? "hora permitida" : "horas permitidas";
+                    }
+                } else {
+                    const minutosTotales = Math.round(tiempoHorasMax * 60);
+                    if (minutosTotales >= 1) {
+                        textoTiempo = `${minutosTotales}`;
+                        textoUnidad = minutosTotales === 1 ? "minuto permitido" : "minutos permitidos";
+                    } else {
+                        const segundosTotales = Math.round(tiempoHorasMax * 3600);
+                        textoTiempo = `${segundosTotales}`;
+                        textoUnidad = "segundos permitidos (¡Riesgo Inmediato!)";
+                    }
+                }
+            }
+
+            document.getElementById('resTiempoMax').textContent = textoTiempo;
+            document.getElementById('resTiempoUnidad').textContent = textoUnidad;
+
+            // Ajustar diagnósticos, textos, clases de alerta y barra de vida de las células ciliadas
+            const indicadorEstado = document.getElementById('resEstadoAuditivo');
+            const barraCilia = document.getElementById('barSaludCilia');
+            const textoCilia = document.getElementById('txtSaludCilia');
+            const indicadorFondo = document.getElementById('simuladorAlertaIndicador');
+
+            // Resetear clases dinámicas previas
+            indicadorEstado.className = "inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ";
+            indicadorFondo.className = "absolute inset-0 blur-xl rounded-full ";
+
+            if (ruidoEfectivo < 80) {
+                indicadorEstado.classList.add("bg-emerald-500", "text-slate-950");
+                indicadorEstado.textContent = "Zona Segura / Confort";
+                indicadorFondo.classList.add("bg-emerald-500/10");
+                
+                barraCilia.style.width = "100%";
+                barraCilia.className = "bg-emerald-500 h-2 progress-bar-fill";
+                textoCilia.textContent = "Células Ciliadas Protegidas";
+                textoCilia.className = "text-emerald-500 font-bold";
+            } else if (ruidoEfectivo <= 85) {
+                indicadorEstado.classList.add("bg-yellow-400", "text-slate-950");
+                indicadorEstado.textContent = "Límite de Acción Ocupacional";
+                indicadorFondo.classList.add("bg-yellow-400/10");
+
+                barraCilia.style.width = "75%";
+                barraCilia.className = "bg-yellow-400 h-2 progress-bar-fill";
+                textoCilia.textContent = "Fatiga Leve";
+                textoCilia.className = "text-yellow-500 font-bold";
+            } else if (ruidoEfectivo <= 95) {
+                indicadorEstado.classList.add("bg-orange-500", "text-white");
+                indicadorEstado.textContent = "Riesgo Alto de Daño";
+                indicadorFondo.classList.add("bg-orange-500/15");
+
+                barraCilia.style.width = "40%";
+                barraCilia.className = "bg-orange-500 h-2 progress-bar-fill";
+                textoCilia.textContent = "Pérdida Auditiva Gradual";
+                textoCilia.className = "text-orange-500 font-bold";
+            } else {
+                indicadorEstado.classList.add("bg-red-600", "text-white");
+                indicadorEstado.textContent = "Peligro Crítico Inminente";
+                indicadorFondo.classList.add("bg-red-600/20");
+
+                barraCilia.style.width = "10%";
+                barraCilia.className = "bg-red-600 h-2 progress-bar-fill";
+                textoCilia.textContent = "Daño Auditivo Permanente e Irreversible";
+                textoCilia.className = "text-red-500 font-bold";
+            }
+        }
+    </script>
+</body>
+</html>
