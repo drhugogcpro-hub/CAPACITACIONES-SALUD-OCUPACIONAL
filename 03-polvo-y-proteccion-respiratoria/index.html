@@ -61,9 +61,20 @@
 </head>
 <body class="flex min-h-screen bg-slate-50 text-slate-800">
 
+    <!-- OVERLAY MÓVIL PARA SIDEBAR -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
     <!-- BARRA LATERAL DE NAVEGACIÓN (SIDEBAR) -->
-    <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between sticky top-0 h-screen shrink-0 text-slate-300">
+    <aside id="sidebar" class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between fixed md:sticky top-0 h-screen shrink-0 text-slate-300 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <div class="p-5 overflow-y-auto no-scrollbar flex-grow">
+            
+            <!-- BOTÓN CERRAR (SOLO MÓVIL) -->
+            <div class="md:hidden flex justify-end mb-2">
+                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-2 rounded-lg">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
             <!-- LOGO DE LA ORGANIZACIÓN Y TÍTULO -->
             <div class="flex flex-col gap-2 mb-6">
                 <div class="flex items-center gap-3">
@@ -131,7 +142,14 @@
     </aside>
 
     <!-- CUERPO PRINCIPAL DE CONTENIDOS -->
-    <main class="flex-1 overflow-y-auto p-12 max-w-5xl mx-auto">
+    <main class="flex-1 overflow-y-auto p-6 md:p-12 max-w-5xl mx-auto w-full relative">
+
+        <!-- HEADER MÓVIL -->
+        <div class="md:hidden flex items-center justify-between mb-6">
+            <button onclick="toggleSidebar()" class="flex items-center gap-2 text-slate-700 bg-white border border-slate-200 px-4 py-2 rounded-lg shadow-sm font-bold text-sm">
+                <i data-lucide="menu" class="w-5 h-5 text-orange-500"></i> Menú
+            </button>
+        </div>
 
         <!-- MÓDULO 1: INTRODUCCIÓN -->
         <section id="modulo-intro" class="modulo activo space-y-8">
@@ -214,6 +232,13 @@
                         Norma nacional para polvo respirable común. No se aplica el límite específico de sílice al no existir laboratorios locales con certificación para su medición técnica oficial.
                     </p>
                 </div>
+            </div>
+
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-end border-t border-slate-200 pt-6">
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente Módulo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
         </section>
 
@@ -337,6 +362,16 @@
                     </p>
                 </div>
             </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
         <!-- MÓDULO 3: RIESGOS PARA LA SALUD -->
@@ -435,6 +470,16 @@
                         <p class="text-[10px] text-slate-400 mt-1">Factores individuales genéticos, condiciones preexistentes de salud (como asma) y hábitos nocivos como el tabaquismo.</p>
                     </div>
                 </div>
+            </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
         </section>
 
@@ -545,6 +590,16 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
         <!-- MÓDULO 5: JERARQUÍA DE CONTROLES -->
@@ -611,6 +666,16 @@
                     <span class="font-bold block">¡RECUERDA SIEMPRE!</span>
                     La protección respiratoria (EPP) es la <strong class="underline">última barrera de protección, no la primera</strong>. Depender únicamente de la mascarilla sin verificar el estado de los filtros de mangas o los sistemas de extracción de la planta va en contra de la normativa internacional de SSO.
                 </div>
+            </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
         </section>
 
@@ -730,6 +795,16 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
         <!-- MÓDULO 7: USO CORRECTO DEL RESPIRADOR -->
@@ -829,6 +904,16 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
         <!-- MÓDULO 8: INSPECCIÓN, LIMPIEZA Y ALMACENAMIENTO -->
@@ -906,6 +991,16 @@
                     </p>
                 </div>
             </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
         <!-- MÓDULO 9: CASOS PRÁCTICOS -->
@@ -942,13 +1037,13 @@
                     </div>
                 </div>
 
-                <!-- CASO 2 -->
+                <!-- CASO 2 (CORREGIDO PARA AUTOMATIZACIÓN) -->
                 <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
                     <div>
                         <div class="text-xs font-bold text-orange-500 mb-1">Escenario B</div>
-                        <h4 class="font-bold text-slate-900 text-sm mb-2">Operador de la Línea de Despacho</h4>
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">Operador de la Línea Automática de Despacho</h4>
                         <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                            Un colaborador labora en el área de boquilla de ensacado, llenando sacos de cemento de 42.5 kg. El sistema posee extracción localizada, pero hay pérdidas incidentales constantes de polvo durante el sellado y traslado de tarimas.
+                            Un colaborador labora supervisando la línea automatizada de ensacado de cemento y la paletizadora automática. El sistema posee extracción localizada de mangas integrada, pero existen fugas incidentales intermitentes.
                         </p>
                     </div>
                     <div class="border-t border-slate-100 pt-4">
@@ -956,35 +1051,117 @@
                             <i data-lucide="help-circle" class="w-4 h-4"></i> Ver Medidas de Control Recomendadas
                         </button>
                         <div id="sol-caso2" class="hidden mt-3 p-3 bg-slate-50 rounded-xl border border-slate-150 text-[10px] text-slate-600 leading-relaxed space-y-1">
-                            <p><strong>¿Generación de polvo?:</strong> Sí, constante pero moderada.</p>
-                            <p><strong>Riesgo:</strong> Irritación ocular, de garganta, tos crónica y EPOC.</p>
-                            <p><strong>Controles a aplicar:</strong> Ingeniería (limpieza neumática de boquilla y aspiradoras, no soplado con aire), Administrativo (señalización obligatoria y monitoreo de fugas de mangas).</p>
-                            <p><strong>Respirador:</strong> Media Cara Reutilizable con filtros P100 para polvo mineral fino.</p>
+                            <p><strong>¿Generación de polvo?:</strong> Sí, incidental y dispersa, de moderada a baja.</p>
+                            <p><strong>Riesgo:</strong> Irritación ocular, de garganta, riesgo moderado de EPOC a largo plazo.</p>
+                            <p><strong>Controles a aplicar:</strong> Ingeniería (limpieza con barredoras industriales, prohibir barrido en seco), Administrativo (señalización obligatoria y monitoreo preventivo de sellos de la máquina).</p>
+                            <p><strong>Respirador:</strong> Media Cara Reutilizable con filtros N95 o P100 para polvo fino.</p>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN -->
+            <div class="mt-8 flex justify-between border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegar(1)" class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold flex items-center gap-2 transition-colors shadow-sm">
+                    Ir a Evaluación Final <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
-        <!-- MÓDULO 10: EVALUACIÓN -->
+        <!-- MÓDULO 10: EVALUACIÓN (RECONSTRUIDO COMPLETAMENTE) -->
         <section id="modulo-evaluacion" class="modulo space-y-8">
             <div class="border-b border-slate-200 pb-6">
                 <div class="flex items-center gap-2 text-xs text-emerald-600 font-bold uppercase tracking-wider mb-2">
                     <i data-lucide="graduation-cap" class="w-4 h-4"></i> Módulo 10 (Evaluación)
                 </div>
                 <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Evaluación Final de Competencias</h2>
-                <p class="text-slate-600 mt-2 text-lg">Resuelve el siguiente cuestionario institucional obligatorio para registrar formalmente la aprobación del curso de SSO.</p>
+                <p class="text-slate-600 mt-2 text-lg">Resuelve el siguiente cuestionario institucional para registrar formalmente la aprobación del curso de SSO.</p>
             </div>
 
-            <!-- ENTRADA DE MICROSOFT FORMS IFRAME SOLICITADO -->
-            <div class="w-full bg-white border border-slate-200 rounded-3xl p-4 md:p-6 shadow-lg flex flex-col items-center">
-                <div class="w-full max-w-4xl bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 relative min-h-[500px]">
-                    <iframe width="100%" height="520px" src="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=R74bQeX7JUCmrieWPa2zRnkQANe8zvtBtjOVN904RcNUOFlSUTBESFBDVUFSOFlBOVY2MzhMV0cwSS4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" style="border: none; max-width:100%; min-height:520px;" allowfullscreen webkitallowfullscreen mozallowfullscreen msallowfullscreen> </iframe>
+            <!-- FASE A: FORMULARIO DE IDENTIDAD -->
+            <div id="fase-identidad" class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-opacity">
+                <h3 class="font-bold text-lg text-slate-900 mb-6 flex items-center gap-2">
+                    <i data-lucide="user" class="text-orange-500 w-5 h-5"></i> Identificación Obligatoria del Colaborador
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wide">Nombre Completo *</label>
+                        <input type="text" id="eval-nombre" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none transition-shadow" placeholder="Ej. Juan Pérez" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wide">Número Correlativo / Ficha ID *</label>
+                        <input type="text" id="eval-id" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none transition-shadow" placeholder="Ej. 12345" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wide">Correo Electrónico *</label>
+                        <input type="email" id="eval-email" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none transition-shadow" placeholder="usuario@cempro.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wide">Puesto de Trabajo *</label>
+                        <input type="text" id="eval-puesto" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none transition-shadow" placeholder="Ej. Operador de Molienda" required>
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wide">Unidad de Negocio *</label>
+                        <select id="eval-unidad" onchange="toggleOtraUnidad()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none transition-shadow" required>
+                            <option value="">-- Seleccione una opción --</option>
+                            <option value="Planta San Gabriel CEMPRO">Planta San Gabriel CEMPRO</option>
+                            <option value="Planta Punta Sur (Puerto Quetzal) CEMPRO">Planta Punta Sur (Puerto Quetzal) CEMPRO</option>
+                            <option value="Planta Alicion (Puerto Barrios) CEMPRO">Planta Alicion (Puerto Barrios) CEMPRO</option>
+                            <option value="NH Services">NH Services</option>
+                            <option value="Otras">Otras</option>
+                        </select>
+                    </div>
+                    
+                    <!-- INPUT DINÁMICO "OTRAS" -->
+                    <div class="md:col-span-2 hidden transition-all" id="div-otra-unidad">
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wide">Especifique su Unidad de Negocio *</label>
+                        <input type="text" id="eval-otra-unidad" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none" placeholder="Escriba el nombre de la unidad o contratista">
+                    </div>
                 </div>
-                <div class="mt-4 flex items-center gap-2 text-xs text-slate-400 font-mono">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
-                    <span>Sincronización Segura Cifrada • Registro de Aprobación de SSO</span>
+                
+                <div class="mt-8">
+                    <button id="btn-iniciar-test" onclick="iniciarExamen()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-colors shadow-sm flex items-center justify-center gap-2 text-base">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i> Confirmar Identidad e Iniciar Cuestionario
+                    </button>
                 </div>
+            </div>
+
+            <!-- FASE B: CUESTIONARIO DINÁMICO NATIVO -->
+            <div id="fase-cuestionario" class="hidden space-y-8 animate-fade-in">
+                
+                <!-- BANDA DE INSTRUCCIONES -->
+                <div class="p-5 bg-orange-50 border border-orange-200 rounded-2xl flex gap-4 items-start shadow-sm">
+                    <i data-lucide="info" class="w-6 h-6 text-orange-600 shrink-0 mt-0.5"></i>
+                    <div class="text-sm text-orange-950 leading-relaxed">
+                        <span class="font-bold block mb-1">Instrucciones del Examen Oficial</span>
+                        Responde las 20 preguntas generadas aleatoriamente. Cada pregunta tiene un valor de 5 puntos. Necesitas obtener un mínimo de <strong>80 puntos (16 respuestas correctas)</strong> para aprobar. Puedes intentarlo las veces que sean necesarias si repruebas.
+                    </div>
+                </div>
+
+                <!-- CONTENEDOR DONDE SE INYECTAN LAS PREGUNTAS -->
+                <div id="contenedor-preguntas" class="space-y-6"></div>
+
+                <!-- PANEL DE RESULTADOS FINAL -->
+                <div id="panel-resultados" class="hidden bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-lg mt-8"></div>
+
+                <!-- BOTÓN EVALUAR -->
+                <div class="mt-8 border-t border-slate-200 pt-8" id="controles-examen">
+                    <button id="btn-evaluar" onclick="evaluarExamen()" class="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-colors shadow-md flex items-center justify-center gap-2 text-lg">
+                        <i data-lucide="check-square" class="w-6 h-6"></i> Finalizar y Evaluar Respuestas
+                    </button>
+                </div>
+            </div>
+            
+            <!-- BOTONES DE NAVEGACIÓN (VOLVER ATRÁS) -->
+            <div class="mt-8 flex justify-start border-t border-slate-200 pt-6">
+                <button onclick="navegar(-1)" class="px-6 py-3 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl font-bold flex items-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
             </div>
         </section>
 
@@ -992,49 +1169,143 @@
 
     <!-- CONTROLADORES LÓGICOS (JAVASCRIPT INTERACTIVO) -->
     <script>
+        // VARIABLE PARA RUTEO DE POWER AUTOMATE
+        const URL_FLOW = "https://default411bbe47fbe54025a6ae27963dadb3.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/25/workflows/d4e987a02c974c19b22bd21d80773f8c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GC_miSkZ9l76k6BaMmjuBxMNMFY0ydtC6e_FvFK4G3A"; 
+
+        // ARRAY ORDENADO PARA NAVEGACIÓN "ANTERIOR/SIGUIENTE"
+        const modulosList = [
+            'modulo-intro', 'modulo-particulado', 'modulo-salud', 
+            'modulo-simulador', 'modulo-controles', 'modulo-proteccion', 
+            'modulo-uso', 'modulo-inspeccion', 'modulo-casos', 'modulo-evaluacion'
+        ];
+        let moduloActualIdx = 0;
+
+        // BANCO MAESTRO DE 50 PREGUNTAS TÉCNICAS OHS
+        const BANCO_COMPLETO_PREGUNTAS = [
+            {"q": "¿Cuál es el límite de exposición permisible (LEP) para polvo respirable común aplicable en Guatemala según este curso?", "o": ["10 mg/m³", "5 mg/m³", "3.0 mg/m³", "1 mg/m³"], "c": 2, "f": "La norma nacional establece 3.0 mg/m³ ante la ausencia de laboratorios locales certificados para la medición específica de sílice."},
+            {"q": "¿Qué fracción de polvo evade las defensas del cuerpo humano y penetra directamente en los alvéolos pulmonares?", "o": ["Polvo Inhalable (PM10)", "Polvo Torácico (PM2.5)", "Polvo Respirable (PM1 / PM4)", "Polvo Grueso Visible"], "c": 2, "f": "El polvo respirable (menor a 4 micras) llega a los alvéolos y se acumula de forma crónica."},
+            {"q": "¿Cuál es el primer paso ideal según la jerarquía de controles de seguridad de la ISO 45001?", "o": ["Entregar Respirador", "Eliminación (Control de Raíz)", "Rotación de Personal", "Sistemas de Extracción (Ingeniería)"], "c": 1, "f": "La eliminación busca quitar físicamente el peligro desde la raíz antes de intentar administrar o aislar el riesgo."},
+            {"q": "¿Qué indica la letra 'P' en la clasificación de filtros purificadores de NIOSH (ej. P100)?", "o": ["Protección básica y general", "Partículas minerales grandes", "Fuertemente resistente a aceites (Strongly resistant to oil)", "A prueba de gases químicos tóxicos"], "c": 2, "f": "La letra 'P' significa altamente resistente a aceites, ideal para entornos mecánicos o industriales con neblinas de lubricantes."},
+            {"q": "¿Cuál es el nivel de eficiencia de retención de un filtro con clasificación '100' (ej. P100 o HEPA)?", "o": ["Retiene el 90.00% de partículas", "Retiene el 95.00% de partículas", "Retiene el 99.00% de partículas", "Retiene mínimo el 99.97% de partículas"], "c": 3, "f": "Los filtros tipo 100 o HEPA son los de máxima eficiencia, reteniendo un mínimo del 99.97% de partículas ultra finas."},
+            {"q": "¿Por qué se considera un error crítico usar un respirador elastomérico de media cara teniendo barba o bigote grueso?", "o": ["Irrita severamente la piel con el sudor", "Rompe las bandas elásticas de sujeción", "Impide el contacto directo de la silicona con la piel, generando fugas severas", "Reduce la visibilidad hacia abajo"], "c": 2, "f": "El vello facial actúa como un canal abierto, impidiendo el sellado hermético perimetral, permitiendo que el polvo ingrese directamente a tus pulmones."},
+            {"q": "¿En qué consiste realizar la 'Prueba de Presión Positiva' antes de iniciar la jornada?", "o": ["Inhalar fuerte tapando los filtros con las manos", "Bloquear la válvula central de exhalación y exhalar para inflar la copa levemente", "Estirar las correas al máximo para comprobar su fuerza", "Apretar el puente nasal de la mascarilla desechable"], "c": 1, "f": "Bloquear la válvula y exhalar infla levemente la máscara, asegurando que no haya fugas de aire hacia afuera por los bordes."},
+            {"q": "¿Qué nivel mínimo de oxígeno ambiental se requiere estrictamente para poder utilizar respiradores purificadores con filtros (N95, P100)?", "o": ["10.0%", "15.5%", "19.5%", "21.0%"], "c": 2, "f": "Por debajo del 19.5% se considera atmósfera deficiente en oxígeno, exigiendo el uso de equipo de respiración autónomo o líneas de aire."},
+            {"q": "¿Qué enfermedad pulmonar crónica e irreversible es causada por la inhalación prolongada de polvo mineral como caliza o sílice?", "o": ["Bronquitis viral", "Neumoconiosis / Silicosis", "Fiebre por inhalación de humos", "Rinitis alérgica estacional"], "c": 1, "f": "La neumoconiosis y silicosis generan la formación de nódulos de tejido cicatrizal en el pulmón, limitando permanentemente la capacidad respiratoria."},
+            {"q": "¿Cuál es el Factor de Protección Asignado (APF) estándar que ofrece un respirador de Cara Completa (Full Face)?", "o": ["APF 10", "APF 25", "APF 50", "APF 1000"], "c": 2, "f": "Un respirador Full Face posee un APF de 50, protegiendo 5 veces más que uno de media cara (APF 10), gracias a su mejor superficie de sellado integral."},
+            {"q": "¿Cómo se define físicamente un 'Humo Metálico' (Fume) en el ámbito de la higiene industrial?", "o": ["Gas tóxico proveniente de combustión de diésel", "Gotas de agua contaminada suspendidas", "Partículas sólidas ultrafinas condensadas a partir de vapor metálico en enfriamiento", "Polvo de barrido suspendido en el viento"], "c": 2, "f": "Los humos metálicos se generan al derretir o cortar metales (soldadura, oxicorte); el vapor metálico caliente se enfría y condensa en partículas respirables ultrafinas."},
+            {"q": "¿Cuál es la práctica correcta para almacenar un respirador elastomérico reutilizable después de su limpieza?", "o": ["Dejarlo colgado en un clavo en el área de molienda para el próximo turno", "Guardarlo dentro de una bolsa hermética limpia y seca (tipo Ziploc)", "Colocarlo sobre el tablero de herramientas del taller", "Guardarlo en el bolsillo trasero del pantalón de trabajo"], "c": 1, "f": "La bolsa hermética evita que el polvo ambiental suspendido se deposite en la cara interior de la máscara mientras no está siendo utilizada."},
+            {"q": "¿Qué representa técnicamente el 'Diámetro Aerodinámico' de una partícula de clínker?", "o": ["Su tamaño físico exacto medido con regla milimétrica", "Su peso químico molecular puro", "La forma matemática en que vuela y sedimenta en el aire comparado con una esfera de agua pura", "El color que refleja bajo el microscopio óptico"], "c": 2, "f": "Define el comportamiento físico y aerodinámico real de la partícula irregular en el aire, dictando en qué parte del tracto respiratorio logrará impactar."},
+            {"q": "¿Qué acción correctiva se debe tomar si se detecta que la válvula de exhalación del respirador está agrietada o endurecida?", "o": ["Sellarla temporalmente con cinta adhesiva gris", "Seguir utilizándola si el usuario no siente molestia", "Retirar el equipo de servicio de inmediato y reemplazar la válvula por una nueva", "Lavar exhaustivamente el respirador con alcohol isopropílico"], "c": 2, "f": "Cualquier daño estructural en las válvulas anula inmediatamente el sello, permitiendo la entrada directa de aire contaminado al interior de la copa."},
+            {"q": "¿Cuál de las siguientes acciones es considerada una medida de 'Control de Ingeniería' frente al polvo?", "o": ["Suministrar mascarillas desechables N95", "Instalar y encender un sistema de extracción localizada (Filtro de mangas)", "Reducir el tiempo del turno laboral del operador", "Dar una charla de seguridad de 5 minutos al inicio del turno"], "c": 1, "f": "Los controles de ingeniería modifican el entorno o equipo (como aislar el proceso o extraer el polvo en su origen) para separar físicamente al trabajador del riesgo."},
+            {"q": "¿Por qué está estrictamente prohibido lavar con agua y jabón los filtros de fibra de vidrio, papel o carbón activo?", "o": ["Porque pierden su color y se ven antiestéticos", "Porque el agua destruye la matriz de retención micro-porosa y electrostática, volviéndolos inútiles", "Porque tardan demasiados días en secar correctamente", "Porque generan malos olores posteriores"], "c": 1, "f": "El lavado físico daña la estructura filtrante y neutraliza las cargas electrostáticas necesarias para atrapar el polvo fino, anulando su capacidad protectora."},
+            {"q": "¿Qué fracción de polvo (tamaño) es la que retienen de forma natural los vellos nasales, la mucosa nasal y la garganta?", "o": ["Polvo Respirable (PM1 / PM4)", "Polvo Torácico (PM2.5)", "Polvo Inhalable (PM10 / Polvo grueso)", "Humos metálicos de soldadura"], "c": 2, "f": "El polvo inhalable (hasta 100 micras) queda atrapado en las vías respiratorias superiores, siendo el responsable de la tos y la irritación inmediata."},
+            {"q": "¿Cuál es el propósito principal de poseer una válvula de exhalación en la parte central de un respirador reutilizable?", "o": ["Filtrar los contaminantes que intentan entrar", "Evitar que entre aire caliente del ambiente", "Permitir la salida rápida del aire exhalado, reduciendo el calor, humedad y fatiga térmica", "Darle mayor peso y equilibrio a la máscara"], "c": 2, "f": "Las válvulas abren al exhalar, expulsando el calor y la humedad de los pulmones. Esto previene la fatiga térmica extrema y evita que los anteojos de seguridad se empañen."},
+            {"q": "¿Qué tipo de respirador es obligatorio utilizar si en el área de trabajo hay una deficiencia grave de oxígeno (ej. espacio confinado)?", "o": ["Media cara elastomérica con filtros P100", "Mascarilla desechable de copa N95", "Equipo de Respiración Autónoma (SCBA) o Línea de aire con suministro", "Respirador de Cara Completa (Full Face) con cartuchos químicos mixtos"], "c": 2, "f": "Los respiradores purificadores con filtros no generan oxígeno. En atmósferas con peligro inmediato para la vida y la salud (IDLH) por falta de oxígeno, requieres aire suministrado desde un tanque limpio."},
+            {"q": "¿Qué consecuencia aguda (inmediata) provoca el polvo de cemento al entrar en contacto directo con las mucosas de los ojos y la garganta?", "o": ["Desarrollo inmediato de Cáncer", "Fibrosis pulmonar fulminante", "Irritación, ardor y quemaduras químicas debido a su alta alcalinidad", "Desarrollo de asma crónica en el primer turno"], "c": 2, "f": "El cemento es altamente alcalino (pH alto); al reaccionar con el agua de las lágrimas o la saliva, produce un efecto corrosivo e irritante que causa quemaduras agudas."},
+            {"q": "¿La protección respiratoria (EPP) es considerada la primera o la última línea de defensa contra riesgos higiénicos según normativas internacionales?", "o": ["La primera línea de defensa obligatoria", "El único control válido para polvo de cemento", "La última línea de defensa (Último recurso)", "Una medida administrativa opcional"], "c": 2, "f": "De acuerdo a la Jerarquía de Controles de Seguridad, el EPP es la barrera final que se utiliza para proteger contra el riesgo residual cuando los controles de ingeniería fallan o son insuficientes."},
+            {"q": "En el contexto de la Pirámide de Jerarquía de Controles, ¿qué ejemplo corresponde a una 'Sustitución' del peligro?", "o": ["Colocar guardas perimetrales a las máquinas", "Cambiar el proceso de barrido y soplado en seco por un sistema de aspiración húmedo/vacío", "Rotar a los trabajadores cada 4 horas", "Brindar un respirador de cara completa en lugar de uno de media cara"], "c": 1, "f": "La sustitución implica cambiar el material o el método peligroso por uno menos peligroso para realizar la misma tarea."},
+            {"q": "¿Qué fracción de polvo (PM) corresponde comúnmente a los polvos ultra finos que se generan en el horneado y molienda de clínker?", "o": ["PM10 (Grueso)", "Fibras de gran tamaño", "PM4 y menores (Polvo Respirable)", "Neblinas de aceite grueso"], "c": 2, "f": "El polvo de clínker suele poseer una alta proporción de partículas en la fracción respirable, requiriendo respiradores de sellado firme y alta eficiencia."},
+            {"q": "¿Qué síntoma es un indicador clínico de que el polvo mineral ha provocado inflamación y obstrucción crónica en los pulmones (EPOC)?", "o": ["Lagrimeo constante al salir al sol", "Tos persistente con flema espesa y falta de aire al hacer esfuerzo físico", "Dolor articular en brazos", "Sarpullido generalizado"], "c": 1, "f": "La EPOC de origen ocupacional se manifiesta con obstrucción progresiva del flujo de aire, limitando la actividad física diaria del colaborador."},
+            {"q": "¿Para qué tipo de exposición fue diseñada la clasificación de filtros NIOSH letra 'N' (Ej. N95)?", "o": ["Exposición a gases de amoniaco", "Exposición exclusiva a aceites industriales puros", "Exposición a partículas sólidas y nieblas que NO contienen aceite", "Exposición a altas temperaturas extremas"], "c": 2, "f": "La letra N (Not resistant to oil) indica que el filtro está diseñado óptimamente para polvos minerales secos, como arcilla, yeso, piedra y cemento puro."},
+            {"q": "Durante la colocación del respirador de elastómero, ¿cuál es la posición correcta de la banda o arnés superior?", "o": ["Detrás del cuello", "Cruzada por la frente", "Apoyada de forma simétrica sobre la coronilla de la cabeza", "Enganchada en las orejas como un cubrebocas médico"], "c": 2, "f": "El arnés debe posicionarse en la corona o parte superior trasera del cráneo para brindar un ángulo de tracción óptimo que selle la máscara contra el rostro sin crear puntos de dolor."},
+            {"q": "¿Qué porcentaje de las enfermedades respiratorias graves en adultos tiene un origen puramente ocupacional, según estadísticas globales citadas?", "o": ["2%", "17%", "50%", "85%"], "c": 1, "f": "Según datos de la OIT y la OMS, el 17% de la carga de enfermedad respiratoria crónica proviene de exposiciones prolongadas en el entorno laboral sin la debida protección."},
+            {"q": "¿Qué es la Prueba de Presión Negativa del respirador?", "o": ["Exhalar aire rápidamente", "Tapar las entradas de aire de los cartuchos e inhalar para colapsar la máscara levemente", "Presionar la máscara contra la cara con las manos para forzar el sello", "Revisar la fecha de caducidad de los filtros de color magenta"], "c": 1, "f": "Al tapar los filtros e inhalar, se genera un vacío interno. Si la máscara se pega al rostro sin dejar entrar aire por los costados, el sello es hermético y seguro."},
+            {"q": "Si estás expuesto a un nivel de concentración 'Moderado' de polvo común, sin vapores de aceite, ¿qué tipo de EPP es una elección técnica adecuada?", "o": ["Respirador Autónomo (Tanque de buceo)", "Solo lentes de seguridad (El polvo no hace daño si no hay aceite)", "Respirador de media cara con filtros N95", "Filtros para gases ácidos (Amarillos)"], "c": 2, "f": "Para polvos minerales secos de concentración moderada, un elastómero de media cara acoplado a filtros N95 otorga una protección confiable con un APF de 10."},
+            {"q": "¿Cuál es la principal ventaja de utilizar un respirador reutilizable de silicona sobre una mascarilla desechable tipo copa?", "o": ["Es más barato de comprar a corto plazo", "Se puede prestar a otros compañeros", "Ofrece un ajuste y contorno hermético muy superior, adaptándose a la forma facial", "No requiere cambio de filtros jamás"], "c": 2, "f": "La silicona o elastómero crea un sello anatómico mucho más resistente y menos propenso a fugas al gesticular o sudar, comparado con el cartón o fibra premoldeada de un desechable."},
+            {"q": "¿Qué parámetro determina la cantidad de contaminante inhalada de forma acumulativa en el trabajador a lo largo de las semanas y años?", "o": ["El color del EPP", "El tiempo y la frecuencia de exposición durante la jornada laboral diaria", "La hora del almuerzo", "El material con que está fabricada la válvula del respirador"], "c": 1, "f": "El riesgo en higiene industrial está determinado no solo por la concentración del tóxico, sino por la dosis total acumulada a lo largo del tiempo de exposición."},
+            {"q": "¿Qué sucede con los respiradores de filtros pasivos cuando se utilizan en un área de muy alta exigencia aeróbica (trabajo físico pesado)?", "o": ["Filtran mejor", "Se enfrían más rápido", "El trabajador experimentará mayor resistencia respiratoria, generando fatiga si no usa válvulas de exhalación", "Se caen por el sudor inevitablemente"], "c": 2, "f": "Inhalar a través de filtros requiere esfuerzo mecánico. En trabajos forzados, la resistencia del filtro genera cansancio, haciendo imperativas las válvulas de alivio térmico."},
+            {"q": "¿Qué indica un filtro clasificado como 'R95'?", "o": ["Resistente al calor hasta 95 grados centígrados", "Resistente a aceites durante un solo turno de 8 horas, reteniendo el 95% de partículas", "Reutilizable 95 veces", "Rechaza el 95% de los gases inflamables"], "c": 1, "f": "La letra R indica resistencia temporal al aceite, recomendada por NIOSH para uso limitado de un solo turno cuando hay neblinas lubricantes presentes."},
+            {"q": "¿Cuál es el objetivo principal de los Controles Administrativos dentro de la jerarquía de prevención?", "o": ["Comprar EPP más barato", "Modificar la forma en que las personas trabajan mediante políticas, señales, rotación y procedimientos", "Aislar la máquina del ambiente ruidoso y polvoriento", "Limpiar los filtros con agua"], "c": 1, "f": "Los controles administrativos cambian las reglas de exposición, reduciendo la dosis por limitación de tiempo de estadía o por procedimientos estandarizados de trabajo seguro (PETS)."},
+            {"q": "Al limpiar un respirador de media cara, ¿con qué instrumento mecánico debes remover el exceso de suciedad o polvo de clínker incrustado?", "o": ["Con aire comprimido a 100 PSI (Alta presión)", "Con solvente tipo thinner o aguarrás puro", "Con un cepillo de cerdas suaves y jabón de pH neutro", "Con una espátula metálica afilada"], "c": 2, "f": "La silicona es un material delicado. El uso de químicos agresivos, herramientas punzocortantes o aire a alta presión deforma, reseca o desgarra el sello facial de forma permanente."},
+            {"q": "Un trabajador presenta alergia ocupacional debido al cromo hexavalente presente en ciertos cementos. ¿Qué enfermedad crónica ilustra este riesgo?", "o": ["Caries dental severa", "Asma Ocupacional con hiperreactividad bronquial", "Silicosis aguda pura", "Enfermedad por descompresión térmica"], "c": 1, "f": "El cromo en el cemento actúa como un sensibilizador. La exposición constante induce una respuesta alérgica del sistema inmune que deviene en cuadros asmáticos crónicos en el lugar de trabajo."},
+            {"q": "¿Cuál es un ejemplo real de 'Eliminación' en el contexto del polvo en ensacado de cemento?", "o": ["Repartir mascarillas de doble filtro", "Poner un rótulo de uso de mascarillas en la puerta principal de la bodega", "Automatizar el despacho a granel mediante tolvas selladas sin intervención de trabajadores", "Dar turnos de solo 2 horas a los ensacadores manuales"], "c": 2, "f": "Eliminar implica erradicar la necesidad humana de estar en contacto con el polvo. Automatizar el proceso anula el riesgo biológico desde la fuente original."},
+            {"q": "¿Cuál de los siguientes escenarios disminuye drásticamente el Factor de Protección Asignado (APF) a casi cero?", "o": ["Usar un respirador de cara completa con el arnés firmemente colocado", "Guardar el respirador limpio en una bolsa hermética cerrada al terminar el turno", "Usar un respirador de copa N95 por debajo del puente de la nariz para evitar que se empañen los lentes", "Cambiar los filtros saturados por un par de repuestos nuevos"], "c": 2, "f": "Utilizar la mascarilla descubriendo la nariz (vía principal de inhalación) anula la función del EPP por completo, permitiendo la inhalación directa del aire no purificado."},
+            {"q": "Para ingresar de emergencia a un silo cerrado de polvo de molienda con ventilación apagada, concentración crítica y dudas sobre el nivel de oxígeno, ¿qué equipo de protección es OBLIGATORIO?", "o": ["Filtros P100 montados en mascarilla de media cara estándar", "Equipo de Respiración Autónoma con tubo y suministro de oxígeno a presión positiva", "Mascarilla quirúrgica tipo hospital azul", "Mascarilla N95 desechable con doble válvula"], "c": 1, "f": "Los espacios confinados o silos son zonas potencialmente IDLH (Peligro Inmediato). Un filtro jamás suple la falta de oxígeno ambiental; se requiere suministro externo de aire certificado."},
+            {"q": "¿Por qué las fibras minerales de aislamiento térmico antiguo son un peligro inhalable particular?", "o": ["Porque son magnéticas", "Porque se disuelven y envenenan la sangre de forma aguda", "Porque tienen una longitud muy superior a su diámetro y se clavan mecánicamente en el parénquima pulmonar", "Porque explotan a altas temperaturas"], "c": 2, "f": "Las fibras (como el asbesto u otras lanas antiguas) tienen una forma de aguja asimétrica (relación 3:1) que el cuerpo no puede expulsar, causando inflamación local crónica severa y cáncer a largo plazo."},
+            {"q": "Si un trabajador realiza una inspección visual a su EPP y nota que las bandas elásticas de sujeción están flojas, estiradas de forma desigual o a punto de romperse, ¿qué debe hacer?", "o": ["Hacerles un nudo corredizo para acortarlas temporalmente", "Seguir trabajando hasta que se rompan del todo para ahorrar recursos de la compañía", "Reportar y solicitar de inmediato el recambio del arnés o del equipo completo a la jefatura/almacén", "Pegar las bandas a la mascarilla con un pegamento industrial fuerte"], "c": 2, "f": "Las bandas de tensión son críticas para garantizar una presión simétrica contra la piel. Uniones manuales, nudos o bandas cedidas comprometen el APF normativo de forma peligrosa."},
+            {"q": "Se observa polvo gris endurecido (costra) debajo de la solapa de exhalación de un respirador elastomérico. ¿Cuál es el riesgo directo?", "o": ["Mejorará el filtrado de partículas grandes de yeso y caliza", "El material actuará como una barrera rígida que impedirá que la válvula cierre herméticamente en la inhalación, permitiendo fugas hacia adentro", "La válvula vibrará provocando ruido molesto para la comunicación, pero sin riesgo real a la salud", "Aumentará artificialmente el valor del Factor de Protección Asignado del equipo"], "c": 1, "f": "La costra sólida de clínker bloquea el cierre elástico de la goma de la válvula, dejando una ranura microscópica por donde ingresa el polvo del ambiente cada vez que tomas aire profundo."},
+            {"q": "¿En qué etapa biológica el polvo de tamaño PM10 (Inhalable) queda mayormente retenido en el cuerpo de un trabajador expuesto sin mascarilla?", "o": ["Alvéolos pulmonares profundos de las bases", "Células hepáticas del estómago", "Zona nasofaríngea: Fosas nasales, cavidad oral y la faringe superior", "Circulación sanguínea capilar arterial de los bronquios"], "c": 2, "f": "Por su masa y gran tamaño aerodinámico (entre 10 y 100 micras), estas partículas colisionan por inercia en las curvas de las vías superiores (nariz y garganta) y quedan retenidas en el moco natural."},
+            {"q": "¿Qué significa que el polvo residual de una cementera posea un límite de exposición permisible (LEP) en la normativa nacional de Guatemala?", "o": ["Que el trabajador está exento de usar protección si está 1 minuto expuesto", "Que el ambiente no debe superar legal y biológicamente ese umbral para prevenir riesgos en salud crónica a largo plazo (Ej. 3.0 mg/m³)", "Que se fomenta la producción del polvo para mantener fresca la planta y las tolvas", "Que el polvo a ese nivel cura el asma o rinitis leve temporalmente"], "c": 1, "f": "El límite de exposición permisible o umbral dictamina el nivel máximo de concentración ponderada en el tiempo (8 horas) considerado médicamente seguro para la mayoría de trabajadores sin efectos perjudiciales crónicos detectables."},
+            {"q": "¿Cuál es la función del sello de silicona presente en los respiradores de media cara?", "o": ["Filtrar mecánicamente partículas finas", "Neutralizar gases químicos", "Generar presión uniforme contra los huesos de la cara aislando las vías del aire externo", "Proveer vitaminas a la piel"], "c": 2, "f": "El borde de elastómero está moldeado ergonómicamente para asentar en el contorno facial, creando una barrera física total que obliga al aire a ingresar exclusivamente por los filtros acoplados."},
+            {"q": "¿Bajo qué premisa normativa internacional (OSHA / ISO) se establece la obligación del uso del equipo de protección personal (EPP)?", "o": ["Como medida prioritaria y económica de primera línea", "Solo si el trabajador tiene enfermedades preexistentes", "Como la última línea de defensa cuando los controles técnicos, de ingeniería y administrativos son técnicamente inviables, están en reparación o no disminuyen el riesgo suficiente", "Como adorno visual exigido por sindicatos"], "c": 2, "f": "Depender del EPP como primera opción es una mala praxis global de higiene industrial; su función real es salvaguardar temporal y finalmente la integridad cuando el peligro en la fuente no pudo ser suprimido exitosamente por completo."},
+            {"q": "¿Por qué es crucial no cruzar las correas superior e inferior (en forma de X) al colocarse el arnés de un respirador reutilizable de la industria cementera?", "o": ["Porque rompe la simetría de la tensión geométrica, provocando fugas de aire en el puente nasal o barbilla", "Porque genera dolores de cuello inmediatamente severos", "Porque rasga el casco de seguridad o chaleco reflectivo", "Porque arruina la estética corporativa requerida en inspecciones"], "c": 0, "f": "El diseño de cuatro puntos de anclaje de la máscara requiere fuerzas opuestas rectas; cruzarlas altera el vector de tensión, separando la silicona de la piel en áreas críticas de sellado y anulando la protección."},
+            {"q": "¿Si utilizas gafas graduadas o de seguridad anchas y se empañan al usar un respirador de media cara, esto es un síntoma técnico de qué error?", "o": ["El clima del país tiene mucha humedad", "Fuga en el puente de la nariz por mal ajuste, lo que envía aire caliente húmedo exhalado directamente a los lentes", "El material filtrante está funcionando demasiado bien y rechaza partículas", "Lentes mal diseñados"], "c": 1, "f": "Si el sello superior está flojo o la cinta nasal no está adaptada, el aire caliente de los pulmones sale por la parte alta (en vez de por la válvula) y condensa el agua sobre el vidrio ocular inferior."},
+            {"q": "¿Qué material es comúnmente empleado para fabricar la visera de un respirador de cara completa debido a su resistencia a impactos en talleres y plantas?", "o": ["Vidrio común (Window glass) templado", "Acrílico doméstico flexible de color opaco oscuro", "Policarbonato de alta resistencia óptica libre de distorsiones visuales y rayaduras ligeras", "Plástico de botellas de PET fundido"], "c": 2, "f": "El visor exige certificación ANSI de impactos. El policarbonato otorga dureza industrial para evitar fracturas por partículas proyectadas sin afectar el campo visual del usuario durante la jornada."},
+            {"q": "¿En el 'Escenario B' del módulo de casos (Supervisión de línea automática de paletizado), por qué se priorizó como 'Control Administrativo' el monitoreo de sellos y limpieza preventiva?", "o": ["Para ahorrar energía eléctrica", "Porque las fugas de polvo finas e incidentales de la línea automatizada representan un riesgo por acumulación constante a lo largo de las 8 horas de turno a pesar de la extracción primaria", "Para mantener ocupado al personal", "Porque la norma lo exige diariamente de forma documental"], "c": 1, "f": "La exposición crónica a bajas concentraciones (fugas incidentales) de polvo PM4 en el área de despacho puede generar irritación, asma y EPOC a futuro, haciendo vital un control preventivo constante del estado operativo."}
+        ];
+
         document.addEventListener("DOMContentLoaded", () => {
-            // Inicializar todos los iconos interactivos Lucide
+            // Inyectar iconos dinámicos la primera vez
             lucide.createIcons();
             
-            // Ejecutar el cálculo inicial del simulador de respiradores interactivo
+            // Inicializar simulación visual
             calcularRespirador();
         });
 
-        // 1. Control de Navegación de la Aplicación (Cambiar Módulo)
-        function cambiarModulo(idModulo, boton) {
-            // Ocultar todos los módulos activos con efecto visual rápido
-            document.querySelectorAll('.modulo').forEach(mod => {
-                mod.classList.remove('activo');
-            });
+        // 1. MANEJO DE LA BARRA LATERAL (Móvil / Desktop)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
             
-            // Mostrar el módulo que se ha seleccionado
-            const moduloObjetivo = document.getElementById(idModulo);
-            if (moduloObjetivo) {
-                moduloObjetivo.classList.add('activo');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
             }
+        }
+
+        // 2. RUTEO DE NAVEGACIÓN Y CAMBIO DE MÓDULOS
+        function cambiarModulo(idModulo, botonHtml) {
+            // 2.1. Ocultar todos los módulos y revelar el seleccionado
+            document.querySelectorAll('.modulo').forEach(mod => mod.classList.remove('activo'));
+            document.getElementById(idModulo).classList.add('activo');
             
-            // Resetear estilos de todos los botones de la barra lateral
+            // Actualizar puntero de índice para botones Prev/Next
+            moduloActualIdx = modulosList.indexOf(idModulo);
+
+            // 2.2. Reiniciar estilos del menú lateral
             document.querySelectorAll('.menu-btn').forEach(btn => {
                 btn.className = "menu-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-slate-800";
             });
-            
-            // Aplicar el estilo activo/resaltado al botón actual
-            if (idModulo === 'modulo-simulador') {
-                boton.className = "menu-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-white bg-emerald-600 border border-emerald-500 shadow-md";
-            } else if (idModulo === 'modulo-evaluacion') {
-                boton.className = "menu-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-950 bg-orange-500 border border-orange-450 shadow-md";
-            } else {
-                boton.className = "menu-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium transition-all text-white bg-orange-500/20 border border-orange-500/30";
+
+            // 2.3. Resaltar botón activo en el sidebar
+            let activeBtn = botonHtml;
+            if(!activeBtn) {
+                // Si fue llamado desde botones de navegación de pie de página, buscar el botón en el DOM
+                activeBtn = document.querySelector(`button[onclick*="'${idModulo}'"]`);
+            }
+            if(activeBtn) {
+                if (idModulo === 'modulo-simulador') {
+                    activeBtn.className = "menu-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-white bg-emerald-600 border border-emerald-500 shadow-md";
+                } else if (idModulo === 'modulo-evaluacion') {
+                    activeBtn.className = "menu-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-950 bg-orange-500 border border-orange-450 shadow-md";
+                } else {
+                    activeBtn.className = "menu-btn w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-medium transition-all text-white bg-orange-500/20 border border-orange-500/30";
+                }
+            }
+
+            // 2.4. Cerrar sidebar en dispositivos móviles al seleccionar
+            if (window.innerWidth < 768 && !document.getElementById('sidebar').classList.contains('-translate-x-full')) {
+                toggleSidebar();
             }
             
-            // Refrescar y renderizar de nuevo los iconos Lucide creados dinámicamente
+            // 2.5. Autoscroll y re-renderizado
+            window.scrollTo(0, 0);
             lucide.createIcons();
-            
-            // Auto scroll hacia arriba al cambiar de módulo
-            document.querySelector('main').scrollTop = 0;
         }
 
-        // 2. Controladores de los Acordeones de Riesgos para la Salud
+        function navegar(direccion) {
+            let nuevoIdx = moduloActualIdx + direccion;
+            if (nuevoIdx >= 0 && nuevoIdx < modulosList.length) {
+                cambiarModulo(modulosList[nuevoIdx]);
+            }
+        }
+
+        // 3. CONTROL DE INFOGRAFÍAS E INTERACTIVOS DE TEORÍA
         function toggleAccordion(idAccordion) {
             const contenido = document.getElementById(idAccordion);
             const icono = document.getElementById('icon-' + idAccordion);
@@ -1048,7 +1319,6 @@
             }
         }
 
-        // 3. Lógica del Simulador de Selección de Protección Respiratoria
         function actualizarConcentracionLabel() {
             const nivelVal = parseInt(document.getElementById('sim-concentracion').value);
             const labelSpan = document.getElementById('label-concentracion');
@@ -1056,16 +1326,10 @@
             const niveles = ["Baja", "Moderada (Requiere Protección)", "Alta (Exposición Peligrosa)", "Crítica (Extrema / Espacio Cerrado)"];
             labelSpan.innerText = niveles[nivelVal - 1];
             
-            // Ajuste dinámico de color en el badge de concentración de la UI
-            if (nivelVal === 1) {
-                labelSpan.className = "text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md";
-            } else if (nivelVal === 2) {
-                labelSpan.className = "text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md";
-            } else if (nivelVal === 3) {
-                labelSpan.className = "text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md";
-            } else {
-                labelSpan.className = "text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md shadow-sm animate-pulse";
-            }
+            if (nivelVal === 1) labelSpan.className = "text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md";
+            else if (nivelVal === 2) labelSpan.className = "text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md";
+            else if (nivelVal === 3) labelSpan.className = "text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md";
+            else labelSpan.className = "text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md shadow-sm animate-pulse";
         }
 
         function calcularRespirador() {
@@ -1073,7 +1337,6 @@
             const concentracion = parseInt(document.getElementById('sim-concentracion').value);
             const aceites = document.querySelector('input[name="sim-aceite"]:checked').value;
             
-            // Elementos de destino en el DOM para actualizar la UI del diagnóstico
             const diagRespirador = document.getElementById('diag-respirador');
             const diagFiltro = document.getElementById('diag-filtro');
             const diagApf = document.getElementById('diag-apf');
@@ -1081,17 +1344,11 @@
             const diagExplicacion = document.getElementById('diag-explicacion');
             const diagIconBox = document.getElementById('diag-icon-box');
             
-            let respFinal = "";
-            let filtroFinal = "";
-            let apfFinal = "";
-            let eficienciaFinal = "95% de eficiencia de filtrado";
-            let explicacionFinal = "";
+            let respFinal = "", filtroFinal = "", apfFinal = "", eficienciaFinal = "95% de eficiencia de filtrado", explicacionFinal = "";
             let iconHtml = '<i data-lucide="shield" class="w-8 h-8"></i>';
             let colorIconClass = "p-3 bg-slate-800 rounded-xl text-emerald-400 border border-slate-700";
 
-            // Lógica de cálculo en base al tamaño de partícula y criticidad de concentración
             if (concentracion === 4) {
-                // Escenario Crítico: Espacio Confinado o Concentración extrema
                 respFinal = "Línea de Aire o Equipo de Respiración Autónoma (SCBA)";
                 filtroFinal = aceites === "si" ? "Línea con suministro Grado D (Aceite-Resistente)" : "Suministro de Aire Directo Presión Positiva";
                 apfFinal = "APF 1000";
@@ -1100,7 +1357,6 @@
                 iconHtml = '<i data-lucide="zap" class="w-8 h-8"></i>';
                 colorIconClass = "p-3 bg-red-500 rounded-xl text-white border border-red-400 shadow-lg animate-pulse";
             } else if (tamañoParticula === "humo") {
-                // Humos metálicos de soldadura o corte térmico
                 respFinal = "Media Cara Reutilizable de Bajo Perfil (Especial para Caretas)";
                 filtroFinal = aceites === "si" ? "Filtros P100 (Discos Magenta Resistentes a Aceite)" : "Filtros N100 o P100 para Humo Metálico";
                 apfFinal = "APF 10";
@@ -1109,7 +1365,6 @@
                 iconHtml = '<i data-lucide="flame" class="w-8 h-8"></i>';
                 colorIconClass = "p-3 bg-indigo-600 rounded-xl text-white border border-indigo-500";
             } else if (tamañoParticula === "respirable") {
-                // Polvo respirable general (PM4/PM2.5) - Clínker
                 if (concentracion === 3) {
                     respFinal = "Respirador de Cara Completa (Full Face)";
                     filtroFinal = aceites === "si" ? "Filtro P100" : "Filtro N100 o P100";
@@ -1122,7 +1377,6 @@
                 eficienciaFinal = "Mínimo 95% o 99.97% de eficiencia de filtrado";
                 explicacionFinal = "Las partículas respirables ingresan de manera imperceptible directamente a los alvéolos. El elastómero proporciona un ajuste facial mucho más firme y hermético que una mascarilla desechable de copa.";
             } else {
-                // Polvo inhalable grueso (PM10 - Caliza, yeso o polvo de cemento crudo)
                 if (concentracion === 3) {
                     respFinal = "Media Cara Reutilizable (Elastómero)";
                     filtroFinal = aceites === "si" ? "Filtro P95" : "Filtro N95";
@@ -1136,7 +1390,6 @@
                 explicacionFinal = "El polvo inhalable se retiene de forma biológica en las fosas nasales y garganta, causando irritación. La mascarilla N95 con válvula de exhalación disminuye la sudoración y fatiga térmica.";
             }
 
-            // Actualizar el DOM con las variables calculadas
             diagRespirador.innerText = respFinal;
             diagFiltro.innerText = filtroFinal;
             diagApf.innerText = apfFinal;
@@ -1145,18 +1398,253 @@
             diagIconBox.innerHTML = iconHtml;
             diagIconBox.className = colorIconClass;
 
-            // Renderizar los nuevos de iconos Lucide inyectados dinámicamente por JS
             lucide.createIcons();
         }
 
-        // 4. Módulo de casos prácticos (mostrar/ocultar respuestas)
         function verSolucionCaso(idCaso) {
             const solBox = document.getElementById(idCaso);
-            if (solBox.classList.contains('hidden')) {
-                solBox.classList.remove('hidden');
-            } else {
-                solBox.classList.add('hidden');
+            if (solBox.classList.contains('hidden')) solBox.classList.remove('hidden');
+            else solBox.classList.add('hidden');
+        }
+
+        // 4. MÓDULO FINAL: LÓGICA DE EXAMEN AUTOMATIZADO Y COMUNICACIÓN API
+        let preguntasDeSesion = [];
+
+        function toggleOtraUnidad() {
+            const val = document.getElementById('eval-unidad').value;
+            const div = document.getElementById('div-otra-unidad');
+            if(val === 'Otras') div.classList.remove('hidden');
+            else div.classList.add('hidden');
+        }
+
+        function iniciarExamen() {
+            // 4.1 Validaciones de completitud
+            const nombre = document.getElementById('eval-nombre').value.trim();
+            const id = document.getElementById('eval-id').value.trim();
+            const mail = document.getElementById('eval-email').value.trim();
+            const puesto = document.getElementById('eval-puesto').value.trim();
+            const unidad = document.getElementById('eval-unidad').value;
+            const otraUn = document.getElementById('eval-otra-unidad').value.trim();
+
+            if(!nombre || !id || !mail || !puesto || !unidad || (unidad === 'Otras' && !otraUn)) {
+                alert("Atención: Por favor, completa todos los campos de identidad obligatorios.");
+                return;
             }
+
+            // 4.2 Bloquear edición de campos
+            const campos = ['eval-nombre', 'eval-id', 'eval-email', 'eval-puesto', 'eval-unidad', 'eval-otra-unidad'];
+            campos.forEach(campo => {
+                document.getElementById(campo).disabled = true;
+                document.getElementById(campo).classList.add('opacity-70', 'cursor-not-allowed');
+            });
+
+            // 4.3 Botón de inicio bloqueado
+            const btn = document.getElementById('btn-iniciar-test');
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="lock" class="w-5 h-5"></i> Identidad Registrada de Forma Segura`;
+            btn.classList.replace('bg-emerald-600', 'bg-slate-600');
+            btn.classList.replace('hover:bg-emerald-700', 'hover:bg-slate-600');
+            btn.classList.add('cursor-not-allowed');
+            lucide.createIcons();
+
+            // 4.4 Revelar cuestionario e iniciarlo
+            document.getElementById('fase-cuestionario').classList.remove('hidden');
+            generarSetDePreguntas();
+            
+            // Scroll hacia la primera pregunta
+            setTimeout(() => {
+                document.getElementById('fase-cuestionario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
+        function generarSetDePreguntas() {
+            const contenedor = document.getElementById('contenedor-preguntas');
+            contenedor.innerHTML = ''; // Limpiar contenedor
+            
+            document.getElementById('panel-resultados').classList.add('hidden');
+            document.getElementById('btn-evaluar').classList.remove('hidden');
+            document.getElementById('btn-evaluar').disabled = false;
+            document.getElementById('btn-evaluar').classList.replace('bg-slate-500', 'bg-slate-900');
+
+            // Barajar banco completo y tomar 20 únicas
+            const bancoBarajado = [...BANCO_COMPLETO_PREGUNTAS].sort(() => 0.5 - Math.random());
+            preguntasDeSesion = bancoBarajado.slice(0, 20);
+
+            // Renderizar html dinámico por cada pregunta
+            preguntasDeSesion.forEach((preguntaObj, indiceGlobal) => {
+                
+                // Extraer el string de la respuesta correcta original (índice 'c')
+                const textoRespuestaCorrecta = preguntaObj.o[preguntaObj.c];
+                
+                // Barajar las 4 opciones de respuesta para esta sesión visual
+                const opcionesMezcladas = [...preguntaObj.o].sort(() => 0.5 - Math.random());
+                
+                // Guardar en el objeto el nuevo índice correcto para validación posterior
+                preguntaObj.indiceCorrectoSesion = opcionesMezcladas.indexOf(textoRespuestaCorrecta);
+
+                // Construir los radio buttons
+                let htmlOpciones = '';
+                opcionesMezcladas.forEach((textoOpcion, indiceOpcion) => {
+                    htmlOpciones += `
+                        <label class="flex items-start gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-orange-50/50 hover:border-orange-200 transition-colors shadow-sm bg-slate-50/30">
+                            <input type="radio" name="p_${indiceGlobal}" value="${indiceOpcion}" class="mt-0.5 w-4 h-4 accent-orange-600 cursor-pointer">
+                            <span class="text-sm text-slate-700 font-medium leading-relaxed">${textoOpcion}</span>
+                        </label>`;
+                });
+
+                // Inyectar en el DOM
+                contenedor.innerHTML += `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm transition-all" id="bloque-pregunta-${indiceGlobal}">
+                        <h4 class="font-bold text-slate-900 mb-5 text-sm md:text-base flex gap-3 leading-relaxed">
+                            <span class="bg-slate-900 text-white w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold shadow-sm">${indiceGlobal + 1}</span>
+                            <span>${preguntaObj.q}</span>
+                        </h4>
+                        <div class="space-y-3 pl-0 md:pl-10">${htmlOpciones}</div>
+                        <div id="feedback-${indiceGlobal}" class="hidden mt-5 md:ml-10 p-4 rounded-xl text-xs md:text-sm leading-relaxed border transition-all animate-fade-in"></div>
+                    </div>`;
+            });
+            
+            // Re-render iconos Lucide (por si se usan luego)
+            lucide.createIcons();
+        }
+
+        function evaluarExamen() {
+            // Validar que las 20 hayan sido respondidas
+            let respondidasTotales = 0;
+            for(let i = 0; i < 20; i++) {
+                if(document.querySelector(`input[name="p_${i}"]:checked`)) {
+                    respondidasTotales++;
+                }
+            }
+            
+            if(respondidasTotales < 20) {
+                alert(`Has respondido ${respondidasTotales} de 20 preguntas. Por favor, completa todas las preguntas antes de enviar la evaluación.`);
+                return;
+            }
+
+            // Deshabilitar botón evaluar temporalmente para evitar doble envío
+            const btnEval = document.getElementById('btn-evaluar');
+            btnEval.disabled = true;
+            btnEval.innerHTML = `<i data-lucide="loader" class="w-6 h-6 animate-spin"></i> Procesando resultados...`;
+            lucide.createIcons();
+
+            let notaAcumulada = 0;
+
+            // Revisar y pintar feedback
+            preguntasDeSesion.forEach((preguntaObj, indiceGlobal) => {
+                const radioSeleccionado = document.querySelector(`input[name="p_${indiceGlobal}"]:checked`);
+                const valorSeleccionado = parseInt(radioSeleccionado.value);
+                
+                const divFeedback = document.getElementById(`feedback-${indiceGlobal}`);
+                const contenedorBloque = document.getElementById(`bloque-pregunta-${indiceGlobal}`);
+                
+                // Deshabilitar radios para prevenir cambios tramposos post-evaluación
+                document.querySelectorAll(`input[name="p_${indiceGlobal}"]`).forEach(rd => rd.disabled = true);
+
+                divFeedback.classList.remove('hidden');
+
+                if (valorSeleccionado === preguntaObj.indiceCorrectoSesion) {
+                    notaAcumulada += 5;
+                    divFeedback.className = "mt-5 md:ml-10 p-4 rounded-xl text-xs md:text-sm bg-emerald-50 border border-emerald-200 text-emerald-900";
+                    divFeedback.innerHTML = `<strong class="text-emerald-700 flex items-center gap-1.5 mb-1 text-sm"><i data-lucide="check-circle" class="w-5 h-5"></i> ¡Correcto!</strong> <span class="block mt-1">${preguntaObj.f}</span>`;
+                    contenedorBloque.classList.replace('border-slate-200', 'border-emerald-300');
+                    contenedorBloque.classList.add('bg-emerald-50/10');
+                } else {
+                    divFeedback.className = "mt-5 md:ml-10 p-4 rounded-xl text-xs md:text-sm bg-red-50 border border-red-200 text-red-900";
+                    divFeedback.innerHTML = `<strong class="text-red-700 flex items-center gap-1.5 mb-1 text-sm"><i data-lucide="x-circle" class="w-5 h-5"></i> Incorrecto</strong> <span class="block mt-1 text-slate-700">La respuesta correcta era: <strong>${preguntaObj.o[preguntaObj.c]}</strong></span><span class="block mt-2 pt-2 border-t border-red-200/50">${preguntaObj.f}</span>`;
+                    contenedorBloque.classList.replace('border-slate-200', 'border-red-300');
+                    contenedorBloque.classList.add('bg-red-50/10');
+                }
+            });
+
+            lucide.createIcons();
+            
+            // Retraso estético mínimo y mostrar resultados
+            setTimeout(() => {
+                mostrarResultados(notaAcumulada);
+            }, 600);
+        }
+
+        function mostrarResultados(notaFinal) {
+            document.getElementById('btn-evaluar').classList.add('hidden'); // Ocultar botón evaluar
+            
+            const panel = document.getElementById('panel-resultados');
+            panel.classList.remove('hidden');
+
+            const notaMinimaAprobacion = 80; // Parámetro del requerimiento
+            const aproboExamen = notaFinal >= notaMinimaAprobacion;
+            
+            const colorPuntaje = aproboExamen ? 'text-emerald-500' : 'text-red-500';
+            const etiquetaEstado = aproboExamen ? 'ACREDITADO' : 'NO ACREDITADO';
+            const mensajeFormativo = aproboExamen 
+                ? '¡Felicidades! Has superado con éxito la capacitación obligatoria en protección respiratoria. Tu resultado ha sido sincronizado institucionalmente.' 
+                : 'No has alcanzado el estándar mínimo de 80 puntos. Por favor, lee la retroalimentación técnica de tus respuestas erróneas y vuelve a intentarlo.';
+
+            let botonAccionAdicional = '';
+            
+            if (!aproboExamen) {
+                // Reintentar si falló
+                botonAccionAdicional = `
+                    <button onclick="generarSetDePreguntas()" class="mt-8 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold flex items-center gap-2 mx-auto transition-transform hover:scale-105 shadow-md">
+                        <i data-lucide="refresh-cw" class="w-5 h-5"></i> Intentar de nuevo con preguntas aleatorias
+                    </button>`;
+            } else {
+                // Sello de bloqueado de seguridad si aprobó
+                botonAccionAdicional = `
+                    <div class="mt-8 px-6 py-3 bg-slate-100 text-slate-500 border border-slate-200 rounded-xl font-bold flex items-center justify-center gap-2 max-w-sm mx-auto">
+                        <i data-lucide="lock" class="w-5 h-5"></i> Examen Bloqueado Permanentemente
+                    </div>`;
+            }
+
+            panel.innerHTML = `
+                <div class="text-7xl font-black ${colorPuntaje} mb-2 tracking-tighter">${notaFinal} <span class="text-3xl text-slate-300 font-bold tracking-normal">/ 100</span></div>
+                <div class="text-xl font-extrabold text-slate-900 mb-3 tracking-widest uppercase">${etiquetaEstado}</div>
+                <p class="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">${mensajeFormativo}</p>
+                ${botonAccionAdicional}
+            `;
+            
+            lucide.createIcons();
+            
+            // Hacer scroll directo al cuadro final
+            panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Disparar carga de datos de manera invisible a Microsoft Power Automate
+            enviarResultadosAPowerAutomate(notaFinal, aproboExamen);
+        }
+
+        function enviarResultadosAPowerAutomate(nota, estadoAprobacionBool) {
+            // Extraer unidad de negocio final considerando el campo "Otras"
+            const valorUnidadDropdown = document.getElementById('eval-unidad').value;
+            const unidadFinalSaneada = valorUnidadDropdown === 'Otras' ? document.getElementById('eval-otra-unidad').value.trim() : valorUnidadDropdown;
+
+            // Construir JSON estricto requerido
+            const payloadJSON = {
+                "NombreCompleto": document.getElementById('eval-nombre').value.trim(),
+                "NumeroCorrelativo": document.getElementById('eval-id').value.trim(),
+                "CorreoElectronico": document.getElementById('eval-email').value.trim(),
+                "UnidadNegocio": unidadFinalSaneada,
+                "PuestoTrabajo": document.getElementById('eval-puesto').value.trim(),
+                "Fecha": new Date().toLocaleDateString('es-GT'), // Formato dd/mm/aaaa local para Guatemala
+                "NotaObtenida": parseInt(nota),
+                "EstadoAcreditacion": estadoAprobacionBool ? "Aprobado" : "Reprobado"
+            };
+
+            // Disparar Webhook HTTP POST
+            fetch(URL_FLOW, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify(payloadJSON)
+            }).then(response => {
+                if(response.ok) {
+                    console.log("Sincronización Exitosa: API Automate recibió el payload JSON.");
+                } else {
+                    console.warn("Estado HTTP No-OK retornado por el flujo de Power Automate:", response.status);
+                }
+            }).catch(error => {
+                console.error("Error de conectividad al enviar datos a Power Automate (CORS/Network):", error);
+            });
         }
     </script>
 </body>
