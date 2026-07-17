@@ -59,13 +59,46 @@
         .btn-game:hover {
             transform: scale(1.03);
         }
+
+        /* Radio Buttons Estilizados */
+        .radio-custom:checked + div {
+            border-color: #f97316;
+            background-color: #fff7ed;
+        }
+        .radio-custom:checked + div .radio-circle {
+            border-color: #f97316;
+            background-color: #f97316;
+        }
     </style>
 </head>
-<body class="flex min-h-screen bg-slate-50 text-slate-800">
+<body class="flex flex-col lg:flex-row min-h-screen bg-slate-50 text-slate-800">
 
-    <!-- PANEL LATERAL DE NAVEGACIÓN (ESTILO INDUSTRIAL / SSO) -->
-    <aside class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between sticky top-0 h-screen shrink-0 text-white z-20">
-        <div class="p-6">
+    <!-- NAVBAR MÓVIL (Solo visible en pantallas pequeñas) -->
+    <header class="lg:hidden bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-30 shadow-md">
+        <div class="flex items-center gap-2">
+            <div class="p-1.5 bg-orange-600 rounded-lg text-white shadow-lg">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            </div>
+            <h1 class="font-bold text-sm tracking-wide uppercase">Salud Industrial</h1>
+        </div>
+        <button onclick="toggleSidebar()" class="p-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </header>
+
+    <!-- BACKDROP PARA MÓVIL -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
+
+    <!-- PANEL LATERAL DE NAVEGACIÓN (SIDEBAR) -->
+    <aside id="sidebar" class="w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between fixed inset-y-0 left-0 z-50 transform -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen shrink-0 text-white transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none">
+        <div class="p-6 overflow-y-auto">
+            <!-- BOTÓN CERRAR EN MÓVIL -->
+            <div class="flex justify-end lg:hidden mb-4">
+                <button onclick="toggleSidebar()" class="p-2 text-slate-400 hover:text-white bg-slate-800 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
             <!-- LOGO INSTITUCIONAL Y TÍTULO -->
             <div class="flex flex-col gap-4 mb-6">
                 <div class="flex items-center gap-3">
@@ -85,43 +118,48 @@
             <div class="mb-6 bg-slate-800/60 p-4 rounded-xl border border-slate-800">
                 <div class="flex justify-between items-center mb-1.5">
                     <span class="text-xs font-semibold text-slate-400">Progreso del Módulo</span>
-                    <span id="txt-progreso" class="text-xs font-bold text-orange-500">20%</span>
+                    <span id="txt-progreso" class="text-xs font-bold text-orange-500">16%</span>
                 </div>
                 <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                    <div id="barra-progreso" class="bg-gradient-to-r from-orange-600 to-orange-400 h-full rounded-full transition-all duration-500" style="width: 20%;"></div>
+                    <div id="barra-progreso" class="bg-gradient-to-r from-orange-600 to-orange-400 h-full rounded-full transition-all duration-500" style="width: 16%;"></div>
                 </div>
             </div>
 
             <!-- MENÚ DE NAVEGACIÓN -->
             <nav class="space-y-2" id="sidebar-menu">
-                <button onclick="cambiarModulo('modulo-intro', this, 20)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700/50 shadow-sm shadow-orange-500/10">
+                <button onclick="cambiarModulo('modulo-intro', 16)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700/50 shadow-sm shadow-orange-500/10" data-target="modulo-intro">
                     <i data-lucide="play-circle" class="w-4.5 h-4.5"></i>
                     <span>Inicio y Objetivos</span>
                 </button>
 
-                <button onclick="cambiarModulo('modulo-legal', this, 40)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                <button onclick="cambiarModulo('modulo-legal', 32)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50" data-target="modulo-legal">
                     <i data-lucide="gavel" class="w-4.5 h-4.5"></i>
                     <span>M1: Obligatoriedad Legal</span>
                 </button>
 
-                <button onclick="cambiarModulo('modulo-conceptos', this, 60)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                <button onclick="cambiarModulo('modulo-conceptos', 48)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50" data-target="modulo-conceptos">
                     <i data-lucide="microscope" class="w-4.5 h-4.5"></i>
                     <span>M2: VIH vs SIDA</span>
                 </button>
 
-                <button onclick="cambiarModulo('modulo-mitos', this, 80)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                <button onclick="cambiarModulo('modulo-mitos', 64)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50" data-target="modulo-mitos">
                     <i data-lucide="help-circle" class="w-4.5 h-4.5"></i>
                     <span>M3: Mitos y Realidades</span>
                 </button>
 
-                <button onclick="cambiarModulo('modulo-planta', this, 90)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                <button onclick="cambiarModulo('modulo-planta', 80)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50" data-target="modulo-planta">
                     <i data-lucide="hard-hat" class="w-4.5 h-4.5"></i>
                     <span>M4: Protocolo en Planta</span>
                 </button>
 
-                <button onclick="cambiarModulo('modulo-derechos', this, 100)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50">
+                <button onclick="cambiarModulo('modulo-derechos', 96)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50" data-target="modulo-derechos">
                     <i data-lucide="heart-handshake" class="w-4.5 h-4.5"></i>
                     <span>M5: Derechos Laborales</span>
+                </button>
+
+                <button onclick="cambiarModulo('modulo-evaluacion', 100)" class="menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50" data-target="modulo-evaluacion">
+                    <i data-lucide="clipboard-check" class="w-4.5 h-4.5"></i>
+                    <span>M6: Evaluación Final</span>
                 </button>
             </nav>
         </div>
@@ -134,7 +172,7 @@
     </aside>
 
     <!-- CUERPO PRINCIPAL DE CONTENIDOS -->
-    <main class="flex-1 overflow-y-auto p-12 max-w-6xl mx-auto z-10">
+    <main class="flex-1 overflow-y-auto p-6 lg:p-12 max-w-6xl mx-auto z-10 relative">
 
         <!-- MÓDULO INTRODUCCIÓN Y OBJETIVOS -->
         <section id="modulo-intro" class="modulo activo space-y-8">
@@ -153,13 +191,13 @@
                 <div class="absolute right-0 bottom-0 opacity-10 translate-x-12 translate-y-12">
                     <i data-lucide="shield-alert" class="w-80 h-80 text-orange-500"></i>
                 </div>
-                <div class="max-w-xl">
+                <div class="max-w-xl relative z-10">
                     <span class="px-3.5 py-1.5 bg-orange-600/30 border border-orange-500/30 rounded-full text-xs font-bold uppercase tracking-widest text-orange-400">Objetivo del Programa</span>
                     <h3 class="text-2xl font-bold mt-4 mb-3 text-slate-100">¿Por qué es vital esta capacitación para nosotros?</h3>
                     <p class="text-slate-300 text-sm leading-relaxed mb-6">
                         En una industria pesada como la del cemento, el trabajo en equipo, la seguridad física y el respeto mutuo son la base de la productividad. El desconocimiento sobre el VIH/SIDA fomenta el estigma, la discriminación y el miedo infundado en nuestros frentes de trabajo.
                     </p>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-center gap-2.5">
                             <div class="p-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg">
                                 <i data-lucide="check" class="w-4 h-4"></i>
@@ -195,10 +233,17 @@
                     <div>
                         <h4 class="font-bold text-amber-900 text-sm">Instrucción Interactiva</h4>
                         <p class="text-amber-800 text-xs mt-1 leading-relaxed">
-                            Navega por cada pestaña en la barra lateral izquierda para completar el entrenamiento teórico. En el Módulo 3, resolverás un interactivo de mitos y realidades que validará tus competencias en salud ocupacional.
+                            Navega por cada pestaña en la barra lateral izquierda para completar el entrenamiento teórico. En el Módulo 3, resolverás un interactivo de mitos y realidades que validará tus competencias en salud ocupacional, y al final deberás completar la evaluación de acreditación.
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN INFERIOR -->
+            <div class="mt-10 flex justify-end border-t border-slate-200 pt-6">
+                <button onclick="navegarFooter(1)" class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl flex items-center gap-2 transition-colors shadow-md shadow-orange-600/20 text-sm">
+                    Siguiente Módulo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
         </section>
 
@@ -291,6 +336,16 @@
                     </p>
                 </div>
             </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN INFERIOR -->
+            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-slate-200 pt-6">
+                <button onclick="navegarFooter(-1)" class="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegarFooter(1)" class="w-full sm:w-auto px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md shadow-orange-600/20 text-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
         <!-- MÓDULO 2: CONCEPTOS CIENTÍFICOS CLAVE -->
@@ -366,6 +421,16 @@
                     </div>
                 </div>
             </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN INFERIOR -->
+            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-slate-200 pt-6">
+                <button onclick="navegarFooter(-1)" class="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegarFooter(1)" class="w-full sm:w-auto px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md shadow-orange-600/20 text-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </section>
 
         <!-- MÓDULO 3: DOCK DINÁMICO DE MITOS Y REALIDADES -->
@@ -379,7 +444,7 @@
             </div>
 
             <!-- INTERACTIVO DE PREGUNTAS (JAVASCRIPT) -->
-            <div class="bg-white border-2 border-slate-200 rounded-3xl p-8 shadow-md flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden" id="contenedor-juego">
+            <div class="bg-white border-2 border-slate-200 rounded-3xl p-6 lg:p-8 shadow-md flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden" id="contenedor-juego">
                 <!-- Estado del juego -->
                 <div class="w-full max-w-lg space-y-6">
                     <div class="flex justify-between items-center">
@@ -393,7 +458,7 @@
                     </div>
 
                     <!-- Botones de Acción -->
-                    <div class="grid grid-cols-2 gap-4" id="botones-accion-juego">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="botones-accion-juego">
                         <button onclick="responderJuego('MITO')" class="btn-game py-4 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform">
                             <i data-lucide="x-circle" class="w-5 h-5"></i> Mito
                         </button>
@@ -461,6 +526,16 @@
                         <span class="flex items-center gap-1.5"><i data-lucide="minus" class="w-3 h-3 text-rose-500"></i> Sudor o lágrimas</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN INFERIOR -->
+            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-slate-200 pt-6">
+                <button onclick="navegarFooter(-1)" class="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegarFooter(1)" class="w-full sm:w-auto px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md shadow-orange-600/20 text-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
         </section>
 
@@ -536,7 +611,7 @@
                     <i data-lucide="alert-octagon" class="w-5.5 h-5.5 text-orange-500 animate-pulse"></i>
                     Protocolo Inmediato ante Exposición con Sangre
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                     <div class="p-4 bg-slate-800/80 rounded-xl border border-slate-700/50">
                         <div class="font-bold text-orange-500 mb-1">PASO 1</div>
                         <div class="font-bold text-slate-100 mb-1">Primeros Auxilios</div>
@@ -558,6 +633,16 @@
                         <p class="text-slate-400">Si hay riesgo real, la Profilaxis Post-Exposición (PEP) debe iniciarse **en las primeras 72 horas** como máximo para evitar la infección.</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN INFERIOR -->
+            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-slate-200 pt-6">
+                <button onclick="navegarFooter(-1)" class="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegarFooter(1)" class="w-full sm:w-auto px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md shadow-orange-600/20 text-sm">
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
         </section>
 
@@ -620,82 +705,241 @@
                     </div>
                 </div>
             </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN INFERIOR -->
+            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-slate-200 pt-6">
+                <button onclick="navegarFooter(-1)" class="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+                <button onclick="navegarFooter(1)" class="w-full sm:w-auto px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-colors shadow-md shadow-orange-600/20 text-sm">
+                    Ir a Evaluación Final <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MÓDULO 6: EVALUACIÓN FINAL (INTEGRACIÓN POWER AUTOMATE) -->
+        <section id="modulo-evaluacion" class="modulo space-y-8">
+            <div class="border-b border-slate-200 pb-6">
+                <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-2">
+                    <i data-lucide="clipboard-check" class="w-4 h-4"></i> Evaluación Final de Acreditación
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Cuestionario Teórico y Registro</h2>
+                <p class="text-slate-600 mt-2 text-lg">Valide su identidad corporativa y demuestre sus conocimientos adquiridos para acreditar la capacitación en SSO.</p>
+            </div>
+
+            <!-- FASE A: FORMULARIO DE IDENTIDAD -->
+            <div id="fase-a" class="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 shadow-sm">
+                <h3 class="font-bold text-slate-900 text-lg mb-6 flex items-center gap-2 border-b border-slate-100 pb-4">
+                    <span class="bg-orange-100 text-orange-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
+                    Datos del Colaborador
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-700">Nombre Completo <span class="text-red-500">*</span></label>
+                        <input type="text" id="ev-nombre" class="form-input w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all disabled:opacity-60" placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-700">Número Correlativo / Ficha ID <span class="text-red-500">*</span></label>
+                        <input type="text" id="ev-id" class="form-input w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all disabled:opacity-60" placeholder="Ej. 102934">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-700">Correo Electrónico <span class="text-red-500">*</span></label>
+                        <input type="email" id="ev-correo" class="form-input w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all disabled:opacity-60" placeholder="correo@empresa.com">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-700">Puesto de Trabajo <span class="text-red-500">*</span></label>
+                        <input type="text" id="ev-puesto" class="form-input w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all disabled:opacity-60" placeholder="Ej. Operador de Molino">
+                    </div>
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label class="text-xs font-semibold text-slate-700">Unidad de Negocio <span class="text-red-500">*</span></label>
+                        <select id="ev-unidad" onchange="verificarOtraUnidad()" class="form-input w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all disabled:opacity-60">
+                            <option value="">Seleccione una unidad...</option>
+                            <option value="Planta San Gabriel CEMPRO">Planta San Gabriel CEMPRO</option>
+                            <option value="Planta Punta Sur (Puerto Quetzal) CEMPRO">Planta Punta Sur (Puerto Quetzal) CEMPRO</option>
+                            <option value="Planta Alicion (Puerto Barrios) CEMPRO">Planta Alicion (Puerto Barrios) CEMPRO</option>
+                            <option value="NH Services">NH Services</option>
+                            <option value="Otras">Otras (Especificar)</option>
+                        </select>
+                    </div>
+                    <div id="contenedor-otras" class="space-y-1.5 md:col-span-2 hidden">
+                        <label class="text-xs font-semibold text-slate-700">Especifique otra Unidad de Negocio <span class="text-red-500">*</span></label>
+                        <input type="text" id="ev-otras" class="form-input w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all disabled:opacity-60" placeholder="Escriba la unidad...">
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end">
+                    <button id="btn-iniciar-examen" onclick="iniciarCuestionario()" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl flex items-center gap-2 shadow-md transition-all text-sm w-full sm:w-auto justify-center">
+                        <i data-lucide="lock" class="w-4 h-4"></i> Confirmar Identidad e Iniciar Cuestionario
+                    </button>
+                </div>
+                <p id="error-form" class="text-red-500 text-xs mt-3 hidden text-right font-semibold">Debe completar todos los campos obligatorios para continuar.</p>
+            </div>
+
+            <!-- FASE B: CUESTIONARIO DINÁMICO -->
+            <div id="fase-b" class="hidden space-y-8">
+                <!-- Panel de advertencia / instrucciones -->
+                <div class="bg-blue-50 border border-blue-200 p-5 rounded-2xl flex gap-4 items-start">
+                    <i data-lucide="info" class="w-6 h-6 text-blue-600 shrink-0 mt-0.5"></i>
+                    <div>
+                        <h4 class="font-bold text-blue-900 text-sm">Instrucciones del Cuestionario</h4>
+                        <p class="text-blue-800 text-xs mt-1 leading-relaxed">
+                            A continuación, se presentan 10 preguntas seleccionadas al azar. Cada pregunta tiene un valor de 10 puntos. <strong>Debe obtener al menos 80 puntos para aprobar.</strong> Seleccione la respuesta que considere correcta para cada enunciado.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Contenedor inyectado dinámicamente -->
+                <div id="contenedor-preguntas-cuestionario" class="space-y-6">
+                    <!-- Preguntas van aquí -->
+                </div>
+
+                <!-- Botón de Envío -->
+                <div id="contenedor-enviar-examen" class="flex justify-end pt-4 border-t border-slate-200">
+                    <button onclick="calificarExamen()" class="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl flex items-center gap-2 shadow-lg shadow-orange-600/30 transition-all w-full sm:w-auto justify-center text-base">
+                        <i data-lucide="send" class="w-5 h-5"></i> Finalizar y Evaluar Examen
+                    </button>
+                </div>
+
+                <!-- Panel de Resultados (Oculto inicialmente) -->
+                <div id="panel-resultado-final" class="hidden bg-white border-2 rounded-3xl p-8 text-center shadow-lg relative overflow-hidden">
+                    <!-- Contenido dinámico del resultado -->
+                </div>
+            </div>
+
+            <!-- CONTROLES DE NAVEGACIÓN INFERIOR -->
+            <div class="mt-10 flex flex-col sm:flex-row justify-start items-center gap-4 border-t border-slate-200 pt-6">
+                <button onclick="navegarFooter(-1)" class="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
+            </div>
         </section>
 
     </main>
 
-    <!-- CONTROLADORES DE INTERACCIÓN LOGICAL (JAVASCRIPT) -->
+    <!-- LOGICA E INTEGRACIÓN JAVASCRIPT -->
     <script>
-        // AFIRMACIONES DEL JUEGO DINÁMICO (MITO O REALIDAD)
-        const preguntasJuego = [
-            {
-                texto: "1. ¿El VIH se puede contagiar por un abrazo o saludo de manos de un compañero de planta?",
-                tipo: "MITO",
-                explicacion: "El afecto cotidiano, compartir espacios, abrazar o saludar de manos no transmite el virus bajo ninguna circunstancia. El virus no sobrevive en la piel ni se transmite sin contacto de fluidos de riesgo directo."
-            },
-            {
-                texto: "2. Una persona con VIH en tratamiento indetectable puede realizar trabajos de mantenimiento mecánico pesados sin poner en riesgo a otros.",
-                tipo: "REALIDAD",
-                explicacion: "¡Es correcto! La fórmula científica comprobada I=I (Indetectable = Intransmisible) garantiza que bajo el tratamiento adecuado la persona puede vivir y trabajar en cualquier puesto industrial de forma normal sin riesgo ocupacional."
-            },
-            {
-                texto: "3. El uso de baños de la planta, comedores, vasos o cubiertos compartidos transmite la infección de VIH.",
-                tipo: "MITO",
-                explicacion: "Es totalmente un MITO. El virus no se propaga a través de la saliva, el sudor, la orina o el aire. Compartir estos recursos en la planta es 100% seguro."
-            },
-            {
-                texto: "4. La Profilaxis Post-Exposición (PEP) puede prevenir de forma efectiva el VIH tras un accidente laboral si se inicia de forma urgente.",
-                tipo: "REALIDAD",
-                explicacion: "¡Así es! Si un colaborador de primeros auxilios entra en contacto de riesgo directo con sangre ajena en una herida abierta, el tratamiento PEP (antirretrovirales preventivos) iniciado antes de las 72 horas puede bloquear el virus eficazmente."
-            },
-            {
-                texto: "5. En Guatemala, la industria puede solicitar pruebas obligatorias de VIH como condición para ascender de puesto a un colaborador.",
-                tipo: "MITO",
-                explicacion: "¡Totalmente falso! El Acuerdo Gubernativo 229-2014 prohíbe expresamente exigir pruebas de VIH para ingresar o permanecer en el empleo. Hacerlo se considera una violación directa a las leyes laborales del país."
-            }
+        // CONFIGURACIÓN DE POWER AUTOMATE (Reemplazar con la URL del Webhook real)
+        const URL_FLOW = "https://default411bbe47fbe54025a6ae27963dadb3.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/11/workflows/2a4dab7284dc445597245cd81ad9729b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LZqRqoEECJPMQrbV8f1zvgj2AbnFoU4J9VG-I51eWps";
+
+        // ORDEN DE MÓDULOS PARA EL NAVEGADOR FOOTER
+        const modulosOrden = [
+            { id: 'modulo-intro', porc: 16 },
+            { id: 'modulo-legal', porc: 32 },
+            { id: 'modulo-conceptos', porc: 48 },
+            { id: 'modulo-mitos', porc: 64 },
+            { id: 'modulo-planta', porc: 80 },
+            { id: 'modulo-derechos', porc: 96 },
+            { id: 'modulo-evaluacion', porc: 100 }
         ];
 
-        let preguntaActual = 0;
-        let puntaje = 0;
+        let moduloActualIndex = 0;
+
+        // BANCO MAESTRO DE 30 PREGUNTAS (VIH Y SIDA / SSO / LEY GUATEMALA)
+        const BANCO_COMPLETO_PREGUNTAS = [
+            { q: "Según la legislación guatemalteca (Acuerdo Gubernativo 229-2014), ¿qué documento o prueba puede exigir legalmente un patrono como requisito para otorgar un puesto laboral respecto al VIH?", o: ["Una prueba de VIH reciente y negativa.", "Una constancia del IGSS de no portar el virus.", "Ninguna prueba, su exigencia es ilegal y sancionable.", "Una declaración jurada de salud firmada por un notario."], c: 2, f: "Legal: El Artículo 6 del Reglamento de SSO prohíbe expresamente exigir pruebas de VIH como condición para obtener o mantener un trabajo." },
+            { q: "¿Cuál es la diferencia fundamental entre el VIH y el SIDA?", o: ["Son exactamente lo mismo, solo es diferente terminología médica.", "El VIH es el virus que infecta el cuerpo, y el SIDA es la fase avanzada y severa de la enfermedad.", "El SIDA es el virus, y el VIH es el síndrome de inmunodeficiencia.", "El VIH solo afecta a hombres y el SIDA a mujeres."], c: 1, f: "Técnico: El VIH es el agente infeccioso. El SIDA (Síndrome de Inmunodeficiencia Adquirida) es la etapa crítica donde el sistema inmune ha colapsado, la cual es prevenible con tratamiento." },
+            { q: "Si un compañero de trabajo en la planta le informa confidencialmente que tiene VIH, ¿cuál debe ser su postura ética y ocupacional?", o: ["Informar a todo el equipo para que tomen distancia.", "Mantener confidencialidad, apoyarlo y continuar trabajando normalmente.", "Solicitar a Recursos Humanos que lo trasladen a un área aislada.", "Negarse a usar las mismas herramientas que él."], c: 1, f: "SSO: La confidencialidad y el respeto son derechos humanos inalienables. Compartir espacios y herramientas no representa ningún riesgo de transmisión." },
+            { q: "En la medicina laboral preventiva, ¿qué significa científicamente la fórmula 'I = I'?", o: ["Infección = Inmunidad", "Indetectable = Intransmisible", "Indefinido = Incurable", "Igualdad = Integridad"], c: 1, f: "Médico: Una persona con VIH que sigue su Tratamiento Antirretroviral (TARV) y mantiene carga viral 'Indetectable', no puede transmitir el virus (Intransmisible) por ninguna vía." },
+            { q: "Durante labores de mantenimiento en la cementera, usted sufre una cortadura severa. Un compañero le ayuda y se mancha con su sangre. ¿Cuál es el protocolo inmediato?", o: ["Aplicar alcohol en la piel manchada del compañero y continuar trabajando.", "Lavar inmediatamente con abundante agua y jabón, y reportarlo al monitor de SSO.", "Esperar al final del turno para lavarse.", "Solo limpiar la sangre con un trapo o estopa seca."], c: 1, f: "Protocolo: El lavado inmediato con agua y jabón desactiva y remueve patógenos, siendo el primer paso obligatorio antes del reporte formal al comité de SSO." },
+            { q: "¿Cuál de las siguientes actividades cotidianas en la planta de cemento transmite el VIH?", o: ["Compartir los cascos de seguridad y lentes.", "Usar los mismos servicios sanitarios (inodoros).", "Comer en la misma mesa de la cafetería.", "Ninguna de las anteriores."], c: 3, f: "Educación: El VIH no sobrevive en el ambiente, ni se transmite por contacto casual, aire, saliva, o compartir mobiliario y EPP." },
+            { q: "¿Qué es la Profilaxis Post-Exposición (PEP) en el contexto de accidentes laborales con riesgo biológico?", o: ["Un tipo de vacuna que se administra a todos los empleados anualmente.", "Un equipo de protección personal (EPP) especializado.", "Un tratamiento médico de emergencia (antirretrovirales) que debe iniciarse antes de 72 horas para prevenir la infección de VIH tras una exposición real.", "Un formato de reporte de incidentes del IGSS."], c: 2, f: "Médico: La PEP es crucial si ocurre un pinchazo o contacto directo de sangre infectada con heridas abiertas. Tiene alta eficacia si se toma dentro de las primeras 72 horas." },
+            { q: "Según el Decreto Número 27-2000 (Ley General de Combate al VIH en Guatemala), despedir a un trabajador porque se descubrió su estado serológico positivo se considera:", o: ["Una práctica legal justificada por seguridad industrial.", "Un acuerdo mutuo de retiro voluntario.", "Un acto de discriminación ilegal e inconstitucional.", "Una medida administrativa preventiva del patrono."], c: 2, f: "Legal: La ley prohíbe taxativamente despedir, degradar, o discriminar a cualquier persona en el ámbito laboral debido a su diagnóstico de VIH." },
+            { q: "¿Qué tipo de células específicas del sistema inmunológico humano ataca y destruye progresivamente el VIH si no hay tratamiento?", o: ["Glóbulos rojos (Eritrocitos).", "Linfocitos T CD4 (Glóbulos blancos especializados).", "Plaquetas sanguíneas.", "Neuronas cerebrales."], c: 1, f: "Biología: El VIH se acopla y destruye los Linfocitos T CD4, los cuales son los 'generales' que dirigen al sistema inmunológico para defender el cuerpo de infecciones." },
+            { q: "Si usted debe prestar primeros auxilios a un trabajador accidentado que está sangrando, la medida universal de prevención estándar exige:", o: ["Averiguar primero si el accidentado tiene VIH u otras enfermedades.", "Colocarse siempre guantes impermeables (látex o nitrilo) antes de entrar en contacto con la sangre.", "Usar sus propias manos descubiertas si hay mucha urgencia.", "Esperar a que llegue un médico o paramédico sin hacer nada."], c: 1, f: "SSO: Las 'Precauciones Universales' indican que toda sangre o fluido debe manejarse como potencialmente infeccioso, haciendo obligatorio el uso de barreras como guantes." },
+            { q: "¿Se puede transmitir el VIH por la picadura de un zancudo o mosquito en áreas abiertas de la planta?", o: ["Sí, si el mosquito picó antes a alguien infectado.", "No, el virus no sobrevive ni se reproduce dentro de los insectos.", "Solo si el mosquito es portador de dengue también.", "Sí, pero solo en climas de alta humedad y calor."], c: 1, f: "Mito: Los insectos hematófagos no transmiten el VIH. El virus se inactiva rápidamente en su sistema digestivo." },
+            { q: "Una empleada de la empresa está embarazada y es diagnosticada con VIH. Con la tecnología médica actual, ¿es posible evitar que su bebé nazca con el virus?", o: ["No, el bebé nacerá infectado obligatoriamente.", "Sí, si la madre recibe tratamiento antirretroviral, profilaxis en el parto y evita la lactancia, el riesgo de transmisión se reduce a casi cero.", "Solo si la madre permanece en aislamiento durante el embarazo.", "Sí, mediante vacunas prenatales exclusivas."], c: 1, f: "Médico: El tratamiento médico adecuado a la madre bloquea la transmisión vertical (perinatal) de manera altamente efectiva." },
+            { q: "¿Cuál de los siguientes fluidos corporales NO tiene la capacidad clínica de transmitir el VIH?", o: ["Sangre.", "Semen.", "Fluidos vaginales.", "Sudor y lágrimas."], c: 3, f: "Técnico: El sudor, las lágrimas, la saliva y la orina no contienen la concentración suficiente de virus para provocar una infección, por lo que no son fluidos de riesgo." },
+            { q: "En caso de encontrar una jeringa usada, hoja de afeitar o cuchilla ensangrentada descartada incorrectamente en la planta, usted debe:", o: ["Recogerla con la mano y tirarla a cualquier basurero común.", "Ignorarla porque no es de su área.", "Utilizar herramientas (pinzas/pala) o guantes gruesos para colocarla en un contenedor de punzocortantes rígido y reportarlo.", "Patearla hacia el drenaje más cercano."], c: 2, f: "Protocolo: Todo material punzocortante de origen dudoso debe manipularse sin contacto directo y desecharse en recipientes rígidos (guardianes)." },
+            { q: "El tratamiento antirretroviral (TARV) que recibe una persona con VIH sirve para:", o: ["Curar definitivamente la infección eliminando el virus del cuerpo en 6 meses.", "Impedir que el virus se multiplique en la sangre y permitir al sistema inmunológico recuperarse.", "Aliviar únicamente los dolores musculares.", "Crear anticuerpos que eviten contagiar de gripes comunes a otros."], c: 1, f: "Médico: Aunque el TARV no cura la infección, controla totalmente la replicación viral, devolviendo a la persona su salud y capacidad defensiva." },
+            { q: "¿Qué debe hacer la unidad médica ocupacional de la empresa respecto a los diagnósticos de salud de los colaboradores?", o: ["Publicar una lista mensual de trabajadores con enfermedades infecciosas.", "Compartir los expedientes médicos con la gerencia de planta sin restricciones.", "Garantizar el secreto profesional y resguardar la confidencialidad de la ficha clínica del colaborador.", "Informar obligatoriamente a los sindicatos."], c: 2, f: "Legal: El secreto médico está protegido por las leyes de Guatemala, y revelar diagnósticos sin consentimiento judicial o personal viola la confidencialidad." },
+            { q: "Si a un colaborador de maquinaria pesada se le detecta VIH, ¿es justificable transferirlo obligatoriamente a tareas de conserjería o barrido 'por su seguridad'?", o: ["Sí, porque la maquinaria puede causarle estrés y agravar el virus.", "Sí, como medida profiláctica para proteger a los demás mecánicos.", "No, el VIH no afecta su capacidad física o mental para operar maquinaria, forzar un traslado es discriminación.", "Sí, porque así lo exige el Ministerio de Salud."], c: 2, f: "Derechos: No existe fundamento técnico ni médico para degradar o cambiar a un empleado de sus funciones habituales solo por su estado serológico." },
+            { q: "¿La prueba de VIH puede incluirse camuflada en los exámenes de laboratorio anuales o de pre-empleo de la clínica de la empresa?", o: ["Sí, es un protocolo estándar para proteger a todos.", "No, la prueba de VIH debe ser voluntaria, informada y expresamente autorizada por el trabajador mediante consentimiento.", "Sí, siempre que no se le cobre al trabajador.", "Solo si el trabajador parece estar enfermo."], c: 1, f: "Ética/Legal: El tamizaje sin consentimiento explícito e informado ('prueba a ciegas') es una violación a los derechos humanos y laborales." },
+            { q: "El VIH fuera del cuerpo humano (en superficies, pasamanos, herramientas de la planta):", o: ["Sobrevive y es muy infeccioso durante semanas enteras.", "No sobrevive largo tiempo y pierde su capacidad infecciosa rápidamente al secarse y exponerse al aire.", "Se multiplica usando las bacterias del polvo.", "Puede entrar por la piel intacta si tocamos la superficie."], c: 1, f: "Biología: El VIH es sumamente frágil a las condiciones ambientales (luz, oxígeno, sequedad). No se transmite por superficies inertes." },
+            { q: "¿Cuál es el principal método de prevención primaria contra el VIH en la vida personal de un trabajador?", o: ["Evitar los besos y abrazos.", "El uso consistente y correcto del preservativo (condón) en toda relación sexual.", "Lavarse las manos tres veces al día.", "Tomar suplementos vitamínicos diarios."], c: 1, f: "Prevención: La vía sexual concentra la inmensa mayoría de casos, por lo que el uso de barreras profilácticas de látex/poliuretano es la principal medida preventiva." },
+            { q: "El estigma y la discriminación en la planta hacia compañeros con VIH provocan:", o: ["Un ambiente laboral más seguro y productivo.", "Que otros trabajadores se cuiden más por el miedo.", "Que los colaboradores oculten su estado de salud, eviten tratamientos y no reporten accidentes por temor a ser descubiertos.", "Mayor camaradería en el entorno."], c: 2, f: "Cultura SSO: El miedo y el estigma son enemigos de la prevención. Ocultar accidentes por miedo al rechazo incrementa drásticamente los riesgos para todos." },
+            { q: "La presencia del virus de inmunodeficiencia humana en un colaborador, asintomático y en control, limita su capacidad para realizar trabajos en altura o espacios confinados:", o: ["Totalmente cierto, podría marearse de pronto.", "Falso, bajo control médico adecuado, su aptitud física, alerta y reflejos son idénticos a los de una persona sin el virus.", "Cierto, la ley le prohíbe hacer tareas de alto riesgo.", "Depende si usa casco y arnés especial."], c: 1, f: "Medicina Ocupacional: La infección por VIH controlada no produce limitaciones físicas ni cognitivas que impidan el trabajo de alto riesgo industrial." },
+            { q: "Si la ropa de trabajo de dotación de la empresa se mancha de sangre durante un accidente de trabajo:", o: ["Debe incinerarse inmediatamente junto con las herramientas.", "Debe manejarse con guantes y lavarse con agua, detergente o soluciones cloradas normales, lo cual inactiva al virus.", "Debe guardarse en la taquilla del trabajador infectado.", "Se debe seguir utilizando sin lavar si la mancha es pequeña."], c: 1, f: "SSO: Los detergentes comunes y el cloro son suficientes para destruir la capa lipídica del virus en textiles. No es necesario quemar ropa o equipos." },
+            { q: "Actualmente en el año 2026, ¿existe una vacuna preventiva que cure el VIH de forma permanente en el mundo?", o: ["Sí, se aplica a los recién nacidos.", "Sí, pero solo para trabajadores industriales.", "No, no existe ninguna vacuna ni cura definitiva, solo tratamientos para controlarlo eficazmente.", "Sí, se vende libremente en las farmacias de Guatemala."], c: 2, f: "Ciencia: A pesar de los grandes avances, aún no hay vacuna probada que evite la infección, el método sigue siendo la prevención conductual y química." },
+            { q: "Un trabajador tose fuertemente sobre el rostro de otro mientras operan una grúa. ¿Existe riesgo de transmisión del VIH?", o: ["Alto riesgo, el virus viaja en las microgotas de la tos.", "Bajo riesgo, pero mejor que vayan a hacerse la prueba los dos.", "Nulo. El VIH no se transmite por el aire, gotitas de saliva, tos o estornudos.", "Alto riesgo si tienen las defensas bajas."], c: 2, f: "Educación: A diferencia de los virus respiratorios (como influenza o COVID), el VIH es incapaz de viajar o transmitirse por vía aerógena." },
+            { q: "¿Es necesario que un centro de trabajo industrial instale baños, comedores o bebederos separados o exclusivos para personas con VIH?", o: ["Sí, para cumplir normas internacionales de salud.", "No, es absurdo, innecesario y altamente discriminatorio, ya que no hay riesgo alguno al compartir instalaciones.", "Sí, el IGSS lo requiere para plantas con más de 100 empleados.", "Solo si el trabajador lo solicita por escrito."], c: 1, f: "Derechos y Técnica: No se requieren instalaciones especiales. Segregar empleados es una vulneración de la dignidad humana y carece de aval científico." },
+            { q: "Según las políticas corporativas, cualquier burla, chisme o rumor malicioso para difamar a un compañero respecto a su salud en las instalaciones:", o: ["Es un tema personal que la empresa ignora.", "Es una 'broma pesada' aceptable en la cultura machista de planta.", "Constituye acoso y una falta gravísima al código de ética, sancionable administrativamente.", "Debe arreglarse fuera de las horas de trabajo."], c: 2, f: "Código de Ética: El respeto mutuo es un pilar corporativo. Fomentar rumores sobre VIH destruye el clima organizacional y se sanciona con firmeza." },
+            { q: "En caso de un pinchazo accidental con una aguja o alambre que tenga sangre fresca en el área de talleres mecánicos, ¿qué medicamento disminuye el riesgo de VIH si se toma rápido?", o: ["Amoxicilina (Antibiótico).", "Profilaxis Post-Exposición (PEP) con medicamentos Antirretrovirales.", "Ibuprofeno y Paracetamol.", "Suero antitetánico exclusivo."], c: 1, f: "Médico: Los antibióticos no sirven para virus. Se requieren medicamentos antirretrovirales (PEP) prescritos de urgencia por un especialista." },
+            { q: "¿Qué porcentaje de riesgo laboral de contraer VIH existe por trabajar en la misma oficina, escritorio o panel de control con alguien positivo?", o: ["Aproximadamente 50% si se comparten bolígrafos.", "100% si encienden el mismo aire acondicionado.", "0% (Cero por ciento). El virus no se transmite por convivencia o uso de equipo ofimático/industrial.", "5% por fricción estática."], c: 2, f: "Mito: La convivencia social y laboral representa 0% de riesgo. Compartir equipo de oficina, paneles, o teclados es enteramente seguro." },
+            { q: "La educación en VIH y SIDA obligatoria que imparte nuestra empresa busca principalmente:", o: ["Descubrir quiénes están infectados en la nómina.", "Despedir trabajadores vulnerables.", "Fomentar la salud integral, prevenir accidentes con protocolos reales y erradicar la estigmatización laboral.", "Cumplir un requisito de papel sin importancia."], c: 2, f: "Objetivos SSO: La meta real del programa es la protección del capital humano y promover una cultura de empatía y seguridad real sustentada en la ciencia." }
+        ];
+
+        let preguntasAleatorias = [];
+        let respuestasUsuario = [];
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Inicializar iconos de Lucide
             lucide.createIcons();
-            
-            // Cargar la primera pregunta de Mitos y Realidades
+            // Iniciar en intro
+            document.getElementById('modulo-intro').classList.add('activo');
             inicializarPreguntaJuego();
         });
 
-        // 1. MANEJO DE CAMBIO DE MODULOS
-        function cambiarModulo(idModulo, boton, porcentaje) {
-            // Ocultar todos los módulos con remoción de clases de activación
-            document.querySelectorAll('.modulo').forEach(m => {
-                m.classList.remove('activo');
-            });
+        // ==========================================
+        // 1. SISTEMA DE NAVEGACIÓN Y MENÚ
+        // ==========================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
             
-            // Mostrar módulo seleccionado de forma suave
-            const moduloActivo = document.getElementById(idModulo);
-            if (moduloActivo) {
-                moduloActivo.classList.add('activo');
+            // Toggle translate para el sidebar
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                backdrop.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                backdrop.classList.add('hidden');
             }
+        }
+
+        function cambiarModulo(idModulo, porcentaje) {
+            // Encontrar el índice del módulo solicitado
+            const index = modulosOrden.findIndex(m => m.id === idModulo);
+            if(index !== -1) moduloActualIndex = index;
+
+            // Ocultar todos
+            document.querySelectorAll('.modulo').forEach(m => m.classList.remove('activo'));
             
-            // Actualizar estados del botón lateral
+            // Mostrar seleccionado
+            const moduloActivo = document.getElementById(idModulo);
+            if (moduloActivo) moduloActivo.classList.add('activo');
+            
+            // Actualizar UI de botones en sidebar
             document.querySelectorAll('.menu-btn').forEach(btn => {
-                btn.className = "menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50";
+                if (btn.dataset.target === idModulo) {
+                    btn.className = "menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700/50 shadow-sm shadow-orange-500/10";
+                } else {
+                    btn.className = "menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-100 hover:bg-slate-800/50";
+                }
             });
             
-            // Resaltar botón activo
-            boton.className = "menu-btn w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700/50 shadow-sm shadow-orange-500/10";
-            
-            // Actualizar la barra de progreso
+            // Actualizar progreso
             document.getElementById('txt-progreso').innerText = `${porcentaje}%`;
             document.getElementById('barra-progreso').style.width = `${porcentaje}%`;
             
-            // Forzar renderizado de iconos en el nuevo módulo activo
+            // Si está en móvil y se hace clic, cerrar el sidebar
+            if (window.innerWidth < 1024) {
+                const sidebar = document.getElementById('sidebar');
+                if(!sidebar.classList.contains('-translate-x-full')) {
+                    toggleSidebar();
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             lucide.createIcons();
         }
 
-        // 2. MANEJO DE ACORDEONES (MARCO LEGAL)
+        function navegarFooter(direccion) {
+            let nuevoIndex = moduloActualIndex + direccion;
+            if (nuevoIndex >= 0 && nuevoIndex < modulosOrden.length) {
+                cambiarModulo(modulosOrden[nuevoIndex].id, modulosOrden[nuevoIndex].porc);
+            }
+        }
+
         function toggleAccordion(id) {
             const contenido = document.getElementById(id);
             const icono = document.getElementById(`icon-${id}`);
@@ -704,7 +948,6 @@
                 contenido.classList.remove('abierto');
                 icono.style.transform = 'rotate(0deg)';
             } else {
-                // Cerrar todos los acordeones primero
                 document.querySelectorAll('.accordion-content').forEach(acc => acc.classList.remove('abierto'));
                 document.querySelectorAll('[id^="icon-acc"]').forEach(ic => ic.style.transform = 'rotate(0deg)');
                 
@@ -713,32 +956,41 @@
             }
         }
 
-        // 3. JUEGO INTERACTIVO MITOS Y REALIDADES
+        // ==========================================
+        // 2. MÓDULO 3: JUEGO MITOS Y REALIDADES
+        // ==========================================
+        const preguntasJuego = [
+            { texto: "1. ¿El VIH se puede contagiar por un abrazo o saludo de manos de un compañero de planta?", tipo: "MITO", explicacion: "El afecto cotidiano, compartir espacios, abrazar o saludar de manos no transmite el virus bajo ninguna circunstancia." },
+            { texto: "2. Una persona con VIH en tratamiento indetectable puede realizar trabajos de mantenimiento mecánico pesados sin poner en riesgo a otros.", tipo: "REALIDAD", explicacion: "La fórmula científica comprobada I=I garantiza que bajo el tratamiento adecuado la persona puede vivir y trabajar normalmente." },
+            { texto: "3. El uso de baños de la planta, comedores, vasos o cubiertos compartidos transmite la infección de VIH.", tipo: "MITO", explicacion: "El virus no se propaga a través de la saliva, el sudor, la orina o el aire. Compartir estos recursos en la planta es 100% seguro." },
+            { texto: "4. La Profilaxis Post-Exposición (PEP) puede prevenir de forma efectiva el VIH tras un accidente laboral si se inicia de forma urgente.", tipo: "REALIDAD", explicacion: "Si un colaborador entra en contacto de riesgo directo con sangre, el tratamiento PEP iniciado antes de las 72 horas bloquea el virus." },
+            { texto: "5. En Guatemala, la industria puede solicitar pruebas obligatorias de VIH como condición para ascender de puesto a un colaborador.", tipo: "MITO", explicacion: "El Acuerdo Gubernativo 229-2014 prohíbe exigir pruebas de VIH para ingresar o permanecer en el empleo." }
+        ];
+
+        let preguntaJuegoActual = 0;
+        let puntajeJuego = 0;
+
         function inicializarPreguntaJuego() {
-            const q = preguntasJuego[preguntaActual];
-            document.getElementById('num-pregunta').innerText = `Pregunta ${preguntaActual + 1} de ${preguntasJuego.length}`;
+            const q = preguntasJuego[preguntaJuegoActual];
+            document.getElementById('num-pregunta').innerText = `Pregunta ${preguntaJuegoActual + 1} de ${preguntasJuego.length}`;
             document.getElementById('afirmacion-texto').innerText = q.texto;
-            
-            // Ocultar feedback y habilitar botones de decisión
-            document.getElementById('feedback-card').className = "hidden p-5 rounded-2xl border flex flex-col gap-3 transition-all duration-300";
+            document.getElementById('feedback-card').classList.add('hidden');
             document.getElementById('botones-accion-juego').classList.remove('hidden');
         }
 
         function responderJuego(seleccion) {
-            const q = preguntasJuego[preguntaActual];
+            const q = preguntasJuego[preguntaJuegoActual];
             const feedbackCard = document.getElementById('feedback-card');
             const feedbackIconContainer = document.getElementById('feedback-icon-container');
             const feedbackTitle = document.getElementById('feedback-title');
             const feedbackExplanation = document.getElementById('feedback-explanation');
-            const botonesAccion = document.getElementById('botones-accion-juego');
             
-            botonesAccion.classList.add('hidden'); // Desactivar respuesta doble
+            document.getElementById('botones-accion-juego').classList.add('hidden');
 
             let esCorrecto = (seleccion === q.tipo);
             if (esCorrecto) {
-                puntaje++;
-                document.getElementById('puntos-juego').innerText = puntaje;
-                
+                puntajeJuego++;
+                document.getElementById('puntos-juego').innerText = puntajeJuego;
                 feedbackCard.className = "p-5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 flex flex-col gap-3 transition-all duration-300";
                 feedbackIconContainer.className = "p-1.5 bg-emerald-600 text-white rounded-full flex items-center justify-center shrink-0";
                 feedbackIconContainer.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
@@ -758,8 +1010,8 @@
         }
 
         function siguientePregunta() {
-            preguntaActual++;
-            if (preguntaActual < preguntasJuego.length) {
+            preguntaJuegoActual++;
+            if (preguntaJuegoActual < preguntasJuego.length) {
                 inicializarPreguntaJuego();
             } else {
                 mostrarResultadoFinalJuego();
@@ -770,13 +1022,13 @@
             const contenedor = document.getElementById('contenedor-juego');
             let medallaHTML = '';
             
-            if (puntaje >= 4) {
+            if (puntajeJuego >= 4) {
                 medallaHTML = `
                     <div class="p-4 bg-emerald-100 text-emerald-600 rounded-full mb-4">
                         <i data-lucide="award" class="w-16 h-16 animate-bounce"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-slate-950">¡Excelente Desempeño!</h3>
-                    <p class="text-slate-600 text-sm max-w-sm mt-2 text-center">Insignia de **Embajador de la Salud Ocupacional e Inclusión** ganada. Demostraste un conocimiento sólido y libre de estigmas.</p>
+                    <p class="text-slate-600 text-sm max-w-sm mt-2 text-center">Insignia de **Embajador de la Salud Ocupacional e Inclusión** ganada.</p>
                 `;
             } else {
                 medallaHTML = `
@@ -784,7 +1036,7 @@
                         <i data-lucide="info" class="w-16 h-16"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-slate-950">Entrenamiento Completado</h3>
-                    <p class="text-slate-600 text-sm max-w-sm mt-2 text-center">Te invitamos a repasar nuevamente las secciones conceptuales para afianzar tus conocimientos sobre la prevención del VIH en la planta.</p>
+                    <p class="text-slate-600 text-sm max-w-sm mt-2 text-center">Te invitamos a repasar nuevamente las secciones conceptuales.</p>
                 `;
             }
 
@@ -792,7 +1044,7 @@
                 <div class="flex flex-col items-center text-center p-6 space-y-4">
                     ${medallaHTML}
                     <div class="bg-slate-50 border border-slate-100 rounded-xl px-6 py-3 font-semibold text-slate-800">
-                        Puntuación final: <span class="text-orange-500 font-bold">${puntaje} de ${preguntasJuego.length}</span> respuestas correctas.
+                        Puntuación: <span class="text-orange-500 font-bold">${puntajeJuego} de ${preguntasJuego.length}</span> correctas.
                     </div>
                     <button onclick="reiniciarJuego()" class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center gap-2">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Intentar Nuevamente
@@ -803,45 +1055,297 @@
         }
 
         function reiniciarJuego() {
-            preguntaActual = 0;
-            puntaje = 0;
-            
-            // Restablecer la estructura de juego inicial
+            preguntaJuegoActual = 0;
+            puntajeJuego = 0;
             document.getElementById('contenedor-juego').innerHTML = `
                 <div class="w-full max-w-lg space-y-6">
                     <div class="flex justify-between items-center">
                         <span class="px-3.5 py-1.5 bg-orange-100 text-orange-600 rounded-lg text-xs font-bold uppercase" id="num-pregunta">Pregunta 1 de 5</span>
                         <span class="text-sm font-semibold text-slate-500">Puntaje: <span id="puntos-juego" class="text-orange-500 font-bold text-base">0</span></span>
                     </div>
-
                     <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 min-h-[110px] flex items-center justify-center text-center">
                         <p id="afirmacion-texto" class="text-slate-800 font-bold text-lg leading-snug">Cargando afirmación...</p>
                     </div>
-
-                    <div class="grid grid-cols-2 gap-4" id="botones-accion-juego">
-                        <button onclick="responderJuego('MITO')" class="btn-game py-4 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform">
-                            <i data-lucide="x-circle" class="w-5 h-5"></i> Mito
-                        </button>
-                        <button onclick="responderJuego('REALIDAD')" class="btn-game py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform">
-                            <i data-lucide="check-circle" class="w-5 h-5"></i> Realidad
-                        </button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="botones-accion-juego">
+                        <button onclick="responderJuego('MITO')" class="btn-game py-4 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform"><i data-lucide="x-circle" class="w-5 h-5"></i> Mito</button>
+                        <button onclick="responderJuego('REALIDAD')" class="btn-game py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md flex items-center justify-center gap-2 transition-transform"><i data-lucide="check-circle" class="w-5 h-5"></i> Realidad</button>
                     </div>
-
                     <div id="feedback-card" class="hidden p-5 rounded-2xl border flex flex-col gap-3 transition-all duration-300">
                         <div class="flex items-center gap-2">
                             <div id="feedback-icon-container" class="p-1 rounded-full text-white"></div>
                             <span id="feedback-title" class="font-extrabold text-sm uppercase tracking-wider">¡Correcto!</span>
                         </div>
-                        <p id="feedback-explanation" class="text-slate-700 text-xs leading-relaxed">Aquí se muestra la explicación.</p>
-                        <button onclick="siguientePregunta()" class="mt-2 self-end px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl flex items-center gap-2.5">
-                            Siguiente <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                        </button>
+                        <p id="feedback-explanation" class="text-slate-700 text-xs leading-relaxed"></p>
+                        <button onclick="siguientePregunta()" class="mt-2 self-end px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl flex items-center gap-2.5">Siguiente <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></button>
                     </div>
-                </div>
-            `;
-            
+                </div>`;
             inicializarPreguntaJuego();
             lucide.createIcons();
+        }
+
+        // ==========================================
+        // 3. MÓDULO 6: EVALUACIÓN Y POWER AUTOMATE
+        // ==========================================
+        
+        function verificarOtraUnidad() {
+            const select = document.getElementById('ev-unidad');
+            const contenedorOtras = document.getElementById('contenedor-otras');
+            if (select.value === 'Otras') {
+                contenedorOtras.classList.remove('hidden');
+            } else {
+                contenedorOtras.classList.add('hidden');
+                document.getElementById('ev-otras').value = '';
+            }
+        }
+
+        // Shuffle tipo Fisher-Yates
+        function mezclarArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function iniciarCuestionario() {
+            const nombre = document.getElementById('ev-nombre').value.trim();
+            const idColab = document.getElementById('ev-id').value.trim();
+            const correo = document.getElementById('ev-correo').value.trim();
+            const puesto = document.getElementById('ev-puesto').value.trim();
+            let unidad = document.getElementById('ev-unidad').value;
+            const errorForm = document.getElementById('error-form');
+
+            if (unidad === 'Otras') {
+                unidad = document.getElementById('ev-otras').value.trim();
+            }
+
+            if (!nombre || !idColab || !correo || !puesto || !unidad) {
+                errorForm.classList.remove('hidden');
+                return;
+            }
+            errorForm.classList.add('hidden');
+
+            // Bloquear inputs
+            document.querySelectorAll('#fase-a input, #fase-a select, #btn-iniciar-examen').forEach(el => {
+                el.disabled = true;
+            });
+
+            // Preparar evaluación
+            generarExamenAleatorio();
+            document.getElementById('fase-b').classList.remove('hidden');
+            
+            // Scroll hacia la sección de preguntas
+            setTimeout(() => {
+                document.getElementById('fase-b').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
+        function generarExamenAleatorio() {
+            // Seleccionar 10 preguntas aleatorias de las 30 disponibles
+            let bancoClonado = JSON.parse(JSON.stringify(BANCO_COMPLETO_PREGUNTAS));
+            let bancoMezclado = mezclarArray(bancoClonado);
+            preguntasAleatorias = bancoMezclado.slice(0, 10);
+            
+            const contenedorPreguntas = document.getElementById('contenedor-preguntas-cuestionario');
+            contenedorPreguntas.innerHTML = '';
+            respuestasUsuario = new Array(10).fill(null);
+
+            preguntasAleatorias.forEach((item, index) => {
+                // Guardar la cadena de la respuesta correcta original antes de mezclar opciones
+                const respuestaCorrectaTexto = item.o[item.c];
+                
+                // Mezclar opciones
+                let opcionesMezcladas = mezclarArray([...item.o]);
+                
+                // Actualizar el índice de la respuesta correcta basándose en el texto
+                item.c = opcionesMezcladas.indexOf(respuestaCorrectaTexto);
+                item.o = opcionesMezcladas;
+
+                let htmlOpciones = '';
+                item.o.forEach((opcionTexto, opIndex) => {
+                    htmlOpciones += `
+                        <label class="relative flex cursor-pointer">
+                            <input type="radio" name="preg_${index}" value="${opIndex}" class="peer sr-only radio-custom" onchange="registrarRespuesta(${index}, ${opIndex})">
+                            <div class="w-full p-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all flex items-start gap-4">
+                                <div class="w-5 h-5 rounded-full border-2 border-slate-300 shrink-0 mt-0.5 radio-circle transition-colors flex items-center justify-center"></div>
+                                <span class="text-sm text-slate-700 font-medium">${opcionTexto}</span>
+                            </div>
+                        </label>
+                    `;
+                });
+
+                const divPregunta = document.createElement('div');
+                divPregunta.className = "bg-white border border-slate-200 p-6 lg:p-8 rounded-3xl shadow-sm";
+                divPregunta.innerHTML = `
+                    <div class="flex items-start gap-4 mb-6">
+                        <span class="flex items-center justify-center bg-slate-900 text-white font-bold w-8 h-8 rounded-lg shrink-0 text-sm">${index + 1}</span>
+                        <h4 class="text-base font-bold text-slate-800 leading-snug">${item.q}</h4>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-0 lg:pl-12">
+                        ${htmlOpciones}
+                    </div>
+                    <!-- Contenedor de feedback oculto inicialmente -->
+                    <div id="eval-feedback-${index}" class="hidden mt-6 pl-0 lg:pl-12">
+                        <div class="p-4 rounded-xl flex gap-3 text-sm">
+                            <i data-lucide="" id="eval-icon-${index}" class="w-5 h-5 shrink-0 mt-0.5"></i>
+                            <div>
+                                <strong id="eval-titulo-${index}" class="block mb-1"></strong>
+                                <p class="leading-relaxed opacity-90">${item.f}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                contenedorPreguntas.appendChild(divPregunta);
+            });
+            lucide.createIcons();
+        }
+
+        function registrarRespuesta(indexPregunta, indexOpcion) {
+            respuestasUsuario[indexPregunta] = indexOpcion;
+        }
+
+        function calificarExamen() {
+            // Verificar que todas estén respondidas
+            if (respuestasUsuario.includes(null)) {
+                alert("Por favor, responda las 10 preguntas antes de finalizar el examen.");
+                return;
+            }
+
+            let puntajeFinal = 0;
+
+            // Evaluar y mostrar feedback visual en cada pregunta
+            preguntasAleatorias.forEach((item, index) => {
+                const esCorrecta = (respuestasUsuario[index] === item.c);
+                const feedbackDiv = document.getElementById(`eval-feedback-${index}`);
+                const innerDiv = feedbackDiv.querySelector('div');
+                const iconDiv = document.getElementById(`eval-icon-${index}`);
+                const tituloDiv = document.getElementById(`eval-titulo-${index}`);
+                
+                // Deshabilitar radios de esta pregunta para evitar cambios post-evaluación
+                document.querySelectorAll(`input[name="preg_${index}"]`).forEach(radio => radio.disabled = true);
+
+                if (esCorrecta) {
+                    puntajeFinal += 10;
+                    innerDiv.className = "p-4 rounded-xl flex gap-3 text-sm bg-emerald-50 text-emerald-900 border border-emerald-200";
+                    iconDiv.setAttribute("data-lucide", "check-circle");
+                    tituloDiv.innerText = "¡Respuesta Correcta!";
+                } else {
+                    innerDiv.className = "p-4 rounded-xl flex gap-3 text-sm bg-rose-50 text-rose-900 border border-rose-200";
+                    iconDiv.setAttribute("data-lucide", "x-circle");
+                    tituloDiv.innerText = "Respuesta Incorrecta";
+                }
+                feedbackDiv.classList.remove('hidden');
+            });
+
+            // Ocultar botón enviar
+            document.getElementById('contenedor-enviar-examen').classList.add('hidden');
+            
+            const estadoAcreditacion = (puntajeFinal >= 80) ? "Aprobado" : "Reprobado";
+            mostrarPanelResultado(puntajeFinal, estadoAcreditacion);
+            enviarResultadosPowerAutomate(puntajeFinal, estadoAcreditacion);
+
+            lucide.createIcons();
+            
+            // Scroll hacia resultados
+            setTimeout(() => {
+                document.getElementById('panel-resultado-final').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+
+        function mostrarPanelResultado(nota, estado) {
+            const panel = document.getElementById('panel-resultado-final');
+            panel.classList.remove('hidden');
+
+            if (estado === "Aprobado") {
+                panel.className = "bg-white border-2 border-emerald-500 rounded-3xl p-8 text-center shadow-2xl shadow-emerald-500/20 relative overflow-hidden mt-8";
+                panel.innerHTML = `
+                    <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="award" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">¡Felicitaciones, Examen Aprobado!</h3>
+                    <p class="text-slate-600 max-w-md mx-auto mb-6">Ha demostrado competencias sólidas en los protocolos de prevención y legislación de salud ocupacional.</p>
+                    <div class="inline-block bg-slate-50 border border-slate-200 rounded-2xl px-8 py-4">
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Nota Final</p>
+                        <p class="text-4xl font-extrabold text-emerald-600">${nota} <span class="text-xl text-slate-400">/ 100</span></p>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-6"><i data-lucide="check" class="w-3 h-3 inline"></i> Sus resultados han sido enviados al comité de SSO exitosamente.</p>
+                `;
+            } else {
+                panel.className = "bg-white border-2 border-rose-500 rounded-3xl p-8 text-center shadow-2xl shadow-rose-500/20 relative overflow-hidden mt-8";
+                panel.innerHTML = `
+                    <div class="w-20 h-20 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="alert-triangle" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Examen Reprobado</h3>
+                    <p class="text-slate-600 max-w-md mx-auto mb-6">La nota mínima para acreditar la capacitación es <strong>80 puntos</strong>. Revise la retroalimentación técnica en cada pregunta anterior para consolidar su aprendizaje.</p>
+                    <div class="inline-block bg-slate-50 border border-slate-200 rounded-2xl px-8 py-4 mb-6">
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Nota Obtenida</p>
+                        <p class="text-4xl font-extrabold text-rose-600">${nota} <span class="text-xl text-slate-400">/ 100</span></p>
+                    </div>
+                    <div>
+                        <button onclick="reintentarExamen()" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl flex items-center gap-2 mx-auto transition-all">
+                            <i data-lucide="rotate-cw" class="w-4 h-4"></i> Intentar de nuevo con preguntas aleatorias
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-6"><i data-lucide="info" class="w-3 h-3 inline"></i> El intento ha quedado registrado en el sistema.</p>
+                `;
+            }
+        }
+
+        function reintentarExamen() {
+            document.getElementById('panel-resultado-final').classList.add('hidden');
+            document.getElementById('contenedor-enviar-examen').classList.remove('hidden');
+            generarExamenAleatorio();
+            document.getElementById('fase-b').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function enviarResultadosPowerAutomate(nota, estado) {
+            let unidadNegocio = document.getElementById('ev-unidad').value;
+            if (unidadNegocio === 'Otras') {
+                unidadNegocio = document.getElementById('ev-otras').value.trim();
+            }
+
+            // Capturar la fecha actual local en formato dd/mm/aaaa
+            const hoy = new Date();
+            const dia = String(hoy.getDate()).padStart(2, '0');
+            const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Enero es 0
+            const anio = hoy.getFullYear();
+            const fechaStr = `${dia}/${mes}/${anio}`;
+
+            // EMPAQUETAR JSON ESTRUCTURADO ESTRICTO
+            const payload = {
+                "NombreCompleto": document.getElementById('ev-nombre').value.trim(),
+                "NumeroCorrelativo": document.getElementById('ev-id').value.trim(),
+                "CorreoElectronico": document.getElementById('ev-correo').value.trim(),
+                "UnidadNegocio": unidadNegocio,
+                "PuestoTrabajo": document.getElementById('ev-puesto').value.trim(),
+                "Fecha": fechaStr,
+                "NotaObtenida": parseInt(nota, 10),
+                "EstadoAcreditacion": estado
+            };
+
+            console.log("Enviando Payload a Power Automate:", payload);
+
+            // Fetch POST
+            fetch(URL_FLOW, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if(response.ok) {
+                    console.log("Datos transmitidos exitosamente a Power Automate.");
+                } else {
+                    console.error("Error en la respuesta del flujo HTTP:", response.status);
+                }
+            })
+            .catch(error => {
+                console.error("Error crítico de red enviando a Power Automate:", error);
+            });
         }
     </script>
 </body>
