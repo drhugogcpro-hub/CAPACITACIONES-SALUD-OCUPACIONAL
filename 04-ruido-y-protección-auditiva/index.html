@@ -44,11 +44,23 @@
         }
     </style>
 </head>
-<body class="flex min-h-screen bg-slate-50 text-slate-800 flex-col md:flex-row">
+<body class="flex min-h-screen bg-slate-50 text-slate-800 flex-col lg:flex-row">
 
-    <!-- BARRA LATERAL DE NAVEGACIÓN -->
-    <aside class="w-full md:w-80 bg-slate-900 text-white flex flex-col justify-between sticky top-0 md:h-screen shrink-0 z-20 border-r border-slate-800 shadow-xl">
-        <div class="p-5 overflow-y-auto max-h-[85vh] md:max-h-none">
+    <!-- BOTÓN HAMBURGUESA: VISIBLE SOLO EN CELULARES Y TABLETS -->
+    <button id="btnHamburguesa" onclick="abrirMenuMovil()" class="fixed top-4 left-4 z-30 lg:hidden bg-slate-900 text-white p-3 rounded-xl shadow-lg border border-slate-700 flex items-center justify-center transition-transform active:scale-95" aria-label="Abrir menú de navegación">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+
+    <!-- OVERLAY GRIS OSCURO SEMITRANSPARENTE CON DESENFOQUE (BACKDROP-BLUR) PARA EL MENÚ MÓVIL -->
+    <div id="menuOverlay" onclick="cerrarMenuMovil()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden lg:hidden"></div>
+
+    <!-- BARRA LATERAL DE NAVEGACIÓN: OCULTA POR DEFECTO EN MÓVIL/TABLET (-translate-x-full), FIJA VISIBLE EN PC -->
+    <aside id="sidebarNav" class="fixed lg:sticky top-0 left-0 w-80 max-w-[85vw] h-screen bg-slate-900 text-white flex flex-col justify-between shrink-0 z-50 lg:z-20 border-r border-slate-800 shadow-xl transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+        <!-- BOTÓN PARA CERRAR EL MENÚ EN MÓVIL/TABLET -->
+        <button onclick="cerrarMenuMovil()" class="lg:hidden absolute top-4 right-4 z-10 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors" aria-label="Cerrar menú de navegación">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="p-5 overflow-y-auto flex-1">
             <!-- LOGO DE LA ORGANIZACIÓN Y TÍTULO -->
             <div class="flex flex-col gap-3 mb-6">
                 <div class="flex items-center gap-3">
@@ -133,7 +145,7 @@
     </aside>
 
     <!-- CUERPO PRINCIPAL DE CONTENIDOS -->
-    <main class="flex-1 overflow-y-auto p-6 md:p-12 max-w-5xl w-full mx-auto">
+    <main id="contenidoPrincipal" class="flex-1 overflow-y-auto p-6 pt-20 lg:p-12 max-w-5xl w-full mx-auto">
         
         <!-- MODULO: OBJETIVO DE LA CAPACITACIÓN -->
         <section id="modulo-objetivo" class="modulo activo space-y-6">
@@ -200,9 +212,12 @@
             </div>
 
             <!-- Botonera de control -->
-            <div class="flex justify-end pt-4">
+            <div class="flex justify-between pt-4">
+                <button disabled class="bg-slate-100 text-slate-400 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 opacity-60 cursor-not-allowed">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+                </button>
                 <button onclick="completarModulo('modulo-objetivo', 'modulo-m1')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Entendido y Continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -288,10 +303,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-objetivo', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m1', 'modulo-m2')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -384,10 +399,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m1', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m2', 'modulo-m3')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -448,10 +463,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m2', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m3', 'modulo-m4')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -505,10 +520,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m3', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m4', 'modulo-simulador')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Ver Simulador Interactivo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -680,10 +695,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m4', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-simulador', 'modulo-m5')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Comprendido, pasar a M5 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -784,10 +799,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-simulador', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m5', 'modulo-m6')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -860,10 +875,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m5', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m6', 'modulo-m7')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -926,10 +941,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m6', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m7', 'modulo-m8')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -993,10 +1008,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m7', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m8', 'modulo-m9')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Completado, continuar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -1070,10 +1085,10 @@
             <!-- Botonera de control -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m8', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <button onclick="completarModulo('modulo-m9', 'modulo-m10')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all">
-                    Ir a la Evaluación Final <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    Siguiente <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </section>
@@ -1088,27 +1103,106 @@
                 <p class="text-slate-500 text-sm mt-1">Resuelve la evaluación oficial integrada de forma digital.</p>
             </div>
 
-            <!-- Contenedor del Iframe con cargador de seguridad -->
-            <div class="w-full bg-white border border-slate-200 rounded-3xl p-4 md:p-6 shadow-md flex flex-col items-center">
-                <div class="w-full max-w-4xl bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 relative min-h-[600px] shadow-inner">
-                    <!-- INTEGRACIÓN DEL FORMULARIO EXTERNO DE MICROSOFT FORMS -->
-                    <iframe width="100%" height="650px" src="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=R74bQeX7JUCmrieWPa2zRnkQANe8zvtBtjOVN904RcNUMFNZQVZaRTdRUFBGTDMwT09LWDk5VEVGNS4u&embed=true" frameborder="0" marginwidth="0" marginheight="0" style="border: none; width: 100%; min-height: 650px; background-color: white;" allowfullscreen webkitallowfullscreen mozallowfullscreen msallowfullscreen></iframe>
+            <!-- Aviso informativo de la evaluación nativa -->
+            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                <p class="leading-relaxed"><strong>Evaluación oficial integrada.</strong> Completa la <strong>Fase A</strong> con tus datos de identidad y después resuelve la <strong>Fase B</strong>: un examen de <strong>20 preguntas aleatorias</strong> (5 puntos cada una, nota máxima 100). Acreditas con <strong>80 puntos o más</strong>. Cada intento se reporta automáticamente al registro corporativo de SSO.</p>
+            </div>
+
+            <!-- ============================================================
+                 FASE A: FORMULARIO DE IDENTIDAD DEL COLABORADOR
+                 ============================================================ -->
+            <div id="faseIdentidad" class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-5">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                    <div class="bg-emerald-100 text-emerald-600 p-2.5 rounded-xl shrink-0">
+                        <i data-lucide="id-card" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-950 text-base">Fase A: Identidad del Colaborador</h3>
+                        <p class="text-slate-500 text-xs">Todos los campos son obligatorios. Se bloquearán al confirmar para evitar alteraciones.</p>
+                    </div>
                 </div>
-                
-                <div class="mt-4 flex items-center gap-2 text-[10px] text-slate-400 font-mono">
-                    <i data-lucide="lock" class="w-3.5 h-3.5 text-emerald-500"></i>
-                    <span>Conexión de Seguridad Cifrada Sincronizada • SSO Corporativo Microsoft Forms</span>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label for="inpNombre" class="text-xs font-bold text-slate-700">Nombre Completo <span class="text-red-500">*</span></label>
+                        <input id="inpNombre" type="text" placeholder="Ej: Juan Carlos Pérez López" autocomplete="name" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500 transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label for="inpCorrelativo" class="text-xs font-bold text-slate-700">Número de Correlativo / Ficha ID <span class="text-red-500">*</span></label>
+                        <input id="inpCorrelativo" type="text" placeholder="Ej: CEM-04521" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500 transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label for="inpCorreo" class="text-xs font-bold text-slate-700">Correo Electrónico <span class="text-red-500">*</span></label>
+                        <input id="inpCorreo" type="email" placeholder="nombre.apellido@empresa.com" autocomplete="email" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500 transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label for="inpPuesto" class="text-xs font-bold text-slate-700">Puesto de Trabajo <span class="text-red-500">*</span></label>
+                        <input id="inpPuesto" type="text" placeholder="Ej: Operador de Molino" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500 transition-all">
+                    </div>
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label for="selUnidad" class="text-xs font-bold text-slate-700">Unidad de Negocio <span class="text-red-500">*</span></label>
+                        <select id="selUnidad" onchange="alternarCampoOtras(this.value)" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500 transition-all">
+                            <option value="">— Selecciona tu unidad de negocio —</option>
+                            <option value="Planta San Gabriel CEMPRO">Planta San Gabriel CEMPRO</option>
+                            <option value="Planta Punta Sur (Puerto Quetzal) CEMPRO">Planta Punta Sur (Puerto Quetzal) CEMPRO</option>
+                            <option value="Planta Alicion (Puerto Barrios) CEMPRO">Planta Alicion (Puerto Barrios) CEMPRO</option>
+                            <option value="NH Services">NH Services</option>
+                            <option value="Otras">Otras</option>
+                        </select>
+                    </div>
+                    <div id="contenedorOtraUnidad" class="space-y-1.5 md:col-span-2 hidden">
+                        <label for="inpOtraUnidad" class="text-xs font-bold text-slate-700">Especifica tu Unidad de Negocio <span class="text-red-500">*</span></label>
+                        <input id="inpOtraUnidad" type="text" placeholder="Escribe el nombre de tu unidad de negocio" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:bg-slate-100 disabled:text-slate-500 transition-all">
+                    </div>
+                </div>
+
+                <p id="errIdentidad" class="hidden text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3"></p>
+
+                <div class="flex justify-end pt-1">
+                    <button id="btnConfirmarIdentidad" onclick="confirmarIdentidadEIniciar()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-emerald-600/20 flex items-center gap-2 transition-all w-full sm:w-auto justify-center">
+                        <i data-lucide="lock" class="w-4 h-4"></i> Confirmar Identidad e Iniciar Cuestionario
+                    </button>
                 </div>
             </div>
 
-            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 text-center">
-                <strong>¡Excelente Trabajo!</strong> Una vez finalizada tu evaluación de forma satisfactoria en el recuadro superior, avisa a tu supervisor de Higiene y Seguridad para registrar de forma oficial tu participación e idoneidad.
+            <!-- ============================================================
+                 FASE B: CUESTIONARIO DINÁMICO DE 20 PREGUNTAS ALEATORIAS
+                 ============================================================ -->
+            <div id="faseCuestionario" class="hidden space-y-6">
+                <!-- Tarjeta de sesión del examen -->
+                <div class="bg-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i> Fase B: Cuestionario Oficial
+                        </div>
+                        <span id="badgeIntento" class="bg-orange-500 text-slate-950 font-extrabold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">Intento #1</span>
+                    </div>
+                    <div id="resumenIdentidad" class="flex flex-wrap gap-2 text-[11px]"></div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed border-t border-slate-800 pt-3">
+                        Examen de <strong class="text-white">20 preguntas aleatorias</strong> extraídas del banco maestro · Cada pregunta vale <strong class="text-white">5 puntos</strong> · Nota máxima <strong class="text-white">100 pts</strong> · Nota mínima para aprobar: <strong class="text-emerald-400">80 pts</strong>. El orden de las opciones (A, B, C, D) se baraja en cada intento.
+                    </p>
+                </div>
+
+                <!-- Contenedor donde el script pinta dinámicamente las 20 preguntas -->
+                <div id="contenedorPreguntas" class="space-y-5"></div>
+
+                <p id="avisoExamen" class="hidden text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-center"></p>
+
+                <div class="flex justify-center pt-2">
+                    <button id="btnFinalizar" onclick="finalizarIntento()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm px-8 py-3.5 rounded-xl shadow-lg shadow-orange-600/20 flex items-center gap-2 transition-all w-full sm:w-auto justify-center">
+                        <i data-lucide="send" class="w-4 h-4"></i> Finalizar y Calificar Examen
+                    </button>
+                </div>
+
+                <!-- PANEL DE RESULTADOS (APROBADO / REPROBADO) -->
+                <div id="panelResultado" class="hidden"></div>
             </div>
 
             <!-- Botonera de control final -->
             <div class="flex justify-between pt-4">
                 <button onclick="cambiarModulo('modulo-m9', this)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 transition-all">
-                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver a Repasar
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
                 </button>
                 <div class="bg-emerald-600 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-emerald-600/10 flex items-center gap-2">
                     <i data-lucide="award" class="w-4 h-4"></i> ¡Capacitación Terminada!
@@ -1190,8 +1284,32 @@
             // Re-dibujar iconos de Lucide por si se pintan de nuevo
             lucide.createIcons();
             
+            // Cerrar automáticamente el menú lateral al navegar en pantallas de celular/tablet
+            if (window.innerWidth < 1024) {
+                cerrarMenuMovil();
+            }
+
             // Scroll arriba suave de la vista de contenidos al cambiar de módulo
+            const areaContenido = document.getElementById('contenidoPrincipal');
+            if (areaContenido) {
+                areaContenido.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // FUNCIONES DEL MENÚ LATERAL RESPONSIVO (BOTÓN HAMBURGUESA)
+        function abrirMenuMovil() {
+            const sidebar = document.getElementById('sidebarNav');
+            const overlay = document.getElementById('menuOverlay');
+            if (sidebar) sidebar.classList.remove('-translate-x-full');
+            if (overlay) overlay.classList.remove('hidden');
+        }
+
+        function cerrarMenuMovil() {
+            const sidebar = document.getElementById('sidebarNav');
+            const overlay = document.getElementById('menuOverlay');
+            if (sidebar && window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
+            if (overlay) overlay.classList.add('hidden');
         }
 
         // Función para validar la compleción de un módulo y mover al siguiente de manera automatizada
@@ -1383,6 +1501,428 @@
                 textoCilia.textContent = "Daño Auditivo Permanente e Irreversible";
                 textoCilia.className = "text-red-500 font-bold";
             }
+        }
+
+        /* ============================================================
+           CONEXIÓN CON MICROSOFT POWER AUTOMATE
+           Pega aquí la URL HTTPS de tu flujo (trigger: "When an HTTP
+           request is received") y el sistema enviará el resultado de
+           cada intento de evaluación de forma automática.
+           ============================================================ */
+        const URL_FLOW = "https://default411bbe47fbe54025a6ae27963dadb3.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/8d0ab3c1ee15403ab6362b1234bda925/triggers/manual/paths/invoke?api-version=1";
+
+        /* ============================================================
+           BANCO MAESTRO DE PREGUNTAS (50 ÍTEMS)
+           Tema: Ruido Laboral y Protección Auditiva en la Industria
+           de Cemento. Formato:
+           q = pregunta | o = 4 opciones | c = índice de la respuesta
+           correcta original (0-3) | f = retroalimentación técnica
+           ============================================================ */
+        const BANCO_COMPLETO_PREGUNTAS = [
+            { q: "¿Cuál es la diferencia técnica fundamental entre sonido y ruido en higiene ocupacional?", o: ["El sonido es una vibración acústica agradable o útil; el ruido es un sonido molesto, inútil o de intensidad perjudicial que puede dañar el oído", "El sonido viaja únicamente por el aire y el ruido solo se transmite por estructuras metálicas", "El ruido siempre supera los 120 dB y el sonido jamás pasa de 60 dB", "No existe diferencia técnica; son términos completamente sinónimos"], c: 0, f: "El sonido es toda vibración acústica que se propaga por un medio elástico; se clasifica como ruido cuando resulta no deseado, interfiere la comunicación o alcanza niveles capaces de destruir las células ciliadas del oído interno." },
+            { q: "¿En qué unidad se expresa el nivel de presión sonora en las mediciones industriales?", o: ["Pascal por metro cuadrado", "Hertz (Hz)", "Decibel (dB)", "Lumen acústico"], c: 2, f: "El nivel de presión sonora se mide en decibeles (dB), una escala logarítmica que comprime el enorme rango de presiones que el oído humano es capaz de percibir." },
+            { q: "¿Qué representa el filtro de ponderación dB(A) utilizado en los sonómetros?", o: ["Un filtro que elimina los graves para medir únicamente maquinaria neumática", "Una ponderación que ajusta las frecuencias a la forma en que el oído humano percibe y sufre el sonido; es el estándar legal obligatorio en la industria", "Una escala que mide la distancia de propagación del sonido en metros", "Un filtro de uso exclusivo en audífonos médicos calibrados"], c: 1, f: "La ponderación A atenúa las frecuencias muy graves y muy agudas imitando la respuesta del oído humano; por ello la normativa de higiene ocupacional exige reportar la exposición en dB(A)." },
+            { q: "¿Cuál es el límite de acción ocupacional de referencia para una jornada de 8 horas?", o: ["75 dB(A)", "80 dB(A)", "85 dB(A)", "95 dB(A)"], c: 2, f: "85 dB(A) por 8 horas es el límite de acción ocupacional (criterio NIOSH/OSHA): a partir de ese nivel son obligatorios el EPP auditivo, la vigilancia médica y el Programa de Conservación Auditiva." },
+            { q: "¿Qué es la 'dosis de ruido' de un trabajador?", o: ["La relación entre el nivel de presión sonora y el tiempo real de exposición del trabajador durante su jornada", "La cantidad de ruido máxima que una máquina puede emitir por ley", "El número de tapones auditivos que se entregan al mes por trabajador", "El volumen promedio de la música permitida en áreas administrativas"], c: 0, f: "La dosis combina intensidad (dB) y tiempo de exposición normalizado a 8 horas; un nivel alto por poco tiempo puede dosificar igual que uno moderado sostenido, y de ambos depende el daño." },
+            { q: "Según el criterio de NIOSH, ¿qué sucede con el tiempo de exposición seguro por cada incremento de 3 dB(A) sobre 85 dB(A)?", o: ["El tiempo seguro se duplica", "El tiempo seguro no se modifica; solo importa el pico máximo", "Se suman 30 minutos adicionales", "El tiempo seguro se reduce exactamente a la mitad"], c: 3, f: "Con la tasa de intercambio de 3 dB: 85 dB(A) permite 8 h; 88 → 4 h; 91 → 2 h; 94 → 1 h; 97 → 30 min; 100 → 15 min. La energía sonora se duplica con cada incremento de 3 dB." },
+            { q: "De acuerdo con la tasa de intercambio de 3 dB, ¿cuál es el tiempo máximo de exposición diaria permitido a 88 dB(A)?", o: ["8 horas", "4 horas", "2 horas", "1 hora"], c: 1, f: "88 − 85 = 3 dB de incremento, por lo que el tiempo se divide entre dos: de 8 horas pasa a 4 horas máximo por jornada." },
+            { q: "¿Cuál es el tiempo máximo de exposición diaria permitido a 100 dB(A) según el criterio NIOSH?", o: ["2 horas", "1 hora", "30 minutos", "15 minutos"], c: 3, f: "100 − 85 = 15 dB, es decir cinco reducciones sucesivas a la mitad: 8 h → 4 h → 2 h → 1 h → 30 min → 15 min. Por eso la molienda de clinker exige doble protección y mínima permanencia." },
+            { q: "¿Qué es la fatiga auditiva o desplazamiento temporal del umbral?", o: ["La pérdida auditiva permanente sin posibilidad de recuperación", "La sordera temporal al final del turno que se recupera con 12 a 16 horas de descanso auditivo", "Una infección del oído medio con supuración", "El zumbido crónico e incurable del oído interno"], c: 1, f: "La fatiga auditiva es reversible con descanso, pero es una señal de alarma crítica: si la sobreexposición se repite a diario, el desplazamiento temporal se convierte en pérdida permanente." },
+            { q: "¿Qué es la Hipoacusia Inducida por Ruido (HIR)?", o: ["Pérdida auditiva permanente e irreversible por destrucción de las células ciliadas del oído interno", "Un tapón de cerumen producido por el polvo de la planta", "Una alergia temporal al material de los protectores auditivos", "Una sordera psicológica que desaparece con terapia"], c: 0, f: "La HIR es una patología ocupacional sin tratamiento ni cirugía reconstructiva: inicia en frecuencias agudas (alrededor de 4.000 Hz) y avanza de forma gradual e indolora." },
+            { q: "¿Por qué el daño auditivo ocupacional es irreversible?", o: ["Porque el tímpano no puede repararse quirúrgicamente", "Porque el nervio auditivo se atrofia con la edad", "Porque las células ciliadas humanas no tienen capacidad de regeneración", "Porque el cerumen endurecido bloquea el conducto de forma definitiva"], c: 2, f: "Las células ciliadas de la cóclea mueren por la sobrecarga sonora y el cuerpo humano no las regenera; ningún medicamento ni cirugía las restaura. Solo la prevención funciona." },
+            { q: "¿Qué es el tinnitus o acúfeno?", o: ["Un zumbido, silbido o chasquido constante percibido sin fuente sonora externa, frecuente tras la exposición a ruido", "La inflamación visible del pabellón de la oreja", "La pérdida total e inmediata del equilibrio corporal", "Una secreción de líquido por infección bacteriana"], c: 0, f: "El tinnitus es un síntoma precoz de daño coclear; cuando se vuelve crónico genera insomnio, ansiedad y desesperación. Reportarlo a tiempo permite actuar antes de que el daño avance." },
+            { q: "¿Cuál de los siguientes NO es un efecto no auditivo del ruido laboral?", o: ["Elevación sostenida de la presión arterial y taquicardia", "Aumento del cortisol e irritabilidad interpersonal", "Insomnio y mala recuperación física diaria", "Ceguera nocturna progresiva"], c: 3, f: "El ruido produce efectos cardiovasculares, hormonales (estrés), del sueño y de concentración, pero no daña la vista. Reconocer su impacto sistémico refuerza la cultura preventiva." },
+            { q: "¿Cómo contribuye el ruido a la accidentabilidad en planta?", o: ["Enmascara alarmas y avisos, dificulta la comunicación y reduce la concentración táctica del personal", "Provoca temblores en las manos que impiden operar herramientas", "Calienta el ambiente y produce fatiga térmica", "No tiene ninguna relación con los accidentes de trabajo"], c: 0, f: "El enmascaramiento de señales de alarma y la fatiga cognitiva explican parte de los incidentes en plantas ruidosas; controlar el ruido también es controlar accidentes." },
+            { q: "¿Qué es y cómo se usa un dosímetro personal de ruido?", o: ["Un medidor que se instala fijo en la pared del área más ruidosa", "Un equipo portátil que se sujeta en el collarín u hombro, cerca del oído, y registra la dosis real acumulada durante toda la jornada", "Un audífono médico para medir la sordera del trabajador", "Un sensor que se coloca dentro del oído durante la audiometría"], c: 1, f: "La dosimetría personal mide la exposición real del trabajador en movimiento y es el método de referencia para comparar contra el límite de 85 dB(A) en 8 horas." },
+            { q: "Si el higienista te instala un dosímetro, ¿qué debes hacer durante la jornada?", o: ["Trabajar con total normalidad, sin soplar, golpear o tapar el micrófono, y sin quitarte el equipo", "Apagarlo en las zonas ruidosas para no dañarlo", "Quitártelo durante el almuerzo y reinstalarlo al día siguiente", "Gritarle al micrófono cada hora para verificar que funcione"], c: 0, f: "Manipular el micrófono genera lecturas falsas que invalidan el estudio: pueden ocultar un riesgo real o simular uno inexistente, perjudicando los controles que te protegen." },
+            { q: "¿Para qué se utiliza el sonómetro integrador clase 1 en la planta?", o: ["Para medir la dosis personal de cada trabajador en movimiento", "Para realizar mediciones puntuales del nivel de ruido en áreas fijas y levantar estudios de higiene industrial", "Para calibrar los tapones auditivos de espuma", "Para medir la temperatura de los hornos rotatorios"], c: 1, f: "El sonómetro de precisión clase 1 mide posiciones fijas del ambiente; el dosímetro mide personas. Ambos métodos se complementan en la evaluación higiénica del ruido." },
+            { q: "¿Qué es un Mapa de Ruido de la planta?", o: ["Un plano de evacuación en caso de emergencia por incendio", "Una zonificación gráfica que identifica las áreas críticas de ruido y dónde es obligatorio el uso de EPP auditivo", "Un croquis con la ubicación de los extintores", "Una gráfica de producción diaria de cemento"], c: 1, f: "El mapa de ruido permite señalizar zonas, restringir el acceso a personal no autorizado y planear controles de ingeniería donde más se necesitan." },
+            { q: "Según la jerarquía de controles, ¿cuál es la PRIMERA medida que debe intentarse para mitigar el ruido?", o: ["Entregar tapones auditivos a todo el personal", "Rotar al personal cada dos horas", "Eliminar completamente el proceso ruidoso mediante reingeniería", "Colocar señalización de advertencia en el área"], c: 2, f: "La jerarquía prioriza atacar el peligro en su origen: eliminación, sustitución, controles de ingeniería, controles administrativos y, como última opción técnica, el EPP." },
+            { q: "¿Por qué el EPP auditivo es considerado la ÚLTIMA línea de defensa?", o: ["Porque no elimina el peligro de la fuente y su eficacia depende por completo del uso correcto y constante del trabajador", "Porque es el control más caro que existe", "Porque la ley prohíbe usarlo como primera opción de diseño", "Porque solo protege contra ruidos menores a 60 dB(A)"], c: 0, f: "El EPP solo protege si está bien colocado el 100% del tiempo de exposición; los controles superiores reducen el riesgo para todos sin depender del factor humano." },
+            { q: "¿Cuál de las siguientes es una medida de control de INGENIERÍA contra el ruido?", o: ["Rotación de personal cada dos horas", "Encapsular el molino con cabina acústica e instalar silenciadores neumáticos", "Comprar tapones de mayor NRR", "Colocar letreros de 'Uso obligatorio de EPP'"], c: 1, f: "Las cabinas acústicas, silenciadores, amortiguadores de vibración y la lubricación de bandas atacan el ruido en la fuente o en su trayectoria, antes de llegar al oído." },
+            { q: "¿Cuál es un ejemplo de control ADMINISTRATIVO del ruido?", o: ["Rotación de personal y reducción programada del tiempo de permanencia en zonas críticas", "Instalación de cabinas acústicas en el molino", "Sustitución de engranajes por bandas transportadoras", "Entrega gratuita de orejeras de copa"], c: 0, f: "Los controles administrativos modifican la organización del trabajo (rotaciones, permisos de acceso, señalización) para reducir la dosis individual de exposición." },
+            { q: "¿Cuál es un ejemplo de SUSTITUCIÓN dentro de la jerarquía de controles de ruido?", o: ["Cambiar transmisiones por engranajes ruidosos por sistemas de transmisión por correa de bajo impacto acústico", "Sustituir al operario por otro más joven con mejor oído", "Cambiar la marca de los tapones auditivos", "Sustituir el turno de día por turno de noche"], c: 0, f: "Sustituir tecnología ruidosa por equivalentes modernos silenciosos elimina el exceso de ruido en origen, con beneficio permanente para toda el área." },
+            { q: "¿Qué caracteriza a los tapones desechables de espuma (poliuretano)?", o: ["Ofrecen la mayor atenuación nominal (NRR ~29) si se enrollan e insertan profundamente de forma correcta", "Son reutilizables por meses con solo sacudirlos", "Se colocan sobre la oreja sin entrar al conducto", "Tienen atenuación cero en ambientes de cemento"], c: 0, f: "La espuma se expande sellando el conducto auditivo y ofrece el NRR más alto del mercado; pero mal colocada, su protección real cae a una fracción del valor de etiqueta." },
+            { q: "¿Cuál es la técnica CORRECTA para colocarse un tapón de espuma?", o: ["Enrollarlo fino, jalar el pabellón de la oreja hacia arriba y atrás, insertarlo profundo y sostenerlo hasta que se expanda", "Meterlo sin enrollar, lo más superficial posible", "Humedecerlo con saliva para que resbale mejor", "Cortarlo a la mitad para que no sobresalga de la oreja"], c: 0, f: "Jalar la oreja hacia arriba y atrás endereza el conducto auditivo; sin ese paso el tapón queda suelto, sobresale visiblemente y protege muy poco." },
+            { q: "¿Qué ventaja ofrecen los tapones reutilizables de silicona en una planta cementera?", o: ["Son lavables, higiénicos para ambientes con polvo fino de clinker y traen cordón de seguridad", "No necesitan limpieza nunca", "Se comparten entre todo el equipo de turno", "Atenúan el doble que cualquier otro protector"], c: 0, f: "Su diseño de falanges permite lavarlos a diario con agua y jabón neutro, ideales para turnos largos con polvo mineral; el cordón evita pérdidas en campo." },
+            { q: "¿Qué son las orejeras de copa?", o: ["Copas rígidas con almohadillas que cubren toda la oreja y pueden acoplarse directamente al casco de seguridad", "Tapones de cera que se moldean con los dedos", "Audífonos con música para motivar al personal", "Un casco completo con visor antipolvo"], c: 0, f: "Las copas sellan alrededor del pabellón auricular; son prácticas para uso intermitente, para conductos pequeños o irritados, y existen versiones acoplables al casco." },
+            { q: "¿Qué efecto tienen las patillas de los lentes de seguridad sobre las orejeras de copa?", o: ["Ninguno; son totalmente compatibles siempre", "Crean un canal de fuga que rompe el sellado y reduce la atenuación real del protector", "Aumentan la protección al presionar la copa", "Deshabilitan el casco de seguridad"], c: 1, f: "Cualquier objeto entre la almohadilla y la piel (patillas, cabello, pasamontañas) fuga sonido hacia el interior; verifica siempre el sellado completo de la copa." },
+            { q: "¿Cuándo se recomienda la doble protección auditiva (tapón + orejera)?", o: ["En ambientes de ruido extremo, típicamente por encima de 100 dB(A), como trituración o molienda", "En oficinas con aire acondicionado ruidoso", "Solo durante las audiometrías anuales", "Nunca; está prohibida por ergonomía"], c: 0, f: "La doble protección aporta aproximadamente 5 dB adicionales sobre la mejor protección individual; se exige en zonas de peligro extremo como la trituradora (~108 dB(A))." },
+            { q: "¿Cómo se estima la atenuación REAL de campo de un protector auditivo (de-rating OSHA/NIOSH)?", o: ["Reducción real ≈ (NRR − 7) × 50%, por las condiciones imperfectas de ajuste en el trabajo real", "Reducción real = NRR × 2, por seguridad", "Reducción real = NRR exacto de la etiqueta", "Reducción real = NRR + 15 dB en plantas cementeras"], c: 0, f: "El NRR se obtiene en laboratorio con ajuste perfecto; en campo los trabajadores no logran ese ajuste, por eso se corrige: un NRR 29 rinde solo ~11 dB reales en el oído." },
+            { q: "Un operario está en molienda a 102 dB(A) con tapones de espuma de atenuación real ~11 dB. ¿Qué nivel llega a su oído?", o: ["≈ 91 dB(A): sigue en zona de riesgo alto", "≈ 73 dB(A): totalmente seguro", "≈ 85 dB(A): exactamente en el límite sin riesgo", "0 dB(A): el tapón anula por completo el ruido"], c: 0, f: "102 − 11 = 91 dB(A): incluso con EPP el nivel supera el límite de acción; por eso en molienda se requiere doble protección, rotación y controles de ingeniería." },
+            { q: "¿Qué significa la sigla NRR impresa en el empaque de un protector auditivo?", o: ["Noise Reduction Rating: índice nominal de reducción de ruido medido en laboratorio", "Nivel de Ruido Residual de la planta", "Norma de Riesgo Reglamentaria nacional", "Número de Reutilizaciones Recomendadas"], c: 0, f: "El NRR orienta la selección del EPP según el nivel de ruido del puesto, pero siempre debe corregirse (de-rating) para estimar la protección real en campo." },
+            { q: "¿Cuál es la limpieza correcta de los tapones reutilizables?", o: ["Lavarlos al final del turno con agua limpia y jabón neutro, y dejarlos secar al aire lejos del polvo", "Sumergirlos en cloro puro toda la noche", "Frotarlos con solvente o thinner", "Guardarlos sucios y lavarlos una vez al mes"], c: 0, f: "La higiene diaria con jabón neutro evita otitis y dermatitis del conducto; los solventes y el cloro degradan la silicona y destruyen el material." },
+            { q: "¿Cómo debes almacenar tus protectores auditivos fuera del turno?", o: ["En su estuche plástico limpio original; nunca sueltos en bolsas del overol o caja de herramientas", "Colgados del retrovisor del vehículo", "Dentro del casco junto con herramientas", "En el bolsillo con tornillos y tuercas"], c: 0, f: "Guardarlos sueltos los contamina con polvo de sílice y grasa, los deforma y acorta su vida útil; el estuche limpio conserva su higiene y su forma de sellado." },
+            { q: "¿En qué momento debes solicitar el reemplazo de tu protector auditivo?", o: ["Cuando la espuma o goma está agrietada, dura, deformada o perdió elasticidad", "Únicamente cuando se pierde", "Cada cinco años, sin excepción", "Nunca; los protectores no se desgastan"], c: 0, f: "Un EPP deteriorado ya no sella el conducto: los desechables son de un solo uso y los reutilizables se reemplazan ante cualquier grieta, dureza o deformación visible." },
+            { q: "¿Qué sucede si recortas o perforas tus tapones de espuma para 'hacerlos más cómodos'?", o: ["Destruyes su atenuación acústica y te quedas prácticamente sin protección", "Mejoras su ventilación sin perder protección", "Aumentas el NRR del protector", "Solo cambia el color, no la función"], c: 0, f: "Cualquier corte o perforación rompe el sello acústico del protector; está estrictamente prohibido modificar el diseño original del EPP." },
+            { q: "¿Por qué nunca debes compartir tus tapones reutilizables o personalizados?", o: ["Porque propaga hongos e infecciones bacterianas; el protector auditivo es de uso estrictamente personal", "Porque se estiran y ya no entran en tu oído", "Porque la ley solo castiga compartir cascos", "Porque pierden el color institucional"], c: 0, f: "El intercambio de tapones transmite flora patógena entre conductos auditivos causando otitis graves; cada colaborador debe tener y cuidar los suyos." },
+            { q: "¿Por qué es peligroso colocarse los tapones con las manos sucias en planta?", o: ["El polvo fino de sílice y caliza se adhiere al tapón y puede lastimar e infectar el conducto auditivo al empujarlo", "El tapón cambia de color y pierde validez", "Las manos sucias hacen que el tapón no entre", "No hay ningún peligro, es solo una recomendación estética"], c: 0, f: "En planta cementera el polvo mineral es abrasivo y portador de microorganismos: lava tus manos antes de manipular el EPP para evitar otitis y lesiones del conducto." },
+            { q: "¿Qué es la audiometría ocupacional y con qué frecuencia se realiza?", o: ["Un examen auditivo anual en cabina sonoamortiguada que detecta temprano las caídas de los umbrales auditivos", "Un examen de vista cada cinco años", "Una prueba de esfuerzo cardíaco semestral", "Una entrevista psicológica opcional"], c: 0, f: "Comparar las audiometrías anuales permite detectar desplazamientos de umbral antes de que se conviertan en hipoacusia incapacitante; asistir puntualmente es tu responsabilidad." },
+            { q: "¿Qué es el Programa de Conservación Auditiva (PCA)?", o: ["El conjunto integrado de mediciones, controles, entrega de EPP, audiometrías y capacitación continua para evitar la pérdida auditiva ocupacional", "Un seguro de gastos médicos mayores", "Un programa de música relajante para la planta", "Un club deportivo para operarios"], c: 0, f: "El PCA integra la vigilancia higiénica (mapas, dosimetrías) con la vigilancia médica (audiometrías) y la capacitación; su éxito depende de tu participación activa." },
+            { q: "¿Qué pasa si te quitas el EPP durante una hora dentro de un área de 100 dB(A)?", o: ["Prácticamente anulas la protección lograda en el resto del día; el EPP debe usarse de forma ininterrumpida", "No pasa nada si el resto del día lo usaste", "Solo afecta si tienes más de 50 años", "El oído se recupera con 5 minutos de descanso"], c: 0, f: "La protección efectiva cae drásticamente con minutos de no uso dentro del área ruidosa: una hora sin EPP a 100 dB(A) consume varias veces la dosis segura del día." },
+            { q: "¿Cuál de estos es un síntoma de alarma temprana de daño auditivo?", o: ["Zumbidos o silbidos al estar en silencio o al intentar dormir (tinnitus)", "Dolor de espalda al final del turno", "Comezón en las manos por el cemento", "Sed excesiva por el calor del horno"], c: 0, f: "El tinnitus tras la jornada es la primera señal de sobrecarga coclear; repórtalo al médico ocupacional sin esperar a que se vuelva constante." },
+            { q: "Si escuchas que la gente te habla pero no logras distinguir con claridad las palabras, ¿qué puede estar indicando?", o: ["Pérdida auditiva en las frecuencias del habla: se oye el volumen pero se pierde la nitidez para entender", "Que tus compañeros hablan muy bajo a propósito", "Un problema de atención sin relación con el oído", "Un exceso de cerumen sin importancia médica"], c: 0, f: "La HIR daña primero las frecuencias agudas que dan claridad a la voz; por eso se oye sin comprender, sobre todo con ruido de fondo. Es señal de acudir a evaluación." },
+            { q: "¿Qué debes hacer si presentas zumbido persistente, sensación de oídos tapados, dolor o supuración?", o: ["Acudir de inmediato al médico ocupacional de la planta y reportarlo a SSO", "Esperar seis meses a ver si se quita solo", "Introducir hisopos profundamente para limpiar", "Automedicarte con gotas de venta libre"], c: 0, f: "El daño auditivo es gradual y silencioso; la detección temprana evita su progresión. Nunca te automediques ni introduzcas objetos en el conducto auditivo." },
+            { q: "¿Cuál de estas es una responsabilidad de la EMPRESA en materia de ruido?", o: ["Medir y mapear el ruido, implementar controles de ingeniería, entregar EPP homologado gratuito y agendar audiometrías", "Vender los protectores auditivos al trabajador con descuento", "Delegar toda la medición de ruido a los operarios", "Realizar audiometrías solo si el trabajador las solicita por escrito"], c: 0, f: "El empleador debe evaluar el agente con instrumentos calibrados, controlarlo técnicamente, proveer protección certificada sin costo y vigilar la salud auditiva de la plantilla." },
+            { q: "¿Cuál de estas es una responsabilidad del COLABORADOR?", o: ["Usar el EPP correctamente durante toda la jornada, cuidarlo, reportar daños y asistir a las audiometrías", "Diseñar las cabinas acústicas del molino", "Calibrar los sonómetros de la empresa", "Elaborar el mapa de ruido de la planta"], c: 0, f: "La prevención es compartida: sin el uso disciplinado del EPP, su cuidado higiénico y la asistencia a la vigilancia médica, los controles de la empresa pierden efectividad." },
+            { q: "¿Por qué debes reportar de inmediato un ruido inusual en una máquina de tu área?", o: ["Porque puede indicar una falla mecánica que eleva el nivel de ruido y el riesgo para todos", "Porque así evitas trabajar ese día", "Porque es obligatorio solo para personal nuevo", "Porque el ruido inusual indica que la máquina está en perfecto estado"], c: 0, f: "Un rodamiento gastado o una banda desalineada aumentan la emisión sonora; el reporte oportuno protege los oídos de todos y previene averías mayores." },
+            { q: "El área de la trituradora registra ~108 dB(A). ¿Cuál es la conducta correcta?", o: ["Zona de peligro extremo: mínimo tiempo de permanencia, EPP de alta atenuación y preferentemente doble protección", "Entrar sin EPP si son menos de dos horas", "Usar únicamente algodón en los oídos", "Taparse los oídos con las manos al pasar"], c: 0, f: "A 108 dB(A) el tiempo seguro sin protección se mide en minutos; solo personal autorizado con protección de alta atenuación o doble protección debe ingresar." },
+            { q: "¿Qué representan la sala de control y las oficinas (~60–65 dB(A)) dentro de la gestión del ruido?", o: ["Zonas seguras de confort que permiten la recuperación auditiva durante la jornada", "Zonas críticas de doble protección obligatoria", "Áreas donde se prohíbe descansar", "Espacios sin ninguna relevancia para la salud auditiva"], c: 0, f: "Permanecer en zonas silenciosas da descanso fisiológico al oído; aprovecharlas en las pausas reduce tu dosis diaria y combate la fatiga auditiva." },
+            { q: "¿Por qué la escala de decibeles es logarítmica y qué implica eso en la práctica?", o: ["Porque el oído percibe un rango gigantesco de presiones; cada +10 dB representa ~10 veces más energía sonora, así que pequeños aumentos de dB son grandes aumentos de agresión", "Porque así lo decidieron los fabricantes de sonómetros sin razón técnica", "Porque facilita sumar ruidos directamente: 80 + 80 = 160 dB", "Porque el oído deja de funcionar después de 100 dB"], c: 0, f: "Por la escala logarítmica, +3 dB duplica la energía sonora: el riesgo no crece de forma lineal. Por eso 100 dB(A) no es 'un poco peor' que 85, sino drásticamente más agresivo." }
+        ];
+
+        // PARÁMETROS OFICIALES DE LA EVALUACIÓN
+        const NUM_PREGUNTAS_EXAMEN = 20;    // Preguntas por intento
+        const PUNTOS_POR_PREGUNTA = 5;      // Valor de cada ítem (máx. 100 pts)
+        const NOTA_MINIMA_APROBACION = 80;  // Nota mínima para acreditar
+
+        // ESTADO INTERNO DEL MOTOR DE EVALUACIÓN
+        let datosColaborador = { nombre: "", correlativo: "", correo: "", unidad: "", puesto: "" };
+        let preguntasActuales = [];
+        let numeroIntento = 0;
+        let examenBloqueadoDefinitivo = false;
+
+        // Barajado Fisher-Yates: devuelve una copia mezclada sin alterar el arreglo original
+        function mezclarArreglo(arregloOriginal) {
+            const copia = [...arregloOriginal];
+            for (let i = copia.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copia[i], copia[j]] = [copia[j], copia[i]];
+            }
+            return copia;
+        }
+
+        // FASE A: Mostrar/ocultar el campo manual cuando la unidad es "Otras"
+        function alternarCampoOtras(valor) {
+            const contenedor = document.getElementById('contenedorOtraUnidad');
+            if (!contenedor) return;
+            if (valor === "Otras") {
+                contenedor.classList.remove('hidden');
+            } else {
+                contenedor.classList.add('hidden');
+            }
+        }
+
+        // FASE A: Validar, bloquear la identidad y revelar el cuestionario
+        function confirmarIdentidadEIniciar() {
+            const nombre = document.getElementById('inpNombre').value.trim();
+            const correlativo = document.getElementById('inpCorrelativo').value.trim();
+            const correo = document.getElementById('inpCorreo').value.trim();
+            const puesto = document.getElementById('inpPuesto').value.trim();
+            const unidadSel = document.getElementById('selUnidad').value;
+            const otraUnidad = document.getElementById('inpOtraUnidad').value.trim();
+            const err = document.getElementById('errIdentidad');
+            const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+
+            let mensaje = "";
+            if (!nombre) mensaje = "Ingresa tu Nombre Completo.";
+            else if (!correlativo) mensaje = "Ingresa tu Número de Correlativo / Ficha ID.";
+            else if (!correoValido) mensaje = "Ingresa un Correo Electrónico válido (ej: nombre@empresa.com).";
+            else if (!puesto) mensaje = "Ingresa tu Puesto de Trabajo.";
+            else if (!unidadSel) mensaje = "Selecciona tu Unidad de Negocio.";
+            else if (unidadSel === "Otras" && !otraUnidad) mensaje = "Especifica manualmente tu Unidad de Negocio.";
+
+            if (mensaje) {
+                err.textContent = mensaje;
+                err.classList.remove('hidden');
+                return;
+            }
+            err.classList.add('hidden');
+
+            datosColaborador = {
+                nombre: nombre,
+                correlativo: correlativo,
+                correo: correo,
+                unidad: unidadSel === "Otras" ? otraUnidad : unidadSel,
+                puesto: puesto
+            };
+
+            // Bloquear (disabled) todos los campos de identidad para evitar alteraciones
+            ['inpNombre', 'inpCorrelativo', 'inpCorreo', 'inpPuesto', 'selUnidad', 'inpOtraUnidad'].forEach(idCampo => {
+                document.getElementById(idCampo).disabled = true;
+            });
+            const btnConfirmar = document.getElementById('btnConfirmarIdentidad');
+            btnConfirmar.disabled = true;
+            btnConfirmar.innerHTML = '<i data-lucide="check-circle-2" class="w-4 h-4"></i> Identidad Confirmada';
+            btnConfirmar.className = "bg-slate-300 text-slate-600 font-bold text-sm px-6 py-3 rounded-xl flex items-center gap-2 w-full sm:w-auto justify-center cursor-not-allowed";
+
+            // Pintar resumen de identidad en la tarjeta de sesión del examen
+            const datosResumen = [
+                ['user', datosColaborador.nombre],
+                ['hash', 'Ficha: ' + datosColaborador.correlativo],
+                ['mail', datosColaborador.correo],
+                ['briefcase', datosColaborador.puesto],
+                ['building-2', datosColaborador.unidad]
+            ];
+            document.getElementById('resumenIdentidad').innerHTML = datosResumen.map(par =>
+                `<span class="inline-flex items-center gap-1.5 bg-slate-800 border border-slate-700 rounded-full px-3 py-1 text-slate-200"><i data-lucide="${par[0]}" class="w-3.5 h-3.5 text-emerald-400"></i>${par[1]}</span>`
+            ).join('');
+
+            // Revelar la Fase B y generar el primer examen aleatorio
+            document.getElementById('faseCuestionario').classList.remove('hidden');
+            generarNuevoIntento();
+        }
+
+        // FASE B: Seleccionar 20 preguntas al azar y barajar internamente sus opciones (A, B, C, D)
+        function generarNuevoIntento() {
+            if (examenBloqueadoDefinitivo) return;
+            numeroIntento++;
+
+            // 1) Elegir 20 preguntas aleatorias del banco maestro
+            const seleccionadas = mezclarArreglo(BANCO_COMPLETO_PREGUNTAS).slice(0, NUM_PREGUNTAS_EXAMEN);
+
+            // 2) Barajar el orden visual de las opciones de cada pregunta y recalcular el índice correcto
+            preguntasActuales = seleccionadas.map(pregunta => {
+                const indicesMezclados = mezclarArreglo([0, 1, 2, 3]);
+                return {
+                    q: pregunta.q,
+                    opciones: indicesMezclados.map(idx => pregunta.o[idx]),
+                    indiceCorrecto: indicesMezclados.indexOf(pregunta.c),
+                    f: pregunta.f
+                };
+            });
+
+            renderizarCuestionario();
+
+            // Limpiar estado visual del intento anterior
+            document.getElementById('panelResultado').classList.add('hidden');
+            document.getElementById('panelResultado').innerHTML = '';
+            document.getElementById('btnFinalizar').classList.remove('hidden');
+            document.getElementById('badgeIntento').textContent = 'Intento #' + numeroIntento;
+            document.getElementById('avisoExamen').classList.add('hidden');
+
+            lucide.createIcons();
+            document.getElementById('faseCuestionario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // FASE B: Pintar dinámicamente las 20 preguntas del intento actual
+        function renderizarCuestionario() {
+            const letras = ['A', 'B', 'C', 'D'];
+            const contenedor = document.getElementById('contenedorPreguntas');
+            contenedor.innerHTML = preguntasActuales.map((preg, i) => `
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 md:p-5 shadow-sm space-y-3" id="pregunta-${i}">
+                    <div class="flex items-start gap-3">
+                        <span class="bg-orange-100 text-orange-700 font-extrabold text-[11px] px-2.5 py-1 rounded-lg shrink-0 font-mono">${i + 1}/${preguntasActuales.length}</span>
+                        <p class="font-bold text-slate-900 text-sm leading-snug pt-0.5">${preg.q}</p>
+                    </div>
+                    <div class="space-y-2">
+                        ${preg.opciones.map((opcion, j) => `
+                        <label class="flex items-start gap-3 p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all">
+                            <input type="radio" name="q${i}" value="${j}" class="mt-0.5 w-4 h-4 accent-emerald-600 shrink-0">
+                            <span class="text-xs text-slate-700 leading-relaxed"><strong class="text-slate-900 mr-1">${letras[j]}.</strong>${opcion}</span>
+                        </label>`).join('')}
+                    </div>
+                    <div class="feedback-slot hidden"></div>
+                </div>`).join('');
+            lucide.createIcons();
+        }
+
+        // FASE B: Calificar el intento, mostrar feedback formativo y disparar el envío HTTP
+        function finalizarIntento() {
+            if (examenBloqueadoDefinitivo) return;
+
+            // Validar que las 20 preguntas estén contestadas
+            const sinResponder = [];
+            for (let i = 0; i < preguntasActuales.length; i++) {
+                if (!document.querySelector(`input[name="q${i}"]:checked`)) sinResponder.push(i);
+            }
+            const aviso = document.getElementById('avisoExamen');
+            if (sinResponder.length > 0) {
+                sinResponder.forEach(idx => {
+                    const tarjeta = document.getElementById('pregunta-' + idx);
+                    tarjeta.classList.remove('ring-red-400');
+                    void tarjeta.offsetWidth; // reiniciar animación visual
+                    tarjeta.classList.add('ring-2', 'ring-red-400');
+                });
+                aviso.textContent = `Te faltan ${sinResponder.length} pregunta(s) por responder. Las marcamos con borde rojo para que las ubiques.`;
+                aviso.classList.remove('hidden');
+                document.getElementById('pregunta-' + sinResponder[0]).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            aviso.classList.add('hidden');
+
+            // Calificar pregunta por pregunta con feedback formativo continuo
+            let aciertos = 0;
+            preguntasActuales.forEach((preg, i) => {
+                const tarjeta = document.getElementById('pregunta-' + i);
+                tarjeta.classList.remove('ring-2', 'ring-red-400');
+                const valorMarcado = parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+                const esCorrecta = valorMarcado === preg.indiceCorrecto;
+                if (esCorrecta) aciertos++;
+
+                // Resaltar visualmente la opción correcta (verde) y la selección errónea (rojo)
+                const etiquetas = tarjeta.querySelectorAll('label');
+                etiquetas.forEach((etq, j) => {
+                    etq.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-red-400', 'bg-red-50');
+                    if (j === preg.indiceCorrecto) {
+                        etq.classList.add('border-emerald-500', 'bg-emerald-50');
+                    } else if (j === valorMarcado && !esCorrecta) {
+                        etq.classList.add('border-red-400', 'bg-red-50');
+                    }
+                });
+
+                // Bloquear los radios del intento para conservar el feedback intacto
+                tarjeta.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = true);
+
+                // Inyectar retroalimentación técnica obligatoria debajo de cada pregunta
+                const slot = tarjeta.querySelector('.feedback-slot');
+                slot.classList.remove('hidden');
+                if (esCorrecta) {
+                    slot.innerHTML = `
+                        <div class="flex items-start gap-2.5 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs leading-relaxed">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0 mt-0.5 text-emerald-600"></i>
+                            <div><span class="font-extrabold uppercase tracking-wide block text-emerald-700 mb-0.5">Correcta</span>${preg.f}</div>
+                        </div>`;
+                } else {
+                    slot.innerHTML = `
+                        <div class="flex items-start gap-2.5 p-3 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs leading-relaxed">
+                            <i data-lucide="x-circle" class="w-4 h-4 shrink-0 mt-0.5 text-red-600"></i>
+                            <div><span class="font-extrabold uppercase tracking-wide block text-red-700 mb-0.5">Incorrecta — Respuesta correcta: ${preg.opciones[preg.indiceCorrecto]}</span>${preg.f}</div>
+                        </div>`;
+                }
+            });
+
+            const notaFinal = aciertos * PUNTOS_POR_PREGUNTA;
+            const estadoAcreditacion = notaFinal >= NOTA_MINIMA_APROBACION ? "Aprobado" : "Reprobado";
+
+            // Si aprueba, el examen se bloquea de forma definitiva
+            if (estadoAcreditacion === "Aprobado") {
+                examenBloqueadoDefinitivo = true;
+                document.getElementById('btnFinalizar').classList.add('hidden');
+            }
+
+            renderizarPanelResultado(notaFinal, aciertos, estadoAcreditacion);
+            enviarResultadoPowerAutomate(notaFinal, estadoAcreditacion);
+            lucide.createIcons();
+            document.getElementById('panelResultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Panel de resultado: felicitación si aprueba / reintento con preguntas nuevas si reprueba
+        function renderizarPanelResultado(nota, aciertos, estado) {
+            const panel = document.getElementById('panelResultado');
+            panel.classList.remove('hidden');
+            const aprobado = estado === "Aprobado";
+            const primerNombre = datosColaborador.nombre.split(' ')[0];
+
+            if (aprobado) {
+                panel.innerHTML = `
+                    <div class="rounded-2xl border-2 border-emerald-500 bg-gradient-to-br from-emerald-50 to-white p-6 md:p-8 shadow-lg text-center space-y-4">
+                        <div class="mx-auto w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                            <i data-lucide="award" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-extrabold text-emerald-700">¡Felicidades, ${primerNombre}! Has APROBADO la evaluación</h3>
+                            <p class="text-xs text-slate-500 mt-1">El examen ha quedado bloqueado de forma definitiva para este registro oficial.</p>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <div class="bg-white border border-emerald-200 rounded-xl px-5 py-3">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nota Obtenida</div>
+                                <div class="text-2xl font-black font-mono text-emerald-600">${nota} pts</div>
+                            </div>
+                            <div class="bg-white border border-emerald-200 rounded-xl px-5 py-3">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Aciertos</div>
+                                <div class="text-2xl font-black font-mono text-slate-800">${aciertos}/20</div>
+                            </div>
+                            <div class="bg-white border border-emerald-200 rounded-xl px-5 py-3">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estado</div>
+                                <div class="text-2xl font-black text-emerald-600">Aprobado</div>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-emerald-800 bg-emerald-100/70 border border-emerald-200 rounded-xl px-4 py-3 leading-relaxed">Revisa la retroalimentación técnica de cada pregunta más arriba para consolidar tus conocimientos. Tu resultado se reporta automáticamente al registro de SSO.</p>
+                        <div id="estadoEnvio"></div>
+                    </div>`;
+            } else {
+                panel.innerHTML = `
+                    <div class="rounded-2xl border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-white p-6 md:p-8 shadow-lg text-center space-y-4">
+                        <div class="mx-auto w-16 h-16 bg-amber-400 text-white rounded-full flex items-center justify-center shadow-lg shadow-amber-400/30">
+                            <i data-lucide="refresh-cw" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-extrabold text-amber-700">Resultado: REPROBADO — ¡No te rindas!</h3>
+                            <p class="text-xs text-slate-500 mt-1">Necesitas al menos <strong>${NOTA_MINIMA_APROBACION} puntos</strong> para acreditar. Lee con calma la retroalimentación de cada pregunta antes de reintentar.</p>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <div class="bg-white border border-amber-200 rounded-xl px-5 py-3">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nota Obtenida</div>
+                                <div class="text-2xl font-black font-mono text-amber-600">${nota} pts</div>
+                            </div>
+                            <div class="bg-white border border-amber-200 rounded-xl px-5 py-3">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Aciertos</div>
+                                <div class="text-2xl font-black font-mono text-slate-800">${aciertos}/20</div>
+                            </div>
+                            <div class="bg-white border border-amber-200 rounded-xl px-5 py-3">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nota Mínima</div>
+                                <div class="text-2xl font-black font-mono text-slate-800">${NOTA_MINIMA_APROBACION} pts</div>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-amber-900 bg-amber-100/70 border border-amber-200 rounded-xl px-4 py-3 leading-relaxed">El feedback formativo permanecerá visible para tu estudio. Cuando estés listo, genera un examen completamente nuevo con preguntas aleatorias del banco maestro.</p>
+                        <button onclick="generarNuevoIntento()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm px-6 py-3 rounded-xl shadow-lg shadow-amber-500/20 inline-flex items-center gap-2 transition-all">
+                            <i data-lucide="shuffle" class="w-4 h-4"></i> Intentar de nuevo con preguntas aleatorias
+                        </button>
+                        <div id="estadoEnvio"></div>
+                    </div>`;
+            }
+        }
+
+        // Fecha local en formato dd/mm/aaaa
+        function obtenerFechaLocalDDMMAAAA() {
+            const hoy = new Date();
+            const dd = String(hoy.getDate()).padStart(2, '0');
+            const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+            const aaaa = hoy.getFullYear();
+            return `${dd}/${mm}/${aaaa}`;
+        }
+
+        // CONEXIÓN CON POWER AUTOMATE: empaquetar el JSON y enviarlo por HTTP POST (todos los intentos)
+        async function enviarResultadoPowerAutomate(nota, estado) {
+            const payload = {
+                "NombreCompleto": datosColaborador.nombre,
+                "NumeroCorrelativo": datosColaborador.correlativo,
+                "CorreoElectronico": datosColaborador.correo,
+                "UnidadNegocio": datosColaborador.unidad,
+                "PuestoTrabajo": datosColaborador.puesto,
+                "Fecha": obtenerFechaLocalDDMMAAAA(),
+                "NotaObtenida": nota,
+                "EstadoAcreditacion": estado
+            };
+
+            const estadoEnvio = document.getElementById('estadoEnvio');
+            if (!estadoEnvio) return;
+
+            // Aviso preventivo mientras no se configure la URL real del flujo
+            if (URL_FLOW === "TU_URL_AQUI") {
+                estadoEnvio.className = "mt-1 flex items-center justify-center gap-2 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5";
+                estadoEnvio.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i><span>Envío pendiente: configura la URL del flujo en la variable URL_FLOW del código. (Payload registrado en consola.)</span>`;
+                console.log("Payload listo para Power Automate:", payload);
+                lucide.createIcons();
+                return;
+            }
+
+            estadoEnvio.className = "mt-1 flex items-center justify-center gap-2 text-[11px] font-semibold text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5";
+            estadoEnvio.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 shrink-0 animate-spin"></i><span>Enviando resultado a Power Automate...</span>`;
+            lucide.createIcons();
+
+            try {
+                const respuesta = await fetch(URL_FLOW, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (respuesta.ok) {
+                    estadoEnvio.className = "mt-1 flex items-center justify-center gap-2 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5";
+                    estadoEnvio.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i><span>Resultado enviado correctamente al registro corporativo de SSO.</span>`;
+                } else {
+                    estadoEnvio.className = "mt-1 flex items-center justify-center gap-2 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5";
+                    estadoEnvio.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i><span>El flujo respondió con estado ${respuesta.status}. Verifica la configuración de Power Automate.</span>`;
+                }
+            } catch (error) {
+                // Si el navegador bloquea por CORS, cambia el flujo a aceptar solicitudes anónimas
+                // o usa mode: 'no-cors' con el cuerpo como texto plano y un paso "Parse JSON" en el flujo.
+                estadoEnvio.className = "mt-1 flex items-center justify-center gap-2 text-[11px] font-semibold text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5";
+                estadoEnvio.innerHTML = `<i data-lucide="wifi-off" class="w-4 h-4 shrink-0"></i><span>No se pudo confirmar el envío (revisa tu conexión o la URL del flujo). Reporta tu nota al supervisor de SSO.</span>`;
+                console.error("Error al enviar a Power Automate:", error);
+            }
+            lucide.createIcons();
         }
     </script>
 </body>
