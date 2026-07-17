@@ -63,6 +63,22 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* Colores correctos/incorrectos para el examen */
+        .opcion-correcta {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+        .opcion-incorrecta {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .opcion-neutral-deshabilitada {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body class="flex min-h-screen bg-slate-50 text-slate-800 relative">
@@ -73,7 +89,7 @@
     </button>
 
     <!-- CAPA OSCURA DE FONDO AL ABRIR EL MENU EN MOVIL -->
-    <div onclick="toggleSidebar()" id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-950/40 z-20 transition-opacity lg:hidden"></div>
+    <div onclick="toggleSidebar()" id="sidebar-overlay" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-20 transition-opacity lg:hidden"></div>
 
     <!-- BARRA LATERAL DE NAVEGACIÓN (SIDEBAR OPTIMIZADO) -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-80 bg-slate-900 border-r border-slate-800 flex flex-col justify-between h-screen text-white shadow-xl z-30 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-0 lg:shrink-0">
@@ -165,7 +181,7 @@
     </aside>
 
     <!-- CUERPO PRINCIPAL DE CONTENIDOS -->
-    <main class="flex-1 overflow-y-auto p-4 md:p-8 max-w-5xl mx-auto flex flex-col justify-between w-full">
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 max-w-5xl mx-auto flex flex-col justify-between w-full h-screen">
         
         <div class="flex-grow space-y-12">
             <!-- MODULO: OBJETIVOS GENERALES -->
@@ -1608,31 +1624,90 @@
                 </div>
             </section>
 
-            <!-- M14: EVALUACIÓN FINAL[cite: 2] -->
+            <!-- M14: EVALUACIÓN FINAL MODIFICADA -->
             <section id="modulo-evaluacion" class="modulo space-y-6">
                 <div class="border-b border-slate-200 pb-4">
-                    <div class="flex items-center gap-2 text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">
+                    <div class="flex items-center gap-2 text-xs text-orange-600 font-bold uppercase tracking-wider mb-1">
                         <i class="w-4 h-4" data-lucide="graduation-cap"></i> Módulo 14
                     </div>
                     <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Evaluación Final de Competencias</h2>
-                    <p class="text-slate-600 text-sm">Cuestionario obligatorio institucional para validación y registro de aprobación.</p>
+                    <p class="text-slate-600 text-sm">Cuestionario obligatorio institucional (Nota mínima aprobatoria: 80 puntos).</p>
                 </div>
 
-                <form id="evaluacionForm" class="mt-6 p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
-                    <h3 class="font-bold text-lg mb-4 text-slate-900">Evaluación de Competencias V6.0</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-                        <input type="text" id="nombreUsuario" placeholder="Nombre Completo" class="p-2 border rounded" required>
-                        <input type="text" id="correlativoUsuario" placeholder="Número de Correlativo" class="p-2 border rounded" required>
-                        <input type="email" id="emailUsuario" placeholder="Correo Electrónico" class="p-2 border rounded" required>
+                <!-- FASE A: Formulario de Identidad -->
+                <div id="fase-a-identidad" class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-lg mb-4 border-b border-slate-100 pb-2">Paso 1: Validación de Identidad</h3>
+                    <form id="form-identidad" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-700 block">Nombre Completo *</label>
+                            <input type="text" id="inpNombre" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all disabled:opacity-50" required placeholder="Ej. Juan Pérez">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-700 block">Ficha ID / Correlativo *</label>
+                            <input type="text" id="inpFicha" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all disabled:opacity-50" required placeholder="Ej. 987654">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-700 block">Correo Electrónico *</label>
+                            <input type="email" id="inpCorreo" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all disabled:opacity-50" required placeholder="Ej. jperez@empresa.com">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-700 block">Puesto de Trabajo *</label>
+                            <input type="text" id="inpPuesto" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all disabled:opacity-50" required placeholder="Ej. Operador de Molienda">
+                        </div>
+                        <div class="space-y-1 md:col-span-2">
+                            <label class="text-xs font-bold text-slate-700 block">Unidad de Negocio *</label>
+                            <select id="selUnidad" onchange="verificarOtrasUnidad()" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all disabled:opacity-50" required>
+                                <option value="">Seleccione su unidad...</option>
+                                <option value="Planta San Gabriel CEMPRO">Planta San Gabriel CEMPRO</option>
+                                <option value="Planta Punta Sur (Puerto Quetzal) CEMPRO">Planta Punta Sur (Puerto Quetzal) CEMPRO</option>
+                                <option value="Planta Alicion (Puerto Barrios) CEMPRO">Planta Alicion (Puerto Barrios) CEMPRO</option>
+                                <option value="NH Services">NH Services</option>
+                                <option value="Otras">Otras</option>
+                            </select>
+                            <input type="text" id="inpOtrasUnidad" class="hidden mt-2 w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all disabled:opacity-50" placeholder="Especifique la unidad de negocio">
+                        </div>
+                        
+                        <div class="md:col-span-2 pt-2">
+                            <button type="submit" id="btn-confirmar-identidad" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="user-check" class="w-5 h-5"></i> Confirmar Identidad e Iniciar Cuestionario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- FASE B: Cuestionario Dinámico (Oculto Inicialmente) -->
+                <div id="fase-b-cuestionario" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-slate-900 text-lg">Paso 2: Evaluación Técnica</h3>
+                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs font-bold">20 Preguntas (100 pts)</span>
                     </div>
-                    <div id="preguntasContainer" class="space-y-6"></div>
-                    <button type="button" onclick="procesarEvaluacion()" class="mt-6 w-full bg-orange-600 text-white py-3 rounded-lg font-bold">Enviar Evaluación</button>
-                </form>
+
+                    <div id="contenedor-preguntas" class="space-y-6">
+                        <!-- Las preguntas se renderizan dinámicamente aquí -->
+                    </div>
+
+                    <!-- Panel de Feedback Post-Examen -->
+                    <div id="panel-resultado-examen" class="hidden mt-8 p-6 rounded-2xl text-center border">
+                        <div id="resultado-icono" class="h-16 w-16 rounded-full mx-auto flex items-center justify-center mb-3"></div>
+                        <h3 id="resultado-titulo" class="text-2xl font-extrabold mb-2"></h3>
+                        <p id="resultado-desc" class="text-slate-700 text-sm mb-5"></p>
+                        
+                        <div id="botones-resultado" class="flex justify-center gap-3">
+                            <!-- Botón de reintento dinámico si reprueba -->
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-slate-200" id="contenedor-boton-finalizar">
+                        <button type="button" onclick="finalizarExamen()" id="btn-finalizar-examen" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 px-4 rounded-xl text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="check-square" class="w-5 h-5"></i> Finalizar Examen y Calificar
+                        </button>
+                    </div>
+                </div>
             </section>
         </div>
 
         <!-- BOTONERA DE NAVEGACIÓN ADELANTAR/RETROCEDER -->
-        <div class="mt-12 pt-6 border-t border-slate-200 flex justify-between items-center gap-4">
+        <div class="mt-12 pt-6 border-t border-slate-200 flex justify-between items-center gap-4 shrink-0 pb-6">
             <button onclick="navegarModulo(-1)" id="btn-nav-anterior" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 active:scale-95 transition-all disabled:opacity-40 disabled:pointer-events-none">
                 <i class="w-4 h-4" data-lucide="arrow-left"></i> Anterior
             </button>
@@ -1645,6 +1720,9 @@
 
     <!-- CONTROLADORES LÓGICOS (JAVASCRIPT) -->
     <script>
+        // VARIABLE CENTRALIZADA DE POWER AUTOMATE
+        const URL_FLOW = "TU_URL_AQUI"; 
+
         // Array ordenado de los módulos para permitir la navegación consecutiva
         const listadoModulos = [
             'modulo-objetivos',
@@ -1664,186 +1742,59 @@
             'modulo-evaluacion'
         ];
 
-        // --- BANCO COMPLETO DE 40 PREGUNTAS ---
-        const bancoPreguntas = [
-            { p: "¿Qué significa SGA?", r: "Sistema Globalmente Armonizado", ops: ["Sistema Globalmente Armonizado", "Sistema de Gestión Ambiental", "Seguridad General Avanzada"] },
-            { p: "¿Cuál es el KPI máximo de obsoletos en almacen?", r: "2%", ops: ["2%", "5%", "10%"] },
-            { p: "¿Qué sección de la SDS indica el EPP?", r: "Sección 8", ops: ["Sección 2", "Sección 8", "Sección 12"] },
-            { p: "¿Qué sección indica qué hacer ante salpicaduras en ojos o piel?", r: "Sección 4", ops: ["Sección 4", "Sección 10", "Sección 1"] },
-            { p: "¿Qué color indica inflamabilidad en NFPA 704?", r: "Rojo", ops: ["Azul", "Rojo", "Amarillo"] },
-            { p: "¿Qué significa el símbolo 'W con raya' en NFPA?", r: "No usar agua", ops: ["No usar agua", "Ácido fuerte", "Explosivo"] },
-            { p: "¿Qué EPP es obligatorio para químicos?", r: "Nitrilo", ops: ["Cuero", "Nitrilo", "Lona"] },
-            { p: "¿Qué peligro representa la cal viva?", r: "Corrosivo", ops: ["Inflamable", "Corrosivo", "Explosivo"] },
-            { p: "¿Qué hacer ante un derrame químico?", r: "Usar kit absorbente", ops: ["Lavar con agua", "Usar kit absorbente", "Ignorar"] },
-            { p: "¿Cuál es la vía de ingreso mas crítica en planta?", r: "Inhalación", ops: ["Inhalación", "Ingestión", "Inyección"] },
-            { p: "¿Qué significa PIQE?", r: "Permiso de Ingreso", ops: ["Permiso de Ingreso", "Plan de Inspección", "Protocolo de Ingreso"] },
-            { p: "¿La sílice cristalina es carcinógeno?", r: "Si", ops: ["Si", "No", "Solo en líquido"] },
-            { p: "¿Puedo trasvasar químicos a botellas de agua?", r: "No", ops: ["Si", "No", "Solo si está limpia"] },
-            { p: "¿Qué indica el color azul en NFPA?", r: "Salud", ops: ["Salud", "Fuego", "Reactividad"] },
-            { p: "¿Qué hacer si un guante químico se perfora?", r: "Cambiarlo", ops: ["Parcharlo", "Cambiarlo", "Seguir usando"] },
-            { p: "¿Qué significa la Frase H?", r: "Peligro", ops: ["Historia", "Peligro", "Higiene"] },
-            { p: "¿Cuál es la última barrera de defensa?", r: "EPP", ops: ["Eliminación", "Controles", "EPP"] },
-            { p: "¿Qué capacidad debe tener un cubeto?", r: "110%", ops: ["50%", "100%", "110%"] },
-            { p: "¿Se puede almacenar inflamables y comburentes?", r: "No", ops: ["Si", "No", "Depende"] },
-            { p: "¿Qué significa la calavera en SGA?", r: "Toxicidad Aguda", ops: ["Toxicidad Aguda", "Inflamable", "Corrosivo"] },
-            { p: "¿A qué distancia se deben separar incompatibles?", r: "1 metro", ops: ["0.5m", "1 metro", "5 metros"] },
-            { p: "¿Qué es la Sección 2 de la FDS?", r: "Peligros", ops: ["Peligros", "Transporte", "Residuos"] },
-            { p: "¿Cuánto tiempo debe durar el lavado de ojos?", r: "15 min", ops: ["5 min", "15 min", "1 min"] },
-            { p: "¿Qué color es reactividad en NFPA?", r: "Amarillo", ops: ["Azul", "Amarillo", "Blanco"] },
-            { p: "¿Qué hacer antes de abrir un producto?", r: "Leer SDS", ops: ["Abrir rápido", "Leer SDS", "Olerlo"] },
-            { p: "¿Qué significa la Frase P?", r: "Prudencia", ops: ["Peligro", "Prudencia", "Prohibición"] },
-            { p: "¿Qué EPP protege los ojos?", r: "Monogafas", ops: ["Lentes de sol", "Monogafas", "Nada"] },
-            { p: "¿Cómo se accede a las FDS de los productos en Planta?", r: "QR", ops: ["Papel viejo", "QR", "Preguntar"] },
-            { p: "¿Quién debe realizar el PIQE para ingresar quimicos a planta?", r: "Contratistas", ops: ["Jefe de planta", "Contratistas", "Médico"] },
-            { p: "¿La sílice requiere vigilancia médica?", r: "Si", ops: ["Si", "No", "Solo si hay tos"] },
-            { p: "¿Qué hace la segregación?", r: "Prevenir reacción", ops: ["Ahorrar espacio", "Prevenir reacción", "Es estética"] },
-            { p: "¿Se debe comer cerca de químicos?", r: "No", ops: ["Si", "No", "Solo si es poco"] },
-            { p: "¿Qué es el Cromo VI?", r: "Metal pesado", ops: ["Metal pesado", "Gas noble", "Sal pura"] },
-            { p: "¿Qué hacer ante un derrame en drenaje?", r: "Reportar", ops: ["Ignorar", "Reportar", "Lavar"] },
-            { p: "¿Qué significa 'W' en NFPA?", r: "Reacciona con agua", ops: ["Reacciona con agua", "Caliente", "Fuego"] },
-            { p: "¿Qué significa 'OX' en NFPA?", r: "Oxidante", ops: ["Oxidante", "Ácido", "Base"] },
-            { p: "¿La FDS debe ser en español?", r: "Si", ops: ["Si", "No", "Inglés es mejor"] },
-            { p: "¿Qué se requiere para el manejo de derrames?", r: "Kit antiderrames", ops: ["Kit antiderrames", "Trapos y papel", "Manguera"] },
-            { p: "¿Qué norma de SSO aplica en Guatemala?", r: "229-2014", ops: ["229-2014", "ISO 9001", "Nada"] },
-            { p: "¿El EPP Corresponde a una barrera de eliminación?", r: "No", ops: ["Si", "No", "Depende"] }
+        // --- BANCO MAESTRO DE 50 PREGUNTAS (SGA Y SALUD OCUPACIONAL) ---
+        const BANCO_COMPLETO_PREGUNTAS = [
+            { q: "¿Qué significan las siglas SGA?", o: ["Sistema General Ambiental", "Sistema Globalmente Armonizado", "Seguridad Global Activa", "Sistemas de Gestión Analítica"], c: 1, f: "El SGA es el Sistema Globalmente Armonizado, una norma internacional creada por la ONU para estandarizar etiquetas y Hojas de Datos de Seguridad (SDS)." },
+            { q: "¿Cuál es el propósito principal del Rombo NFPA 704?", o: ["Uso diario en frentes de trabajo", "Clasificación de residuos", "Respuesta táctica ante emergencias e incendios", "Revisión médica"], c: 2, f: "A diferencia del SGA, la norma NFPA 704 está dirigida exclusivamente a bomberos y brigadas para identificar peligros tácticos durante siniestros." },
+            { q: "¿En qué sección de una SDS encuentro las instrucciones obligatorias sobre el EPP a utilizar?", o: ["Sección 2", "Sección 4", "Sección 8", "Sección 16"], c: 2, f: "La Sección 8 (Controles de exposición y protección personal) dicta exactamente qué tipo de guantes, gafas o mascarilla debe utilizar antes de manipular el químico." },
+            { q: "El Trinomio preventivo (2-4-8) de lectura rápida de una SDS corresponde a:", o: ["Peligros, Primeros Auxilios, Controles EPP", "Identificación, Fuego, Residuos", "Composición, Vertidos, Transporte", "Normativa, Toxicología, Ecología"], c: 0, f: "La regla de oro exige leer: Sección 2 (Peligros), Sección 4 (Primeros Auxilios) y Sección 8 (EPP) antes de tocar cualquier contenedor." },
+            { q: "¿Cuál es la barrera más efectiva según la Jerarquía de Controles?", o: ["Uso de EPP", "Controles de Ingeniería", "Eliminación del peligro", "Sustitución"], c: 2, f: "La eliminación suprime físicamente la exposición y el peligro de raíz, siendo el nivel máximo de la jerarquía." },
+            { q: "¿Por qué el EPP se considera la 'última línea de defensa'?", o: ["Porque es el más costoso", "Porque no disminuye el peligro inherente, si falla quedas expuesto", "Porque elimina el químico", "Porque se inventó al final"], c: 1, f: "Un guante de nitrilo no hace menos corrosivo a un ácido; solo te separa temporalmente. Si el guante se rompe, la barrera desaparece al 100%." },
+            { q: "¿Cuál es la vía de ingreso más crítica de agentes químicos en la planta de cemento?", o: ["Inhalación", "Contacto cutáneo", "Ingestión", "Inyección"], c: 0, f: "La inhalación es la más crítica debido a los volúmenes constantes de polvo (sílice, clinker) y vapores en el entorno industrial." },
+            { q: "¿Qué indica la palabra de advertencia 'PELIGRO' en una etiqueta SGA?", o: ["Un peligro leve o moderado", "Una advertencia de precaución general", "Un peligro grave, inminente o mortal", "Un peligro solo para el medio ambiente"], c: 2, f: "El SGA solo usa dos palabras: 'PELIGRO' (riesgos severos) o 'ATENCIÓN' (riesgos menores)." },
+            { q: "¿Qué tipo de guantes están estrictamente PROHIBIDOS para manipular químicos líquidos?", o: ["Guantes de Nitrilo", "Guantes de Neopreno", "Guantes de cuero o lona", "Guantes de butilo"], c: 2, f: "El cuero y la lona son absorbentes. Si caen químicos, el guante los retendrá contra su piel, agravando la quemadura química." },
+            { q: "¿Cuánto tiempo mínimo debe lavar sus ojos en la estación lavaojos tras una salpicadura química?", o: ["5 minutos", "15 a 20 minutos", "1 minuto", "Solo hasta que deje de arder"], c: 1, f: "Se exigen de 15 a 20 minutos continuos para asegurar un barrido mecánico efectivo antes de buscar atención médica." },
+            { q: "¿Qué indica el color Azul en el Rombo NFPA 704?", o: ["Inflamabilidad", "Reactividad", "Peligro para la Salud", "Riesgo Especial"], c: 2, f: "El cuadrante izquierdo azul califica la toxicidad o daño a la salud humana en una escala del 0 al 4." },
+            { q: "Si la NFPA indica el símbolo 'W' con una raya cruzada, significa:", o: ["Es corrosivo", "No aplicar agua bajo ninguna circunstancia", "Riesgo de radiación", "Solo usar agua pulverizada"], c: 1, f: "Alerta crítica: Indica una reactividad violenta o explosiva si el compuesto entra en contacto con agua." },
+            { q: "¿Qué documento debe tramitar obligatoriamente un contratista 72 hrs antes de ingresar químicos?", o: ["Permiso de Trabajo en Alturas", "Formulario SAP", "Permiso de Ingreso de Químicos Externos (PIQE)", "Hoja de vida del operador"], c: 2, f: "Cero tolerancia. Todo contratista debe tramitar el PIQE con SSO entregando las SDS de los productos que planea usar." },
+            { q: "¿Qué sucede al mezclar Hipoclorito (cloro común) con limpiadores ácidos (corrosivos)?", o: ["Se neutralizan inofensivamente", "Libera gas cloro, altamente tóxico y letal por inhalación", "Se genera espuma limpiadora", "Se evapora como agua"], c: 1, f: "Es una de las mezclas incompatibles más mortales; el gas cloro ataca las vías respiratorias causando asfixia severa." },
+            { q: "¿Qué volumen debe ser capaz de contener un cubeto de retención secundaria en la bodega?", o: ["50% del envase más grande", "110% del volumen del recipiente líquido mayor", "100% exacto", "200% del total de la bodega"], c: 1, f: "La normativa exige un 110% de holgura estructural para prevenir derrames totales por ruptura catastrófica." },
+            { q: "¿Cuál es el KPI (límite máximo permitido) de inventario químico obsoleto en bodegas?", o: ["≤ 2%", "5%", "10%", "0% absoluto"], c: 0, f: "La meta es evitar el riesgo de descomposición de químicos manteniendo los obsoletos en niveles ≤ 2%." },
+            { q: "¿Cuál es el riesgo crónico principal del polvo de Sílice Cristalina Respirable (SCR)?", o: ["Dermatitis leve", "Asma temporal", "Silicosis incurable y cáncer de pulmón", "Ceguera"], c: 2, f: "La sílice es un carcinógeno catalogado. El polvo fino destruye la capacidad pulmonar de forma irreversible." },
+            { q: "¿Es permitido el trasvase temporal de químicos industriales hacia botellas plásticas de agua o refresco?", o: ["Sí, si se rotulan con marcador", "Solo para solventes", "Nunca, está estrictamente prohibido y penado", "Sí, si se lavan antes"], c: 2, f: "Causa directa de envenenamiento e ingestión accidental en la industria. Jamás usar envases de consumo alimenticio." },
+            { q: "¿A qué distancia horizontal mínima se deben separar familias de químicos incompatibles en estantería?", o: ["0.5 metros", "1 metro", "No requieren separación si están tapados", "5 metros"], c: 1, f: "La matriz de compatibilidad dictamina 1 metro mínimo de separación horizontal si existe restricción entre compuestos." },
+            { q: "El pictograma del SGA que muestra una llama sobre un círculo representa sustancias:", o: ["Inflamables", "Comburentes / Oxidantes", "Explosivas", "Corrosivas"], c: 1, f: "Este es el símbolo de comburentes (oxígeno/nitratos), sustancias que avivan el fuego de otros materiales de forma drástica." },
+            { q: "¿Qué sección de la SDS detalla cómo actuar frente a un derrame accidental?", o: ["Sección 6", "Sección 1", "Sección 14", "Sección 9"], c: 0, f: "La Sección 6 cubre las 'Medidas en caso de vertido accidental', indicando el uso de kits absorbentes y evacuación." },
+            { q: "Si encuentra un envase en planta sin etiqueta alguna, usted debe:", o: ["Olerlo para adivinar qué es", "Usarlo bajo su propio riesgo", "Aislarlo y reportar de inmediato a SSO o su supervisor", "Arrojarlo al basurero común"], c: 2, f: "Jamás manipule sustancias de identidad desconocida. Pueden ser reactivas o tóxicas. Reporte de inmediato." },
+            { q: "¿Qué antigüedad máxima debe tener una SDS para considerarse válida corporativamente?", o: ["1 año", "3 años", "5 años", "No caducan"], c: 1, f: "La vigencia máxima es de 3 años de emisión para garantizar que los datos toxicológicos estén actualizados." },
+            { q: "¿Cómo se debe absorber un derrame de ácido clorhídrico en el laboratorio?", o: ["Lavando con manguera de agua directa hacia el drenaje", "Con aserrín, arena o paños de un kit absorbente homologado", "Barriendo con escoba", "Dejando que se evapore solo"], c: 1, f: "El lavado contamina afluentes y puede provocar salpicaduras violentas. Se exige recolección inerte con kits antiderrames." },
+            { q: "El pictograma de una probeta goteando sobre una mano y un metal significa:", o: ["Líquido a alta temperatura", "Peligro Ambiental", "Sustancia Corrosiva", "Toxicidad Aguda"], c: 2, f: "Alerta de corrosión severa (pH extremo): capaz de causar quemaduras cutáneas profundas y corroer acero." },
+            { q: "¿Las batas y uniformes de algodón convencionales protegen contra la absorción química cutánea?", o: ["Sí, completamente", "No, los líquidos pueden empapar la tela y pegarse a la piel", "Solo si es ácido", "Sí, si están limpios"], c: 1, f: "La ropa común absorbe fluidos. Se requieren delantales de neopreno o trajes Tychem para protección química real." },
+            { q: "¿A quién aplica y beneficia principalmente la correcta lectura del Sistema Globalmente Armonizado (SGA)?", o: ["Solo al supervisor", "Únicamente a los brigadistas", "A absolutamente todos los colaboradores que tocan el producto a diario", "A los médicos de planta"], c: 2, f: "El SGA es la norma estándar de comunicación de peligros del día a día para el usuario operativo de planta." },
+            { q: "¿Qué indica la Frase H en el contexto de una SDS?", o: ["Hoja de Higiene", "Indicación de Peligro (Hazard)", "Instrucción de Huida", "Herramienta homologada"], c: 1, f: "Las frases H (Hazard) son textos estandarizados internacionalmente que describen la naturaleza del peligro químico." },
+            { q: "¿Qué indica la Frase P en el contexto de una SDS?", o: ["Precaución o Consejo de Prudencia", "Peligro Inminente", "Procedimiento Punitivo", "Producto Puro"], c: 0, f: "Las frases P describen las medidas recomendadas para minimizar los efectos adversos (ej. 'P280: Llevar guantes de protección')." },
+            { q: "En caso de emergencia médica, ¿qué documento exige presentar el paramédico en el hospital para un tratamiento eficaz?", o: ["El carnet del empleado", "La factura de compra del químico", "La Hoja de Datos de Seguridad (SDS) física o digital", "El PIQE"], c: 2, f: "El médico requiere la SDS obligatoriamente (Sección 4 y 11) para administrar antídotos o tratamientos toxicológicos correctos." },
+            { q: "¿De qué forma afecta el sudor y las altas temperaturas de los hornos a la absorción química por la piel?", o: ["La disminuye creando barrera líquida", "Dilata los poros y acelera peligrosamente la penetración de tóxicos", "No tiene ningún efecto", "Endurece la piel"], c: 1, f: "El calor abre los poros y capilares cutáneos, multiplicando la tasa de absorción de polvos nocivos y aceites." },
+            { q: "¿Es necesario el EPP si un proceso se automatiza por completo (Control de Ingeniería) y aísla al trabajador?", o: ["No, porque se eliminó el químico", "El riesgo se minimiza drásticamente, aunque un EPP base puede ser protocolo residual", "Sí, debe usar traje encapsulado completo siempre", "La automatización es inútil"], c: 1, f: "El control de ingeniería reduce la exposición directa. El EPP pasa a un uso preventivo secundario y más liviano." },
+            { q: "El pictograma de una persona con un daño en el pecho en el SGA indica:", o: ["Ataque al corazón", "Peligro grave para la salud (órganos diana, carcinógeno)", "Infección viral", "Asfixia por agua"], c: 1, f: "Alerta de mutagénesis, carcinogenicidad (como la sílice) o daños graves prolongados en el sistema respiratorio o hepático." },
+            { q: "¿Por qué el Cromo Hexavalente (Cromo VI) requiere monitoreo en la cementera?", o: ["Porque causa explosiones", "Porque es altamente cancerígeno y alergénico al respirar", "Porque daña los ladrillos refractarios", "No requiere monitoreo"], c: 1, f: "Trazas de cromo VI en cemento o refractarios pueden gatillar dermatitis alergénica severa y cáncer pulmonar." },
+            { q: "Si su EPP de protección respiratoria no logra un sello hermético debido a que usted tiene barba:", o: ["La barrera está anulada y el polvo fino entrará a los pulmones", "El filtro P100 funcionará igual", "Solo debe ajustarlo más fuerte", "Debe respirar despacio"], c: 0, f: "La barba interrumpe el sello facial del respirador de media cara, inutilizando el EPP por completo ante gases y sílice." },
+            { q: "¿Cuál es el color de las estanterías reservadas para residuos peligrosos (según estándares genéricos visuales)?", o: ["Varía, pero siempre debe tener Dique de contención y Rotulación clara", "Siempre negro", "Blanco mate", "No requiere estantería especial"], c: 0, f: "El color es irrelevante; lo obligatorio normativamente es el dique del 110%, segregación de familias y rótulos de 'Residuo Peligroso'." },
+            { q: "Si usted va a trasvasar una sustancia, el recipiente secundario:", o: ["Debe tener una etiqueta corporativa indicando el nombre y pictograma SGA", "Solo necesita un número con marcador Sharpie", "No importa si se consume el mismo día", "Debe ser de vidrio"], c: 0, f: "Todo trasvase demanda trazabilidad. La etiqueta secundaria con SGA y código QR asegura que todos sepan el peligro." },
+            { q: "La sección 10 de la SDS (Estabilidad y reactividad) indica principalmente:", o: ["El peso del barril químico", "Productos de descomposición peligrosos e incompatibilidades químicas a evitar", "La fecha de caducidad del material", "Cómo reciclar envases vacíos"], c: 1, f: "Es vital para el diseño del almacén, pues indica con qué materiales (ej. ácidos y bases) no debe interactuar nunca." },
+            { q: "¿A quién debo notificar si un tambor de aceite presenta una pequeña fuga no controlada?", o: ["A nadie, si cae en la tierra", "Al Jefe de Almacén y Supervisor SSO para activar protocolos de contención", "Al proveedor del aceite directamente", "Al gerente de recursos humanos"], c: 1, f: "Toda desviación, por menor que sea, debe escalar operativamente para corregir fugas y evitar un desastre ecológico mayor." },
+            { q: "La etiqueta de un químico marca la palabra de advertencia 'ATENCIÓN'. Esto significa:", o: ["No reviste peligro alguno", "Peligro inminente de muerte", "Severidad de riesgo menor a 'PELIGRO', pero sigue siendo nocivo o irritante", "Solo para advertir que mancha la ropa"], c: 2, f: "El SGA usa 'Atención' para alertar riesgos moderados que igual requieren barreras EPP y respeto técnico." },
+            { q: "¿Es seguro ingerir alimentos o bebidas cerca de la zona de dosificación química?", o: ["Sí, si se lava las manos primero", "No, existe alto riesgo de ingestión cruzada de partículas suspendidas", "Sí, pero solo líquidos en botella tapada", "Solo en el turno nocturno"], c: 1, f: "Estrictamente prohibido. El polvo o vapores contaminan la comida, generando intoxicación digestiva." },
+            { q: "¿Qué valor en el cuadrante rojo de la NFPA 704 indica que el químico puede inflamarse a temperatura ambiente?", o: ["0", "1", "3", "4"], c: 2, f: "El valor 3 indica que el líquido puede encenderse bajo casi todas las condiciones de temperatura normal de planta." },
+            { q: "¿Las estaciones lavaojos deben estar accesibles a qué distancia temporal de la zona de riesgo?", o: ["A 5 minutos caminando", "A menos de 1 minuto (distancia máxima de 15 metros sin obstáculos)", "En otro edificio", "Donde haya baño público"], c: 1, f: "La ceguera química ocurre en minutos. La respuesta de lavado debe ser inmediata (menos de un minuto, sin puertas trancadas)." },
+            { q: "¿Cuál de estos NO es un riesgo físico (fisicoquímico) de una sustancia?", o: ["Inflamabilidad", "Toxicidad acuática", "Explosividad", "Comburencia"], c: 1, f: "La toxicidad acuática es un riesgo Ambiental. Los otros tres generan liberación de energía física y fuego." },
+            { q: "¿Qué elemento es fundamental para neutralizar derrames alcalinos fuertes (como cemento fresco o cal)?", o: ["Ácidos débiles o kits específicos neutralizadores de pH alto", "Agua hirviendo", "Soplete térmico", "Dejarlo al sol"], c: 0, f: "Los derrames alcalinos se contienen y neutralizan con agentes específicos para evitar un choque exotérmico peligroso." },
+            { q: "¿Qué indica un pH 13 o 14 en la hoja técnica (Sección 9) de un químico?", o: ["Sustancia neutra, como el agua", "Ácido fuerte", "Base altamente alcalina y corrosiva (como la lejía o la cal)", "Gas inerte"], c: 2, f: "Un pH superior a 11 advierte de extrema corrosión alcalina, capaz de saponificar la grasa y destruir tejidos vivos." },
+            { q: "¿Se pueden co-procesar (destruir térmicamente en los hornos cementeros) todos los tipos de residuos químicos?", o: ["Sí, todos arden igual", "No, la disposición final de cada uno depende estrictamente de su FDS y la aprobación ambiental", "Solo si se licúan antes", "Sí, si el horno está a baja temperatura"], c: 1, f: "No todo es coprocesable. Se requiere un análisis calórico y químico estricto, o de lo contrario se envían con gestores externos." },
+            { q: "Un compañero es salpicado y su ropa de trabajo está empapada de químico corrosivo. ¿Qué se hace?", o: ["Retirar la ropa contaminada de inmediato e ir bajo ducha de emergencia por 15 min", "Lavarla con agua fría y jabón", "Esperar que se seque", "Mandarlo caminando al hospital"], c: 0, f: "La ropa empapada sigue quemando la piel. Hay que cortarla o quitarla velozmente y lavar con abundante agua la epidermis." },
+            { q: "El polvo alcalino de cemento puede reaccionar con el sudor en las botas. ¿Qué afección genera?", o: ["Ninguna, el pie está protegido por la bota", "Dermatitis por cemento (quemadura química lenta y ulceración)", "Pie de atleta común", "Solo mal olor"], c: 1, f: "El sudor disuelve el cemento que ingresa a la bota, creando una mezcla con pH 12 que quema silenciosamente la piel sin dolor inicial." },
+            { q: "Para evitar la exposición, ¿en qué idioma obligatoriamente debe estar la SDS dentro de las plantas en Guatemala?", o: ["Inglés para que sea internacional", "Español, sin excepciones, según el AG 229-2014", "En el idioma del país fabricante del químico", "Bilingüe siempre"], c: 1, f: "La normativa laboral nacional y corporativa estipulan que toda FDS e instructivo debe estar disponible en idioma español (nativo)." }
         ];
-
-        let preguntasSeleccionadas = [];
-
-        // Generar 20 preguntas al azar del banco de 40
-        function inicializarPreguntasEvaluacion() {
-            preguntasSeleccionadas = bancoPreguntas.sort(() => 0.5 - Math.random()).slice(0, 20);
-            const container = document.getElementById('preguntasContainer');
-            container.innerHTML = ""; // Limpiar previo
-            
-            preguntasSeleccionadas.forEach((q, i) => {
-                let html = `<div class="p-4 bg-slate-50 rounded-xl border border-slate-200"><p class="font-bold mb-2">${i+1}. ${q.p}</p><div class="space-y-1">`;
-                q.ops.forEach(op => {
-                    html += `<label class="block text-sm cursor-pointer hover:text-orange-600"><input type="radio" name="p${i}" value="${op}" required class="mr-2"> ${op}</label>`;
-                });
-                container.innerHTML += html + `</div></div>`;
-            });
-        }
-
-        // Reiniciar formulario para nueva evaluación manteniendo datos del usuario
-        function reiniciarEvaluacion() {
-            const nombre = document.getElementById('nombreUsuario') ? document.getElementById('nombreUsuario').value : '';
-            const correlativo = document.getElementById('correlativoUsuario') ? document.getElementById('correlativoUsuario').value : '';
-            const email = document.getElementById('emailUsuario') ? document.getElementById('emailUsuario').value : '';
-            
-            const seccionEvaluacion = document.getElementById('modulo-evaluacion');
-            
-            seccionEvaluacion.innerHTML = `
-                <div class="border-b border-slate-200 pb-4">
-                    <div class="flex items-center gap-2 text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">
-                        <i data-lucide="graduation-cap" class="w-4 h-4"></i> Módulo 14
-                    </div>
-                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Evaluación Final de Competencias</h2>
-                    <p class="text-slate-600 text-sm">Cuestionario obligatorio institucional para validación y registro de aprobación.</p>
-                </div>
-
-                <form id="evaluacionForm" class="mt-6 p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
-                    <h3 class="font-bold text-lg mb-4 text-slate-900">Evaluación de Competencias V6.0</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-                        <input type="text" id="nombreUsuario" placeholder="Nombre Completo" class="p-2 border rounded" value="${nombre}" required>
-                        <input type="text" id="correlativoUsuario" placeholder="Número de Correlativo" class="p-2 border rounded" value="${correlativo}" required>
-                        <input type="email" id="emailUsuario" placeholder="Correo Electrónico" class="p-2 border rounded" value="${email}" required>
-                    </div>
-                    <div id="preguntasContainer" class="space-y-6"></div>
-                    <button type="button" onclick="procesarEvaluacion()" class="mt-6 w-full bg-orange-600 text-white py-3 rounded-lg font-bold">Enviar Evaluación</button>
-                </form>
-            `;
-            
-            inicializarPreguntasEvaluacion();
-            lucide.createIcons();
-            document.querySelector('main').scrollTop = 0;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        async function procesarEvaluacion() {
-            const nombreVal = document.getElementById('nombreUsuario').value.trim();
-            const correlativoVal = document.getElementById('correlativoUsuario').value.trim();
-            const emailVal = document.getElementById('emailUsuario').value.trim();
-
-            if (!nombreVal || !correlativoVal || !emailVal) {
-                alert("Por favor, complete todos los campos de datos personales.");
-                return;
-            }
-
-            let todasRespondidas = true;
-            for (let i = 0; i < preguntasSeleccionadas.length; i++) {
-                let sel = document.querySelector(`input[name="p${i}"]:checked`);
-                if (!sel) {
-                    todasRespondidas = false;
-                    break;
-                }
-            }
-
-            if (!todasRespondidas) {
-                alert("Por favor, responda todas las preguntas de la evaluación.");
-                return;
-            }
-
-            let nota = 0;
-            preguntasSeleccionadas.forEach((q, i) => {
-                let sel = document.querySelector(`input[name="p${i}"]:checked`);
-                if (sel && sel.value === q.r) nota += 5;
-            });
-
-            const datos = {
-                nombre: nombreVal,
-                correlativo: correlativoVal,
-                email: emailVal,
-                fecha: new Date().toLocaleDateString(),
-                nota: nota
-            };
-
-            const formContainer = document.getElementById('evaluacionForm');
-            if (nota >= 80) {
-                formContainer.innerHTML = `
-                    <div class="text-center p-10 space-y-4">
-                        <div class="h-16 w-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mx-auto">
-                            <i data-lucide="award" class="w-10 h-10"></i>
-                        </div>
-                        <h2 class="text-3xl text-emerald-600 font-extrabold">¡Capacitación Aprobada!</h2>
-                        <p class="text-slate-700 text-lg">Excelente trabajo, ha completado con éxito la evaluación con una nota de <strong>${nota}/100</strong>.</p>
-                        <p class="text-slate-500 text-sm">Su diploma digital será generado y enviado a su correo electrónico registrado en las próximas horas.</p>
-                    </div>
-                `;
-                
-                try {
-                    await fetch('https://default411bbe47fbe54025a6ae27963dadb3.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/22/workflows/d49a8282897f44df878fda40d466e9b8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=0kO_bIRoO5z8-IxPjQwi_QVzLWkVTZIG1eQkYmIwbX4', { 
-                        method: 'POST', 
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(datos) 
-                    });
-                } catch (e) { 
-                    console.error("Error al enviar datos al Webhook:", e); 
-                }
-            } else {
-                formContainer.innerHTML = `
-                    <div class="text-center p-10 space-y-4">
-                        <div class="h-16 w-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 mx-auto">
-                            <i data-lucide="x-circle" class="w-10 h-10"></i>
-                        </div>
-                        <h2 class="text-3xl text-red-600 font-extrabold">Evaluación No Aprobada</h2>
-                        <p class="text-slate-700 text-lg">Su nota obtenida fue de <strong>${nota}/100</strong> (Mínimo requerido: 80/100).</p>
-                        <p class="text-slate-500 text-sm">Para garantizar su seguridad y la de su equipo, debe repasar el contenido técnico de los módulos antes de realizar un nuevo intento.</p>
-                        <div class="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-                            <button onclick="cambiarModulo('modulo-objetivos')" class="border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold py-3 px-6 rounded-xl text-xs transition-all flex items-center justify-center gap-2">
-                                <i data-lucide="book-open" class="w-4 h-4"></i> Estudiar de Nuevo
-                            </button>
-                            <button onclick="reiniciarEvaluacion()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
-                                <i data-lucide="refresh-cw" class="w-4 h-4"></i> Intentar de nuevo (Preguntas Nuevas)
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-            lucide.createIcons();
-            document.querySelector('main').scrollTop = 0;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
         document.addEventListener("DOMContentLoaded", () => {
             lucide.createIcons();
@@ -1851,11 +1802,7 @@
             const primerBotonResp = document.querySelector('.resp-btn');
             if (primerBotonResp) primerBotonResp.click();
             
-            // Actualizar estado de los botones de navegación al cargar
             actualizarBotoneraNavegacion();
-
-            // Inicializar las preguntas aleatorias de evaluación
-            inicializarPreguntasEvaluacion();
         });
 
         // Alternar visualización del Sidebar en celulares
@@ -1881,48 +1828,37 @@
         }
 
         function cambiarModulo(idModulo, boton) {
-            // Ocultar todos los módulos
             document.querySelectorAll('.modulo').forEach(m => m.classList.remove('activo'));
             
-            // Mostrar módulo seleccionado
             const modSeleccionado = document.getElementById(idModulo);
             if (modSeleccionado) {
                 modSeleccionado.classList.add('activo');
             }
             
-            // Si no se pasa el botón (cuando se usa la botonera inferior), buscarlo en el menú
             if (!boton) {
                 boton = document.querySelector(`[onclick*="${idModulo}"]`);
             }
 
-            // Restablecer estilos de los botones del menú lateral
             document.querySelectorAll('.menu-btn').forEach(btn => {
                 btn.className = "menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white hover:bg-slate-800/50";
             });
             
-            // Aplicar estilo activo en Sidebar (Identidad Naranja)
             if (boton) {
                 boton.className = "menu-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all text-orange-500 bg-slate-800 border border-slate-700 shadow-inner";
             }
             
-            // Cerrar el sidebar automáticamente si estamos en móvil
             const sidebar = document.getElementById('sidebar');
             if (sidebar.classList.contains('translate-x-0') && window.innerWidth < 1024) {
                 toggleSidebar();
             }
 
-            // Actualizar estado de la botonera inferior
             actualizarBotoneraNavegacion();
-            
-            // Re-renderizar iconos de Lucide
             lucide.createIcons();
             
-            // Auto scroll al inicio de la página al cambiar de pestaña
             document.querySelector('main').scrollTop = 0;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Lógica para adelantar o retroceder módulos de forma secuencial
         function navegarModulo(direccion) {
             const moduloActivo = document.querySelector('.modulo.activo');
             if (!moduloActivo) return;
@@ -1935,7 +1871,6 @@
             }
         }
 
-        // Habilitar o deshabilitar botones según la posición del módulo
         function actualizarBotoneraNavegacion() {
             const moduloActivo = document.querySelector('.modulo.activo');
             if (!moduloActivo) return;
@@ -1949,7 +1884,6 @@
             btnSiguiente.disabled = (indexActual === listadoModulos.length - 1);
         }
 
-        // CONTROLADOR DE ACORDEÓN
         function toggleAccordion(idAccordion) {
             const accordion = document.getElementById(idAccordion);
             const icon = document.getElementById('icon-' + idAccordion);
@@ -1963,63 +1897,23 @@
             }
         }
 
-        // DESPLEGAR DETALLES SGA INTERACTIVOS
+        // --- SISTEMAS DE IDENTIFICACION Y SGA ---
         const detallesSga = {
-            'explosivo': {
-                titulo: "Sustancias Explosivas",
-                desc: "Sustancias o mezclas gaseosas, líquidas o sólidas que presentan riesgo de explosión en masa por calor, fricción o golpe mecánico.",
-                ejemplo: "Ejemplos en cantera: Nitratos y agentes químicos de voladura."
-            },
-            'inflamable': {
-                titulo: "Sustancias Inflamables",
-                desc: "Líquidos, sólidos o gases que se encienden con gran facilidad al contacto directo con chispas de soldadura o fuentes de ignición.",
-                ejemplo: "Ejemplos en planta: Tíner, solventes de limpieza dieléctricos y aceites usados."
-            },
-            'comburente': {
-                titulo: "Sustancias Comburentes / Oxidantes",
-                desc: "Sustancias que facilitan o avivan la combustión violenta de otros materiales combustibles liberando oxígeno.",
-                ejemplo: "Ejemplos en talleres: Oxígeno comprimido empleado en oxicorte."
-            },
-            'gas': {
-                titulo: "Gases a Presión",
-                desc: "Gases comprimidos que pueden proyectarse violentamente o explotar si el cilindro se calienta o sufre golpes en las válvulas.",
-                ejemplo: "Ejemplos en talleres: Cilindros de acetileno, nitrógeno o CO2."
-            },
-            'corrosivo': {
-                titulo: "Sustancias Corrosivas",
-                desc: "Sustancias que causan quemaduras irreversibles severas e inmediatas en contacto directo con piel u ojos, o atacan metales.",
-                ejemplo: "Ejemplos en planta: Soda cáustica líquida y ácido clorhídrico de laboratorio."
-            },
-            'toxicidad': {
-                titulo: "Toxicidad Aguda",
-                desc: "Sustancias extremadamente dañinas o mortales de forma inmediata tras inhalación, ingesta o contacto único.",
-                ejemplo: "Ejemplos en planta: Reactivos puros de calibración analítica."
-            },
-            'irritante': {
-                titulo: "Sustancias Irritantes / Nocivas",
-                desc: "Causan irritaciones respiratorias o cutáneas severas, somnolencia, alergias o mareos al operador expuesto.",
-                ejemplo: "Ejemplos en planta: Grasas, limpiadores y cemento Portland húmedo."
-            },
-            'grave': {
-                titulo: "Peligros Graves para la Salud",
-                desc: "Agentes con efectos severos a largo plazo. Incluye mutágenos, carcinógenos o tóxicos de órganos específicos.",
-                ejemplo: "Ejemplos en planta: Polvo de sílice cristalina respirable (SCR)."
-            },
-            'ambiental': {
-                titulo: "Peligros para el Medio Ambiente",
-                desc: "Sustancias con alta toxicidad duradera para la flora y fauna acuática.",
-                ejemplo: "Ejemplos en planta: Lubricantes stock, hidrocarburos pesados."
-            }
+            'explosivo': { titulo: "Sustancias Explosivas", desc: "Sustancias que presentan riesgo de explosión en masa por calor, fricción o golpe mecánico.", ejemplo: "Ejemplos en cantera: Nitratos y agentes químicos de voladura." },
+            'inflamable': { titulo: "Sustancias Inflamables", desc: "Líquidos, sólidos o gases que se encienden con gran facilidad al contacto directo con fuentes de ignición.", ejemplo: "Ejemplos en planta: Tíner, solventes y aceites usados." },
+            'comburente': { titulo: "Sustancias Comburentes / Oxidantes", desc: "Sustancias que facilitan o avivan la combustión violenta de otros materiales combustibles liberando oxígeno.", ejemplo: "Ejemplos en talleres: Oxígeno comprimido." },
+            'gas': { titulo: "Gases a Presión", desc: "Gases comprimidos que pueden proyectarse violentamente o explotar si el cilindro se calienta.", ejemplo: "Ejemplos en talleres: Cilindros de acetileno, nitrógeno o CO2." },
+            'corrosivo': { titulo: "Sustancias Corrosivas", desc: "Causan quemaduras irreversibles severas e inmediatas en contacto directo con piel u ojos, o atacan metales.", ejemplo: "Ejemplos en planta: Soda cáustica líquida y ácido clorhídrico." },
+            'toxicidad': { titulo: "Toxicidad Aguda", desc: "Sustancias mortales o altamente nocivas de forma inmediata tras inhalación, ingesta o contacto.", ejemplo: "Ejemplos: Reactivos puros de calibración." },
+            'irritante': { titulo: "Sustancias Irritantes", desc: "Causan irritaciones respiratorias o cutáneas severas, alergias o mareos.", ejemplo: "Ejemplos: Grasas, limpiadores y cemento Portland húmedo." },
+            'grave': { titulo: "Peligros Graves para la Salud", desc: "Agentes con efectos severos a largo plazo. Mutágenos, carcinógenos o tóxicos de órganos.", ejemplo: "Ejemplos en planta: Polvo de sílice cristalina." },
+            'ambiental': { titulo: "Peligros Ambientales", desc: "Sustancias con alta toxicidad duradera para la flora y fauna acuática.", ejemplo: "Ejemplos en planta: Lubricantes stock, hidrocarburos pesados." }
         };
 
         function desplegarDetalleSga(tipo, boton) {
             const datos = detallesSga[tipo];
             const panel = document.getElementById('panel-sga-detalle');
-            const imgPanel = document.getElementById('panel-sga-img');
-            const tituloPanel = document.getElementById('panel-sga-titulo');
-            const descPanel = document.getElementById('panel-sga-desc');
-            const ejPanel = document.getElementById('panel-sga-ejemplo');
-
+            
             document.querySelectorAll('.picto-btn').forEach(btn => {
                 btn.classList.remove('border-orange-500', 'bg-orange-50');
                 btn.classList.add('border-slate-200', 'bg-slate-50');
@@ -2028,15 +1922,14 @@
             boton.classList.remove('border-slate-200', 'bg-slate-50');
 
             panel.classList.remove('hidden');
-            imgPanel.src = boton.querySelector('img').src;
-            tituloPanel.innerText = datos.titulo;
-            descPanel.innerText = datos.desc;
-            ejPanel.innerText = datos.ejemplo ? datos.ejemplo : "";
+            document.getElementById('panel-sga-img').src = boton.querySelector('img').src;
+            document.getElementById('panel-sga-titulo').innerText = datos.titulo;
+            document.getElementById('panel-sga-desc').innerText = datos.desc;
+            document.getElementById('panel-sga-ejemplo').innerText = datos.ejemplo ? datos.ejemplo : "";
             
             lucide.createIcons();
         }
 
-        // ACORDEÓN FDS 16 SECCIONES
         function alternarFdsAcordeon(boton) {
             const contenido = boton.nextElementSibling;
             const icono = boton.querySelector('[data-lucide="chevron-down"]');
@@ -2053,7 +1946,6 @@
             }
         }
 
-        // REVELAR SOLUCIONES DE ESCENARIOS
         function revelarSolución(idSolucion, boton) {
             const panel = document.getElementById(idSolucion);
             const estaOculto = panel.classList.contains('hidden');
@@ -2068,10 +1960,9 @@
             lucide.createIcons();
         }
 
-        // CONTROLADOR DE CHECKLIST INTERACTIVO
+        // CHECKLIST
         let itemsMarcados = 0;
         const totalItemsChecklist = 8;
-
         function marcarCheckItem(fila) {
             const indicador = fila.querySelector('.check-box-indicator');
             const yaMarcado = fila.classList.contains('bg-emerald-50');
@@ -2093,55 +1984,34 @@
             }
             lucide.createIcons();
 
-            const mensajeExito = document.getElementById('mensaje-exito-checklist');
             if (itemsMarcados === totalItemsChecklist) {
-                mensajeExito.classList.remove('hidden');
+                document.getElementById('mensaje-exito-checklist').classList.remove('hidden');
             } else {
-                mensajeExito.classList.add('hidden');
+                document.getElementById('mensaje-exito-checklist').classList.add('hidden');
             }
         }
 
-        // RESPONSABILIDADES POR PUESTO DATA
+        // RESPONSABILIDADES
         const datosResponsabilidades = {
             'jefe-almacen': {
                 titulo: "Obligaciones del Jefe de Almacén",
-                tareas: [
-                    "Mantener actualizado el Catálogo de Productos Químicos mediante los formatos **FOR-000999** y **FOR-002031** antes de ingresar sustancias.",
-                    "Garantizar que todo producto cuente con su respectiva etiqueta SGA y código único corporativo.",
-                    "Revisar trimestralmente el inventario de productos obsoletos para cumplir el KPI de mantenerlos en **&le; 2%**."
-                ]
+                tareas: ["Mantener actualizado el Catálogo de Productos Químicos mediante los formatos **FOR-000999** y **FOR-002031** antes de ingresar sustancias.", "Garantizar que todo producto cuente con su respectiva etiqueta SGA y código único corporativo.", "Revisar trimestralmente el inventario de obsoletos para cumplir el KPI de mantenerlos en **&le; 2%**."]
             },
             'gerente-seguridad': {
                 titulo: "Obligaciones del Gerente de Seguridad Industrial",
-                tareas: [
-                    "Aprobar técnicamente el ingreso físico de cualquier producto químico nuevo a las instalaciones.",
-                    "Coordinar y supervisar de forma anual las auditorías globales del sistema de control del procedimiento.",
-                    "Definir los lineamientos de los planes de contingencia frente a derrames mayores."
-                ]
+                tareas: ["Aprobar técnicamente el ingreso físico de cualquier producto químico nuevo a las instalaciones.", "Coordinar y supervisar las auditorías globales del sistema de control del procedimiento.", "Definir lineamientos de planes de contingencia frente a derrames mayores."]
             },
             'gerente-higiene': {
                 titulo: "Higiene / Médico Ocupacional",
-                tareas: [
-                    "Evaluar toxicológicamente los riesgos asociados a los componentes activos de las mezclas.",
-                    "Liderar los programas de Vigilancia Epidemiológica y exámenes clínicos para el personal expuesto.",
-                    "Validar el tipo de EPP de barrera química idóneo para la tarea en planta."
-                ]
+                tareas: ["Evaluar toxicológicamente los riesgos asociados a los componentes activos de las mezclas.", "Liderar programas de Vigilancia Epidemiológica y exámenes clínicos.", "Validar el tipo de EPP de barrera química idóneo para la tarea."]
             },
             'coordinador-sso': {
                 titulo: "Obligaciones del Coordinador SSO de Planta",
-                tareas: [
-                    "Inspeccionar de forma mensual las bodegas, etiquetas y estados de las estaciones de lavaojos.",
-                    "Gestionar las capacitaciones anuales obligatorias en riesgo químico y uso del SGA para operarios.",
-                    "Validar y autorizar el Permiso de Ingreso de Químicos Externos (**PIQE**) de contratistas."
-                ]
+                tareas: ["Inspeccionar de forma mensual las bodegas, etiquetas y lavaojos.", "Gestionar capacitaciones obligatorias en riesgo químico.", "Validar y autorizar el Permiso de Ingreso de Químicos Externos (**PIQE**) de contratistas."]
             },
             'lideres-area': {
                 titulo: "Obligaciones de Líderes y Colaboradores",
-                tareas: [
-                    "Inspeccionar que no se utilicen químicos sin rotular o sin FDS accesible.",
-                    "Asegurar el uso de envases homologados para trasvases, con su debida etiqueta QR corporativa.",
-                    "Garantizar el uso permanente y correcto del EPP químico asignado."
-                ]
+                tareas: ["Inspeccionar que no se utilicen químicos sin rotular o sin FDS accesible.", "Asegurar uso de envases homologados para trasvases (etiqueta QR).", "Garantizar el uso permanente y correcto del EPP asignado."]
             }
         };
 
@@ -2149,9 +2019,7 @@
             const contenido = datosResponsabilidades[idRol];
             const placeholder = document.getElementById('resp-placeholder');
             const divContenido = document.getElementById('resp-contenido');
-            const titulo = document.getElementById('resp-titulo');
-            const lista = document.getElementById('resp-lista');
-
+            
             document.querySelectorAll('.resp-btn').forEach(b => {
                 b.className = "resp-btn w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all border bg-white border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600";
             });
@@ -2160,7 +2028,8 @@
             if (contenido) {
                 placeholder.classList.add('hidden');
                 divContenido.classList.remove('hidden');
-                titulo.innerText = contenido.titulo;
+                document.getElementById('resp-titulo').innerText = contenido.titulo;
+                const lista = document.getElementById('resp-lista');
                 lista.innerHTML = "";
                 contenido.tareas.forEach(tarea => {
                     const li = document.createElement('li');
@@ -2171,117 +2040,324 @@
             }
         }
 
-        // --- JUEGO INTERACTIVO ---
+        // --- JUEGO INTERACTIVO MITO REALIDAD ---
         const gameQuestions = [
-            {
-                text: "Si un envase secundario carece de etiqueta en el laboratorio o taller, puedo olerlo con cautela para identificar rápidamente la sustancia.",
-                isRealidad: false,
-                explanation: "¡MITO! Inhalar vapores directamente es altamente peligroso. Muchos químicos industriales de la cementera causan pérdida de conciencia o dañan de inmediato las membranas respiratorias."
-            },
-            {
-                text: "Las Hojas de Datos de Seguridad (SDS) son de lectura y comprensión obligatoria antes de iniciar la manipulación de cualquier producto químico.",
-                isRealidad: true,
-                explanation: "¡REALIDAD! Todo colaborador expuesto tiene la obligación de leer el trinomio de secciones clave (2, 4 y 8) para asegurar su autoprotección efectiva."
-            },
-            {
-                text: "La vía respiratoria es la ruta más crítica de ingreso de agentes químicos en la cementera debido al polvo alcalino y aditivos volátiles.",
-                isRealidad: true,
-                explanation: "¡REALIDAD! La inhalación de material particulado y vapores de molienda los convierte en el riesgo de absorción principal e inmediato."
-            },
-            {
-                text: "El uso de Equipo de Protección Personal (EPP) es siempre la primera y más efectiva barrera según la Jerarquía de Controles de SSO.",
-                isRealidad: false,
-                explanation: "¡MITO! El EPP es la última línea de defensa. No elimina el peligro en origen: si el guante se perfora, queda expuesto al 100% de la agresión del producto."
-            },
-            {
-                text: "La cal viva (óxido de calcio) reacciona violentamente al contacto con la humedad de la piel o sudor liberando quemaduras térmicas destructivas.",
-                isRealidad: true,
-                explanation: "¡REALIDAD! La cal viva es altamente reactiva y exotérmica al hidratarse, por lo que exige trajes Tyvek herméticos, guantes secos y goggles herméticos."
-            }
+            { text: "Si un envase carece de etiqueta, puedo olerlo para identificar la sustancia.", isRealidad: false, explanation: "¡MITO! Inhalar vapores directamente es altamente peligroso." },
+            { text: "Las FDS (SDS) son de lectura obligatoria antes de iniciar la manipulación.", isRealidad: true, explanation: "¡REALIDAD! Debe leer secciones clave 2, 4 y 8 para asegurar su autoprotección." },
+            { text: "La vía respiratoria es la ruta más crítica de ingreso en la cementera.", isRealidad: true, explanation: "¡REALIDAD! Inhalación de material particulado y vapores es el riesgo principal." },
+            { text: "El EPP es siempre la primera y más efectiva barrera contra riesgos.", isRealidad: false, explanation: "¡MITO! El EPP es la última línea de defensa. No elimina el peligro en origen." },
+            { text: "La cal viva reacciona violentamente al contacto con la humedad de la piel.", isRealidad: true, explanation: "¡REALIDAD! Es altamente reactiva y exotérmica al hidratarse (quemaduras térmicas)." }
         ];
 
-        let currentQuestionIdx = 0;
-        let score = 0;
+        let currentQIdx = 0, gScore = 0;
 
         function startGame() {
-            currentQuestionIdx = 0;
-            score = 0;
-            
+            currentQIdx = 0; gScore = 0;
             document.getElementById('game-intro').classList.add('hidden');
             document.getElementById('game-result').classList.add('hidden');
             document.getElementById('game-play').classList.remove('hidden');
             document.getElementById('game-feedback').classList.add('hidden');
-            
             loadQuestion();
         }
 
         function loadQuestion() {
             document.getElementById('game-feedback').classList.add('hidden');
-            document.getElementById('q-index').textContent = currentQuestionIdx + 1;
-            document.getElementById('q-score').textContent = score;
-            document.getElementById('q-text').textContent = gameQuestions[currentQuestionIdx].text;
-            
+            document.getElementById('q-index').textContent = currentQIdx + 1;
+            document.getElementById('q-score').textContent = gScore;
+            document.getElementById('q-text').textContent = gameQuestions[currentQIdx].text;
             document.querySelectorAll('#game-play button').forEach(b => b.removeAttribute('disabled'));
             lucide.createIcons();
         }
 
         function submitAnswer(userChoice) {
-            const currentQ = gameQuestions[currentQuestionIdx];
-            const isCorrect = userChoice === currentQ.isRealidad;
-            
-            if (isCorrect) {
-                score++;
-                document.getElementById('q-score').textContent = score;
+            const currentQ = gameQuestions[currentQIdx];
+            if (userChoice === currentQ.isRealidad) {
+                gScore++;
+                document.getElementById('q-score').textContent = gScore;
                 document.getElementById('fb-title').textContent = "¡Respuesta Correcta!";
                 document.getElementById('game-feedback').className = "p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 bg-emerald-50 border-emerald-300 text-emerald-900 text-left";
             } else {
                 document.getElementById('fb-title').textContent = "Respuesta Incorrecta";
                 document.getElementById('game-feedback').className = "p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 bg-red-50 border-red-300 text-red-900 text-left";
             }
-            
             document.getElementById('fb-text').textContent = currentQ.explanation;
             document.getElementById('game-feedback').classList.remove('hidden');
-            
             document.querySelectorAll('#game-play button').forEach(b => {
                 if (!b.classList.contains('bg-slate-900')) b.setAttribute('disabled', 'true');
             });
         }
 
         function nextQuestion() {
-            currentQuestionIdx++;
-            if (currentQuestionIdx < gameQuestions.length) {
-                loadQuestion();
-            } else {
-                showGameResults();
-            }
+            currentQIdx++;
+            if (currentQIdx < gameQuestions.length) loadQuestion();
+            else showGameResults();
         }
 
         function showGameResults() {
             document.getElementById('game-play').classList.add('hidden');
             document.getElementById('game-result').classList.remove('hidden');
-            
-            const passScore = 4;
-            const hasPassed = score >= passScore;
-            
             const iconContainer = document.getElementById('res-icon');
             const titleContainer = document.getElementById('res-title');
             const descContainer = document.getElementById('res-desc');
             
-            if (hasPassed) {
+            if (gScore >= 4) {
                 iconContainer.className = "h-12 w-12 rounded-full flex items-center justify-center mx-auto text-white bg-emerald-500 shadow-lg shadow-emerald-500/25";
                 iconContainer.innerHTML = `<i data-lucide="award" class="w-6 h-6"></i>`;
                 titleContainer.textContent = "¡Felicidades, Desafío Superado!";
                 titleContainer.className = "text-xl font-bold text-emerald-600";
-                descContainer.innerHTML = `Ha obtenido un puntaje de <strong class="text-slate-950">${score}/5</strong>. Su nivel preventivo es apto y seguro. Continúe hacia el examen final.`;
+                descContainer.innerHTML = `Puntaje: <strong class="text-slate-950">${gScore}/5</strong>. Continúe hacia el examen final.`;
             } else {
                 iconContainer.className = "h-12 w-12 rounded-full flex items-center justify-center mx-auto text-white bg-red-500 shadow-lg shadow-red-500/25";
                 iconContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-6 h-6"></i>`;
                 titleContainer.textContent = "Desafío No Aprobado";
                 titleContainer.className = "text-xl font-bold text-red-600";
-                descContainer.innerHTML = `Ha obtenido un puntaje de <strong class="text-slate-950">${score}/5</strong>. Para garantizar su seguridad, le recomendamos releer los módulos técnicos y reintentar el juego.`;
+                descContainer.innerHTML = `Puntaje: <strong class="text-slate-950">${gScore}/5</strong>. Reintente el juego formativo.`;
             }
             lucide.createIcons();
         }
+
+        // =========================================================================
+        // === LÓGICA DE FASE A & B (EVALUACIÓN Y CONEXIÓN POWER AUTOMATE) ===
+        // =========================================================================
+
+        let dataCuestionarioActivo = [];
+        let infoColaborador = {};
+
+        // Función para mostrar/ocultar "Otras" unidad
+        function verificarOtrasUnidad() {
+            const sel = document.getElementById('selUnidad');
+            const inpOtras = document.getElementById('inpOtrasUnidad');
+            if (sel.value === 'Otras') {
+                inpOtras.classList.remove('hidden');
+                inpOtras.setAttribute('required', 'true');
+            } else {
+                inpOtras.classList.add('hidden');
+                inpOtras.removeAttribute('required');
+                inpOtras.value = "";
+            }
+        }
+
+        // Manejador del Formulario de Identidad (Fase A)
+        document.getElementById('form-identidad').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Recopilar Identidad
+            const selUnidad = document.getElementById('selUnidad').value;
+            infoColaborador = {
+                NombreCompleto: document.getElementById('inpNombre').value.trim(),
+                NumeroCorrelativo: document.getElementById('inpFicha').value.trim(),
+                CorreoElectronico: document.getElementById('inpCorreo').value.trim(),
+                PuestoTrabajo: document.getElementById('inpPuesto').value.trim(),
+                UnidadNegocio: selUnidad === 'Otras' ? document.getElementById('inpOtrasUnidad').value.trim() : selUnidad
+            };
+
+            // Bloquear formulario
+            document.querySelectorAll('#form-identidad input, #form-identidad select').forEach(el => el.disabled = true);
+            const btnIdentidad = document.getElementById('btn-confirmar-identidad');
+            btnIdentidad.innerHTML = `<i data-lucide="lock" class="w-5 h-5"></i> Identidad Confirmada`;
+            btnIdentidad.classList.remove('bg-slate-900', 'hover:bg-slate-800');
+            btnIdentidad.classList.add('bg-emerald-600', 'cursor-not-allowed', 'opacity-90');
+            btnIdentidad.disabled = true;
+
+            // Iniciar Fase B
+            iniciarFaseB();
+            lucide.createIcons();
+        });
+
+        // Barajador de Arreglos (Fisher-Yates Shuffle)
+        function shuffleArray(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId);
+                curId -= 1;
+                let tmp = array[curId];
+                array[curId] = array[randId];
+                array[randId] = tmp;
+            }
+            return array;
+        }
+
+        // Inicia / Reinicia las 20 Preguntas
+        function iniciarFaseB() {
+            const contenedorFormularioB = document.getElementById('fase-b-cuestionario');
+            const panelPreguntas = document.getElementById('contenedor-preguntas');
+            const panelResultado = document.getElementById('panel-resultado-examen');
+            const btnFinalizar = document.getElementById('btn-finalizar-examen');
+            const contFinalizar = document.getElementById('contenedor-boton-finalizar');
+
+            contenedorFormularioB.classList.remove('hidden');
+            panelResultado.classList.add('hidden');
+            contFinalizar.classList.remove('hidden');
+            btnFinalizar.disabled = false;
+            btnFinalizar.innerHTML = `<i data-lucide="check-square" class="w-5 h-5"></i> Finalizar Examen y Calificar`;
+
+            // Extraer 20 aleatorias y barajar opciones
+            let bancoBarajado = shuffleArray([...BANCO_COMPLETO_PREGUNTAS]).slice(0, 20);
+            
+            dataCuestionarioActivo = bancoBarajado.map(q => {
+                let opcionesConVal = q.o.map((opText, i) => ({ text: opText, isCorrect: i === q.c }));
+                opcionesConVal = shuffleArray(opcionesConVal);
+                let nuevoCorrectIndex = opcionesConVal.findIndex(op => op.isCorrect);
+                
+                return {
+                    pregunta: q.q,
+                    opciones: opcionesConVal.map(op => op.text),
+                    correctIdx: nuevoCorrectIndex,
+                    feedback: q.f
+                };
+            });
+
+            // Renderizar Preguntas
+            panelPreguntas.innerHTML = '';
+            dataCuestionarioActivo.forEach((item, index) => {
+                let htmlOpciones = '';
+                item.opciones.forEach((op, opIdx) => {
+                    htmlOpciones += `
+                        <label id="lbl-q${index}-op${opIdx}" class="flex items-start gap-3 p-3 rounded-lg border border-slate-200 bg-white cursor-pointer hover:border-orange-400 transition-colors">
+                            <input type="radio" name="q${index}" value="${opIdx}" class="mt-0.5 accent-orange-600">
+                            <span class="text-sm text-slate-700 leading-tight">${op}</span>
+                        </label>
+                    `;
+                });
+
+                panelPreguntas.innerHTML += `
+                    <div id="caja-q${index}" class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-sm text-slate-900 mb-3"><span class="text-orange-600 mr-1">${index + 1}.</span> ${item.pregunta}</h4>
+                        <div class="space-y-2 flex flex-col">
+                            ${htmlOpciones}
+                        </div>
+                        <div id="feedback-q${index}" class="hidden mt-4 p-3 rounded-lg text-xs font-medium border"></div>
+                    </div>
+                `;
+            });
+
+            // Auto-scroll a las preguntas
+            setTimeout(() => {
+                document.getElementById('fase-b-cuestionario').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Procesar Examen Final y Power Automate
+        async function finalizarExamen() {
+            // Validar que todas estén respondidas
+            let sinResponder = false;
+            for (let i = 0; i < 20; i++) {
+                if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+                    sinResponder = true; break;
+                }
+            }
+
+            if (sinResponder) {
+                alert("Atención: Debe responder las 20 preguntas antes de finalizar el examen.");
+                return;
+            }
+
+            // Deshabilitar botón
+            const btnFinalizar = document.getElementById('btn-finalizar-examen');
+            btnFinalizar.disabled = true;
+            btnFinalizar.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Procesando Calificación...`;
+
+            let puntos = 0;
+
+            // Evaluar y mostrar Feedback Formativo
+            dataCuestionarioActivo.forEach((item, index) => {
+                const seleccionIndex = parseInt(document.querySelector(`input[name="q${index}"]:checked`).value);
+                const esCorrecta = (seleccionIndex === item.correctIdx);
+                const feedbackDiv = document.getElementById(`feedback-q${index}`);
+                
+                // Bloquear inputs visualmente
+                document.querySelectorAll(`input[name="q${index}"]`).forEach(inp => inp.disabled = true);
+                
+                // Aplicar estilos formativos
+                for (let opIdx = 0; opIdx < 4; opIdx++) {
+                    let lbl = document.getElementById(`lbl-q${index}-op${opIdx}`);
+                    if (opIdx === item.correctIdx) {
+                        lbl.classList.add('opcion-correcta');
+                    } else if (opIdx === seleccionIndex && !esCorrecta) {
+                        lbl.classList.add('opcion-incorrecta');
+                    } else {
+                        lbl.classList.add('opcion-neutral-deshabilitada');
+                    }
+                }
+
+                feedbackDiv.classList.remove('hidden');
+                if (esCorrecta) {
+                    puntos += 5;
+                    feedbackDiv.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-900');
+                    feedbackDiv.innerHTML = `<strong class="text-emerald-700 block mb-0.5">¡Correcta!</strong> ${item.feedback}`;
+                } else {
+                    feedbackDiv.classList.add('bg-red-50', 'border-red-300', 'text-red-900');
+                    feedbackDiv.innerHTML = `<strong class="text-red-700 block mb-0.5">Incorrecta.</strong> ${item.feedback}`;
+                }
+            });
+
+            const estadoExamen = puntos >= 80 ? "Aprobado" : "Reprobado";
+
+            // Preparar JSON Payload Estricto
+            const fechaActualLocal = new Date().toLocaleDateString('es-GT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            
+            const payloadJSON = {
+                "NombreCompleto": infoColaborador.NombreCompleto,
+                "NumeroCorrelativo": infoColaborador.NumeroCorrelativo,
+                "CorreoElectronico": infoColaborador.CorreoElectronico,
+                "UnidadNegocio": infoColaborador.UnidadNegocio,
+                "PuestoTrabajo": infoColaborador.PuestoTrabajo,
+                "Fecha": fechaActualLocal,
+                "NotaObtenida": parseInt(puntos),
+                "EstadoAcreditacion": estadoExamen
+            };
+
+            // Post asíncrono a Power Automate (sin bloquear UI total)
+            try {
+                fetch(URL_FLOW, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadJSON)
+                }).catch(e => console.error("Error no bloqueante en envío al Flow:", e));
+            } catch (error) {
+                console.error("Fallo general en petición fetch:", error);
+            }
+
+            // Mostrar Panel Resultado
+            document.getElementById('contenedor-boton-finalizar').classList.add('hidden');
+            const pnlResult = document.getElementById('panel-resultado-examen');
+            const rIcon = document.getElementById('resultado-icono');
+            const rTitle = document.getElementById('resultado-titulo');
+            const rDesc = document.getElementById('resultado-desc');
+            const btnsResult = document.getElementById('botones-resultado');
+            
+            pnlResult.classList.remove('hidden');
+
+            if (estadoExamen === "Aprobado") {
+                pnlResult.classList.add('bg-emerald-50', 'border-emerald-200');
+                pnlResult.classList.remove('bg-red-50', 'border-red-200');
+                rIcon.className = "h-16 w-16 rounded-full mx-auto flex items-center justify-center mb-3 bg-emerald-500 text-white shadow-lg";
+                rIcon.innerHTML = `<i data-lucide="award" class="w-8 h-8"></i>`;
+                rTitle.className = "text-2xl font-extrabold mb-2 text-emerald-700";
+                rTitle.innerText = `¡Certificación Aprobada! (${puntos} / 100)`;
+                rDesc.innerText = "Excelente labor. Su información ha sido registrada exitosamente por el sistema de SSO. El examen se ha bloqueado de forma definitiva.";
+                btnsResult.innerHTML = ``; // Sin reintento
+            } else {
+                pnlResult.classList.add('bg-red-50', 'border-red-200');
+                pnlResult.classList.remove('bg-emerald-50', 'border-emerald-200');
+                rIcon.className = "h-16 w-16 rounded-full mx-auto flex items-center justify-center mb-3 bg-red-500 text-white shadow-lg";
+                rIcon.innerHTML = `<i data-lucide="x-circle" class="w-8 h-8"></i>`;
+                rTitle.className = "text-2xl font-extrabold mb-2 text-red-700";
+                rTitle.innerText = `Examen Reprobado (${puntos} / 100)`;
+                rDesc.innerHTML = "No ha alcanzado la nota mínima de 80 puntos exigida por los estándares de seguridad. <br/><strong>Por favor, lea la retroalimentación técnica de las preguntas falladas en color rojo arriba.</strong>";
+                btnsResult.innerHTML = `
+                    <button onclick="iniciarFaseB()" class="mt-2 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl text-sm transition-all flex items-center gap-2 shadow">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Intentar de nuevo con preguntas aleatorias
+                    </button>
+                `;
+            }
+            
+            lucide.createIcons();
+            setTimeout(() => {
+                pnlResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+
     </script>
 </body>
 </html>
